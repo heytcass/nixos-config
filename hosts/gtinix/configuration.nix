@@ -125,6 +125,7 @@
   programs.zsh.enable = true;
 
   services.hardware.bolt.enable = true;
+  hardware.bluetooth.enable = true;
 
   zramSwap.enable = true;
 
