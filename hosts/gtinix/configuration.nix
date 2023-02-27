@@ -80,6 +80,7 @@
     shell = pkgs.zsh;
     packages = with pkgs; [
       kitty
+      kitty-themes
       starship
       google-chrome
       gh
