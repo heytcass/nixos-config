@@ -85,6 +85,11 @@
       google-chrome
       gh
       etcher
+      bitwarden
+      bitwarden-cli
+      rofi-rbw
+      rofi-emoji
+      rofi-bluetooth
     ];
   };
 
