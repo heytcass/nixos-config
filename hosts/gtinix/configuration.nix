@@ -59,7 +59,7 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-
+    wireplumber.enable = true;
     jack.enable = true;
   };
 
@@ -102,6 +102,7 @@
     cachix
     pciutils
     usbutils
+    pavucontrol
   ];
   environment.shells = with pkgs; [ zsh ];
 
