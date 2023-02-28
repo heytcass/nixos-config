@@ -12,12 +12,13 @@
     gnome3.adwaita-icon-theme  # default gnome cursors
     swaylock
     swayidle
+    wlogout
     grim # screenshot functionality
     slurp # screenshot functionality
     wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
     mako # notification system developed by swaywm maintainer
     pulseaudio
-    blueman
+    blueberry
   ];
 
 }

@@ -90,7 +90,8 @@
       rofi-rbw
       rofi-emoji
       rofi-bluetooth
-    ];
+      streamdeck-ui
+  ];
   };
 
   # List packages installed in system profile. To search, run:
@@ -130,7 +131,10 @@
 
   programs.zsh.enable = true;
 
+  programs.streamdeck-ui.enable = true;
+
   services.hardware.bolt.enable = true;
+
   hardware.bluetooth.enable = true;
 
   zramSwap.enable = true;
