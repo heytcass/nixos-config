@@ -5,6 +5,13 @@
     nixpkgs.url = "nixpkgs/nixos-unstable";
     hyprland.url = "github:hyprwm/Hyprland";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    eww.url = "github:elkowar/eww";
+    nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
+    rust-overlay.url = "github:oxalica/rust-overlay";
+
+    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
+    eww.inputs.nixpkgs.follows = "nixpkgs";
+    eww.inputs.rust-overlay.follows = "rust-overlay";
   };
 
   outputs = { self, nixpkgs, hyprland, nixos-hardware, ... }@inputs :
