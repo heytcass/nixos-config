@@ -91,7 +91,9 @@
       rofi-emoji
       rofi-bluetooth
       streamdeck-ui
-  ];
+      logitech-udev-rules
+      solaar
+    ];
   };
 
   # List packages installed in system profile. To search, run:
