@@ -14,7 +14,7 @@
     eww.inputs.rust-overlay.follows = "rust-overlay";
   };
 
-  outputs = { self, nixpkgs, hyprland, nixos-hardware, ... }@inputs :
+  outputs = { self, nixpkgs, hyprland, nixos-hardware, eww, ... }@inputs :
     let
       system = "x86_64-linux";
 
@@ -34,6 +34,7 @@
 
             modules = [
               ./hosts/gtinix/configuration.nix
+              { _module.args = inputs; }
               {
                 nixpkgs.overlays = [ hyprland.overlays.default];
               }
