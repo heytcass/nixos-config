@@ -8,6 +8,7 @@
   environment.systemPackages = with pkgs; [
     waybar-hyprland
     rofi-wayland
+    hyprpaper
     gnome3.adwaita-icon-theme  # default gnome cursors
     swaylock
     swayidle
