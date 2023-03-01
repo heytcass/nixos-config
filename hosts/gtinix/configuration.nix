@@ -15,24 +15,28 @@
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
   networking.hostName = "gtinix"; # Define your hostname.
   networking.hostId = "3da1b1ca";
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+    permittedInsecurePackages = [
+      "electron-12.2.3"
+    ];
+  };
   nix = {
     package = pkgs.nixFlakes;
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
+    autoOptimiseStore = true;
+    nixPath = [
+      "nixos-config=/home/tom/.config/system/hosts/gtinix/configuration.nix"
+    ];
   };
-
-  nixpkgs.config.permittedInsecurePackages = [
-    "electron-12.2.3"
-  ];
 
   # Set your time zone.
   time.timeZone = "America/Detroit";
