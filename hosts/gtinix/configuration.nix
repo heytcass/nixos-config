@@ -32,7 +32,7 @@
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
-    autoOptimiseStore = true;
+    settings.auto-optimise-store = true;
     nixPath = [
       "nixos-config=/home/tom/.config/system/hosts/gtinix/configuration.nix"
     ];
