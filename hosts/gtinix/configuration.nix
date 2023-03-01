@@ -92,6 +92,7 @@
       streamdeck-ui
       logitech-udev-rules
       solaar
+      lxappearance
     ];
   };
 

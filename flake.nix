@@ -29,7 +29,7 @@
     in
       {
         nixosConfigurations = {
-          gtinix = lib.nixosSystem {
+          gtinix = nixpkgs.lib.nixosSystem {
             inherit system;
 
             modules = [
