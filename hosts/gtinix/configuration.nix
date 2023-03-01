@@ -44,7 +44,6 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
-    font = "Hack Regular Nerd Font Complete Mono";
     keyMap = "us";
   #   useXkbConfig = true; # use xkbOptions in tty.
   };
@@ -106,6 +105,7 @@
     pciutils
     usbutils
     pavucontrol
+    ranger
   ];
   environment.shells = with pkgs; [ zsh ];
 
