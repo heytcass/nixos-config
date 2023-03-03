@@ -97,6 +97,7 @@
       logitech-udev-rules
       solaar
       lxappearance
+      obsidian
     ];
   };
 
