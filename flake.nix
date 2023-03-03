@@ -14,7 +14,7 @@
     eww.inputs.rust-overlay.follows = "rust-overlay";
   };
 
-  outputs = { self, nixpkgs, hyprland, nixos-hardware, eww-wayland, ... }@inputs :
+  outputs = { self, nixpkgs, hyprland, nixos-hardware, eww, ... }@inputs :
     let
       system = "x86_64-linux";
 
@@ -41,7 +41,9 @@
               hyprland.nixosModules.default
               {programs.hyprland.enable = true;}
               nixos-hardware.nixosModules.dell-xps-13-9370
-              packages.system.eww-wayland
+              environment.systemPackages = [
+                inputs.eww.packages.system.eww-wayland
+              ]; 
 	    ];
 
             specialArgs = {
