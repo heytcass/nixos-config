@@ -112,6 +112,7 @@
     usbutils
     pavucontrol
     ranger
+    inputs.eww.packages.x86_64-linux.eww-wayland
   ];
   environment.shells = with pkgs; [ zsh ];
 
