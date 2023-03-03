@@ -41,7 +41,7 @@
               hyprland.nixosModules.default
               {programs.hyprland.enable = true;}
               nixos-hardware.nixosModules.dell-xps-13-9370
-              packages.x86_64-linux.eww-wayland;
+              pkgs.x86_64-linux.eww-wayland
             ];
 
             specialArgs = {
