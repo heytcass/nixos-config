@@ -46,9 +46,7 @@
               ]; 
 	    ];
 
-            specialArgs = {
-              inherit inputs;
-            };
+            specialArgs.inputs = inputs;
               
           };
         };
