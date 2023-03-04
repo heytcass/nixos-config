@@ -143,6 +143,7 @@
   programs.streamdeck-ui.enable = true;
 
   services.hardware.bolt.enable = true;
+  services.fwupd.enable = true;
 
   hardware.bluetooth.enable = true;
 
