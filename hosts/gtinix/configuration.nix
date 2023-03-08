@@ -98,6 +98,7 @@
       solaar
       lxappearance
       obsidian
+      mqttui
     ];
   };
 
