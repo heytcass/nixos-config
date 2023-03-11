@@ -96,9 +96,7 @@
       streamdeck-ui
       logitech-udev-rules
       solaar
-      lxappearance
       obsidian
-      mqttui
     ];
   };
 
@@ -145,6 +143,7 @@
 
   services.hardware.bolt.enable = true;
   services.fwupd.enable = true;
+  services.tailscale.enable = true;
 
   hardware.bluetooth.enable = true;
 
