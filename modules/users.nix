@@ -5,23 +5,10 @@
     isNormalUser = true;
     description = "Tom Cassady";
     extraGroups = [ "networkmanager" "wheel" ];
-    shell = pkgs.fish;
     packages = with pkgs; [
       # User-specific packages can go here
     ];
   };
-
-  # Shell configuration
-  programs.fish.enable = true;
-  programs.starship = {
-    enable = true;
-    # Default settings work well, but can be customized if needed
-  };
-
-  # Font configuration
-  fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "FiraCode" ]; })
-  ];
 
   # Locale settings
   i18n = {
