@@ -9,7 +9,14 @@
     ./modules/audio.nix
     ./modules/users.nix
     ./modules/packages.nix
+    ./modules/vscode.nix
   ];
+
+  nix = {
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+    };
+  };
 
   # Core system settings
   time.timeZone = "America/Detroit";
