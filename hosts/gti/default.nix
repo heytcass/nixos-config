@@ -3,23 +3,23 @@
 {
   imports = [
     ./hardware.nix
+    ../../modules/audio
     ../../modules/boot.nix
     ../../modules/network.nix
     ../../modules/desktop.nix
-    ../../modules/audio.nix
     ../../modules/users.nix
     ../../modules/packages.nix
     ../../modules/vscode.nix
   ];
 
-  # Nix settings
+  # Enable the audio module
+  modules.audio.enable = true;
+
+  # Rest of your configuration remains the same...
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
   };
 
-  # Core system settings
   time.timeZone = "America/Detroit";
-
-  # Keep this value the same as it affects system state management
   system.stateVersion = "24.11";
 }
