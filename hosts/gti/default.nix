@@ -7,7 +7,7 @@
     ../../modules/boot
     ../../modules/network
     ../../modules/desktop
-    ../../modules/users.nix
+    ../../modules/users
     ../../modules/packages
     ../../modules/vscode.nix
   ];
@@ -39,6 +39,18 @@
       enable = true;
       gui.enable = true;
       wayland.enable = true;
+    };
+    users = {
+      enable = true;
+      mainUser = {
+        name = "tom";
+        realName = "Tom Cassady";
+        extraGroups = [ "networkmanager" "wheel" ];
+        packages = with pkgs; [
+          # User-specific packages can go here
+        ];
+      };
+      locale.region = "en_US.UTF-8";
     };
   };
 
