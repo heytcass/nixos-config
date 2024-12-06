@@ -5,13 +5,14 @@
     ./hardware.nix
     ../../modules/audio
     ../../modules/boot.nix
-    ../../modules/network.nix
+    ../../modules/network
     ../../modules/desktop
     ../../modules/users.nix
-    ../../modules/packages.nix
+    ../../modules/packages
     ../../modules/vscode.nix
   ];
 
+  # Enable and configure modules
   modules = {
     audio.enable = true;
     desktop = {
@@ -22,13 +23,26 @@
         variant = "colemak";
       };
     };
+    network = {
+      enable = true;
+      hostName = "gti";
+      networkmanager.enable = true;
+    };
+    packages = {
+      enable = true;
+      gui.enable = true;
+      wayland.enable = true;
+    };
   };
 
-  # Rest of your configuration remains the same...
+  # Nix settings
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
   };
 
+  # Core system settings
   time.timeZone = "America/Detroit";
+
+  # Keep this value the same as it affects system state management
   system.stateVersion = "24.11";
 }
