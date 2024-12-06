@@ -7,7 +7,7 @@
   environment.systemPackages = with pkgs; [
     # CLI tools
     wget
-    kitty
+    foot
     git
 
     # GUI applications
