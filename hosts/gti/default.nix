@@ -6,14 +6,23 @@
     ../../modules/audio
     ../../modules/boot.nix
     ../../modules/network.nix
-    ../../modules/desktop.nix
+    ../../modules/desktop
     ../../modules/users.nix
     ../../modules/packages.nix
     ../../modules/vscode.nix
   ];
 
-  # Enable the audio module
-  modules.audio.enable = true;
+  # Enable and configure modules
+  modules = {
+    audio.enable = true;
+    desktop = {
+      enable = true;
+      keyboard = {
+        layout = "us";
+        variant = "colemak";
+      };
+    };
+  };
 
   # Rest of your configuration remains the same...
   nix.settings = {
