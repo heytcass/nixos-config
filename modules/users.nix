@@ -5,21 +5,10 @@
     isNormalUser = true;
     description = "Tom Cassady";
     extraGroups = [ "networkmanager" "wheel" ];
-    shell = pkgs.nushell;  # Set nushell as the default shell
     packages = with pkgs; [
       # User-specific packages can go here
     ];
   };
-
-  environment.systemPackages = with pkgs; [
-    nushell
-    starship
-  ];
-
-  # Font for symbols (needed for starship)
-  fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "FiraCode" ]; })
-  ];
 
   # Locale settings
   i18n = {
