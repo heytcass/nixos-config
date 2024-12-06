@@ -12,11 +12,11 @@
     ../../modules/vscode.nix
   ];
 
-  # Enable and configure modules
   modules = {
     audio.enable = true;
     desktop = {
       enable = true;
+      environment = "gnome";
       keyboard = {
         layout = "us";
         variant = "colemak";

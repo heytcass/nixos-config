@@ -1,10 +1,15 @@
-# modules/desktop/default.nix
 { config, lib, pkgs, ... }:
 
 with lib;
 {
   options.modules.desktop = {
     enable = mkEnableOption "desktop environment";
+    
+    environment = mkOption {
+      type = types.enum [ "gnome" "hyprland" ];
+      default = "gnome";
+      description = "Desktop environment to use";
+    };
     
     keyboard = {
       layout = mkOption {
@@ -21,29 +26,68 @@ with lib;
     };
   };
 
-  config = mkIf config.modules.desktop.enable {
-    # X11 and GNOME settings
-    services.xserver = {
-      enable = true;
-      displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
-      excludePackages = [ pkgs.xterm ];
-      
-      # Keyboard settings from module options
-      xkb = {
-        layout = config.modules.desktop.keyboard.layout;
-        variant = config.modules.desktop.keyboard.variant;
+  config = mkIf config.modules.desktop.enable (mkMerge [
+    # Common configuration for all desktop environments
+    {
+      # X11 base configuration
+      services.xserver = {
+        enable = true;
+        excludePackages = [ pkgs.xterm ];
+        
+        # Keyboard settings from module options
+        xkb = {
+          layout = config.modules.desktop.keyboard.layout;
+          variant = config.modules.desktop.keyboard.variant;
+        };
       };
-    };
 
-    # Disable default GNOME packages
-    services.gnome.core-utilities.enable = false;
+      # Hardware-related services that are DE-independent
+      services.fwupd.enable = true;
+      services.hardware.bolt.enable = true;
+      services.printing.enable = false;
+    }
 
-    # Hardware-related services
-    services.fwupd.enable = true;
-    services.hardware.bolt.enable = true;
+    # GNOME-specific configuration
+    (mkIf (config.modules.desktop.environment == "gnome") {
+      services.xserver = {
+        displayManager.gdm.enable = true;
+        desktopManager.gnome.enable = true;
+      };
+      services.gnome.core-utilities.enable = false;
+    })
 
-    # Printing (currently disabled)
-    services.printing.enable = false;
-  };
+    # Hyprland-specific configuration
+    (mkIf (config.modules.desktop.environment == "hyprland") {
+      programs.hyprland = {
+        enable = true;
+        xwayland.enable = true;
+      };
+
+      # Common Wayland-related packages you might want
+      environment.systemPackages = with pkgs; [
+        waybar           # Status bar
+        wofi             # Application launcher
+        dunst           # Notification daemon
+        swaylock        # Screen locker
+        swayidle        # Idle management daemon
+        grim            # Screenshot utility
+        slurp           # Screen area selection
+        wl-clipboard    # Clipboard utilities
+      ];
+
+      # Wayland-specific settings
+      environment.sessionVariables = {
+        NIXOS_OZONE_WL = "1";  # Electron apps use Wayland
+        XDG_SESSION_TYPE = "wayland";
+        XDG_CURRENT_DESKTOP = "Hyprland";
+        XDG_SESSION_DESKTOP = "Hyprland";
+      };
+
+      # Consider using a Wayland-native display manager
+      services.xserver.displayManager.gdm = {
+        enable = true;
+        wayland = true;
+      };
+    })
+  ]);
 }
