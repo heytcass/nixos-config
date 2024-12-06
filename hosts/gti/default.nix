@@ -9,7 +9,7 @@
     ../../modules/desktop
     ../../modules/users
     ../../modules/packages
-    ../../modules/vscode.nix
+    ../../modules/vscode
   ];
 
   # Enable and configure modules
@@ -51,6 +51,16 @@
         ];
       };
       locale.region = "en_US.UTF-8";
+    };
+    vscode = {
+      enable = true;
+      extensions = {
+        base = true;
+        editing = true;
+        formatting = true;
+        languages = true;
+      };
+      wayland.enable = true;
     };
   };
 
