@@ -4,7 +4,7 @@
   imports = [
     ./hardware.nix
     ../../modules/audio
-    ../../modules/boot.nix
+    ../../modules/boot
     ../../modules/network
     ../../modules/desktop
     ../../modules/users.nix
@@ -15,6 +15,13 @@
   # Enable and configure modules
   modules = {
     audio.enable = true;
+    boot = {
+      enable = true;
+      bootloader = {
+        systemd-boot.enable = true;
+        efi.canTouchEfiVariables = true;
+      };
+    };
     desktop = {
       enable = true;
       environment = "gnome";
