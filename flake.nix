@@ -9,18 +9,24 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Add nixos-hardware
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
+    magic-nix-cache.url = "github:DeterminateSystems/magic-nix-cache";
   };
 
-  outputs = { self, nixpkgs, hyprland, nixos-hardware }: {
+  outputs = { 
+    self, 
+    nixpkgs, 
+    hyprland, 
+    nixos-hardware,
+    magic-nix-cache 
+  }: {
     nixosConfigurations."gti" = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
-        # Add XPS 13 9370 hardware configuration
         nixos-hardware.nixosModules.dell-xps-13-9370
-        
         hyprland.nixosModules.default
+        magic-nix-cache.nixosModules.default  # Added this line
         ./hosts/gti
       ];
     };

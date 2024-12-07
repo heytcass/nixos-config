@@ -53,7 +53,7 @@ with lib;
         displayManager.gdm.enable = true;
         desktopManager.gnome.enable = true;
       };
-      services.gnome.core-utilities.enable = false;
+      services.gnome.core-utilities.enable = true;
     })
 
     # Hyprland-specific configuration
