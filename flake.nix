@@ -10,16 +10,13 @@
     };
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-
-    magic-nix-cache.url = "github:DeterminateSystems/magic-nix-cache";
   };
 
   outputs = { 
     self, 
     nixpkgs, 
     hyprland, 
-    nixos-hardware,
-    magic-nix-cache 
+    nixos-hardware
   }: {
     nixosConfigurations."gti" = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
