@@ -21,7 +21,7 @@ with lib;
       # Base packages that are always installed
       environment.systemPackages = with pkgs; [
         wget
-        foot
+        kitty
         git
       ];
     }

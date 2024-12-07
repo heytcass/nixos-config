@@ -23,7 +23,6 @@
       modules = [
         nixos-hardware.nixosModules.dell-xps-13-9370
         hyprland.nixosModules.default
-        magic-nix-cache.nixosModules.default  # Added this line
         ./hosts/gti
       ];
     };
