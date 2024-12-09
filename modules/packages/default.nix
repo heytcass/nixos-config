@@ -33,6 +33,7 @@ with lib;
         todoist-electron
         slack
         teams-for-linux
+        marp-cli
       ];
     })
 
