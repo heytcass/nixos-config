@@ -28,12 +28,13 @@ with lib;
 
     (mkIf config.modules.packages.gui.enable {
       environment.systemPackages = with pkgs; [
-        google-chrome
         bitwarden-desktop
-        todoist-electron
+        google-chrome
+        marp-cli
         slack
         teams-for-linux
-        marp-cli
+        todoist-electron
+        zoom-us
       ];
     })
 
