@@ -49,6 +49,7 @@ with lib;
             ])
             ++ (optionals config.modules.vscode.extensions.formatting [
               esbenp.prettier-vscode  # Prettier code formatter
+              marp-team.marp-vscode  # Markdown presentation previewer
             ])
             ++ (optionals config.modules.vscode.extensions.languages [
               redhat.vscode-yaml     # YAML support
