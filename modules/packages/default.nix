@@ -31,6 +31,7 @@ with lib;
         bitwarden-desktop
         google-chrome
         marp-cli
+        obsidian
         slack
         teams-for-linux
         todoist-electron

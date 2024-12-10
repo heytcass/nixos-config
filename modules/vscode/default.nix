@@ -41,7 +41,7 @@ with lib;
           vscodeExtensions = with vscode-extensions; ([]
             ++ (optionals config.modules.vscode.extensions.base [
               bbenoist.nix     # Nix support
-              mkhl.direnv      # direnv integration
+              # mkhl.direnv      # direnv integration
             ])
             ++ (optionals config.modules.vscode.extensions.editing [
               vscodevim.vim           # Vim keybindings
