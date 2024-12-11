@@ -73,6 +73,7 @@ with lib;
         grim            # Screenshot utility
         slurp           # Screen area selection
         wl-clipboard    # Clipboard utilities
+        kitty
       ];
 
       # Wayland-specific settings
