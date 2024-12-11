@@ -22,7 +22,6 @@ with lib;
 
   config = mkIf config.modules.boot.enable {
     boot.loader = {
-      # Force disable systemd-boot as lanzaboote replaces it
       systemd-boot.enable = lib.mkForce false;
       efi.canTouchEfiVariables = config.modules.boot.bootloader.efi.canTouchEfiVariables;
     };
@@ -32,6 +31,10 @@ with lib;
       enable = true;
       pkiBundle = "/etc/secureboot";
     };
+
+    # Add proper resume support
+    boot.resumeDevice = "/dev/nvme0n1p3";  # Your swap partition
+    boot.initrd.supportedFilesystems = [ "encrypt" "ext4" ];
 
     # Add sbctl for debugging secure boot
     environment.systemPackages = [ pkgs.sbctl ];
