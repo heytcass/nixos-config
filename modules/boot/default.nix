@@ -22,8 +22,18 @@ with lib;
 
   config = mkIf config.modules.boot.enable {
     boot.loader = {
-      systemd-boot.enable = config.modules.boot.bootloader.systemd-boot.enable;
+      # Force disable systemd-boot as lanzaboote replaces it
+      systemd-boot.enable = lib.mkForce false;
       efi.canTouchEfiVariables = config.modules.boot.bootloader.efi.canTouchEfiVariables;
     };
+
+    # Add lanzaboote configuration
+    boot.lanzaboote = {
+      enable = true;
+      pkiBundle = "/etc/secureboot";
+    };
+
+    # Add sbctl for debugging secure boot
+    environment.systemPackages = [ pkgs.sbctl ];
   };
 }
