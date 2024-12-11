@@ -33,7 +33,11 @@ with lib;
     };
 
     # Add proper resume support
-    boot.resumeDevice = "/dev/nvme0n1p3";  # Your swap partition
+    boot.resumeDevice = "/dev/nvme0n1p3";
+    boot.kernelParams = [
+      "nvme.noacpi=1"          # Help with NVME suspend issues
+      "acpi_rev_override=1"    # Fix potential ACPI issues
+    ];
     boot.initrd.supportedFilesystems = [ "encrypt" "ext4" ];
 
     # Add sbctl for debugging secure boot
