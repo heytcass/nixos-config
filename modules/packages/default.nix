@@ -30,6 +30,7 @@ with lib;
       environment.systemPackages = with pkgs; [
         bitwarden-desktop
         google-chrome
+        gnome-weather
         marp-cli
         obsidian
         slack
