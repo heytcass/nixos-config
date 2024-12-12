@@ -42,9 +42,10 @@
         # Add home-manager as NixOS module
         home-manager.nixosModules.home-manager
         {
-          home-manager.useGlobalPkgs = true;  # Use the system's pkgs
-          home-manager.useUserPackages = true;  # Install to /etc/profiles
-          home-manager.users.tom = import ./home/tom;  # Your home config
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.tom = import ./home/tom;
+          home-manager.backupFileExtension = "backup-before-home-manager";  
         }
       ];
     };
