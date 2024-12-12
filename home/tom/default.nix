@@ -23,11 +23,9 @@
         symbol = "❄️ ";
         format = "via [$symbol($state)\($name\)]($style) ";
         style = "bold blue";
-        # Different symbols for different shell types
         pure_msg = "pure";
         impure_msg = "impure";
         unknown_msg = "unknown";
-        # Enable heuristic detection for nix develop
         heuristic = true;
       };
 
@@ -52,9 +50,9 @@
       git_status = {
         style = "bold red";
         format = "([$all_status$ahead_behind]($style) )";
-        ahead = "⇡${count}";
-        behind = "⇣${count}";
-        diverged = "⇕⇡${ahead_count}⇣${behind_count}";
+        ahead = "⇡";
+        behind = "⇣";
+        diverged = "⇕";
         conflicted = "=";
         deleted = "✖";
         modified = "!";
