@@ -1,4 +1,3 @@
-# flake.nix
 {
   description = "Tom's NixOS Configuration ❄️";
 
