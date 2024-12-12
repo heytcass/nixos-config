@@ -57,13 +57,12 @@ with lib;
 
       # Remove default GNOME applications
       environment.gnome.excludePackages = (with pkgs; [
+        epiphany
+        evince
+        geary
+        gnome-music
         gnome-photos
         gnome-tour
-        gedit # text editor
-      ]) ++ (with pkgs.gnome; [
-        gnome-terminal
-        evince      # document viewer
-        totem       # video player
       ]);
 
       services.geoclue2 = {
@@ -72,7 +71,7 @@ with lib;
           isAllowed = true;
           isSystem = true;
         };
-        enableDemoAgent = true;  # Allows user to grant permission via GUI
+        enableDemoAgent = lib.mkForce true;  # Override GNOME's default setting
       };
 
       environment.systemPackages = with pkgs; [
