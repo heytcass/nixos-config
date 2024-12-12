@@ -10,7 +10,14 @@
   programs.home-manager.enable = true;
   nixpkgs.config.allowUnfree = true;
 
-  programs.fish.enable = true;
+  programs.fish = {
+    enable = true;
+    
+    # Add aliases
+    shellAliases = {
+      rebuild = "sudo nixos-rebuild switch --flake .#gti";
+    };
+  };
 
   programs.starship = {
     enable = true;
