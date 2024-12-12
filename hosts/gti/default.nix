@@ -45,7 +45,7 @@
       mainUser = {
         name = "tom";
         realName = "Tom Cassady";
-        extraGroups = [ "networkmanager" "wheel" "geoclue" ];
+        extraGroups = [ "networkmanager" "wheel" ];
         packages = with pkgs; [
           # User-specific packages can go here
         ];

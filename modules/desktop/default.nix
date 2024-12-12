@@ -63,20 +63,8 @@ with lib;
         gnome-music
         gnome-photos
         gnome-tour
-      ]);
-
-      services.geoclue2 = {
-        enable = true;
-        appConfig.gnome-weather = {
-          isAllowed = true;
-          isSystem = true;
-        };
-        enableDemoAgent = lib.mkForce true;  # Override GNOME's default setting
-      };
-
-      environment.systemPackages = with pkgs; [
         gnome-weather
-      ];
+      ]);
     })
 
     # Hyprland-specific configuration
