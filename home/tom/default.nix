@@ -4,14 +4,45 @@
   home = {
     username = "tom";
     homeDirectory = "/home/tom";
-
-    # Match your NixOS version
     stateVersion = "24.11";
   };
 
-  # Let Home Manager manage itself
   programs.home-manager.enable = true;
-
-  # Allow unfree packages (if needed)
   nixpkgs.config.allowUnfree = true;
+
+  # Fish shell configuration
+  programs.fish = {
+    enable = true;
+    interactiveShellInit = ''
+      # Remove fish default greeting
+      set fish_greeting
+    '';
+
+    plugins = [
+      # Plugin example format, we'll add these based on your preferences
+      # {
+      #   name = "plugin-name";
+      #   src = pkgs.fetchFromGitHub {
+      #     owner = "owner";
+      #     repo = "repo";
+      #     rev = "revision";
+      #     sha256 = "sha256";
+      #   };
+      # }
+    ];
+  };
+
+  # Starship prompt configuration
+  programs.starship = {
+    enable = true;
+    enableFishIntegration = true;
+    # We can customize the prompt later if you want
+    settings = {
+      add_newline = true;
+      character = {
+        success_symbol = "[➜](bold green)";
+        error_symbol = "[➜](bold red)";
+      };
+    };
+  };
 }

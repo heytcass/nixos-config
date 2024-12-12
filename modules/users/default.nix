@@ -29,6 +29,12 @@ with lib;
         default = [];
         description = "Packages installed for the main user";
       };
+
+      shell = mkOption {
+        type = types.package;
+        default = pkgs.bash;
+        description = "Default shell for the main user";
+      };
     };
 
     locale = {
@@ -41,11 +47,15 @@ with lib;
   };
 
   config = mkIf config.modules.users.enable {
+    # Allow fish shell
+    programs.fish.enable = true;
+
     users.users.${config.modules.users.mainUser.name} = {
       isNormalUser = true;
       description = config.modules.users.mainUser.realName;
       extraGroups = config.modules.users.mainUser.extraGroups;
       packages = config.modules.users.mainUser.packages;
+      shell = config.modules.users.mainUser.shell;
     };
 
     # Locale settings

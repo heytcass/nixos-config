@@ -46,9 +46,7 @@
         name = "tom";
         realName = "Tom Cassady";
         extraGroups = [ "networkmanager" "wheel" ];
-        packages = with pkgs; [
-          # User-specific packages can go here
-        ];
+        shell = pkgs.fish;  # Set fish as default shell
       };
       locale.region = "en_US.UTF-8";
     };
