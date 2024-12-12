@@ -55,6 +55,12 @@ with lib;
       };
       services.gnome.core-utilities.enable = true;
 
+      # Add system tray support
+      services.udev.packages = with pkgs; [ gnome-settings-daemon ];
+      environment.systemPackages = with pkgs; [
+        gnomeExtensions.appindicator  # Add system tray support
+      ];
+
       # Remove default GNOME applications
       environment.gnome.excludePackages = (with pkgs; [
         epiphany

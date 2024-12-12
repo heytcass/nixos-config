@@ -29,6 +29,7 @@ with lib;
     (mkIf config.modules.packages.gui.enable {
       environment.systemPackages = with pkgs; [
         bitwarden-desktop
+        discord
         google-chrome
         gnome-weather
         marp-cli
