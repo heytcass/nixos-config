@@ -61,7 +61,6 @@ with lib;
         gnome-tour
         gedit # text editor
       ]) ++ (with pkgs.gnome; [
-        cheese      # webcam tool
         gnome-terminal
         evince      # document viewer
         totem       # video player
