@@ -54,6 +54,31 @@ with lib;
         desktopManager.gnome.enable = true;
       };
       services.gnome.core-utilities.enable = true;
+
+      # Remove default GNOME applications
+      environment.gnome.excludePackages = (with pkgs; [
+        gnome-photos
+        gnome-tour
+        gedit # text editor
+      ]) ++ (with pkgs.gnome; [
+        cheese      # webcam tool
+        gnome-terminal
+        evince      # document viewer
+        totem       # video player
+      ]);
+
+      services.geoclue2 = {
+        enable = true;
+        appConfig.gnome-weather = {
+          isAllowed = true;
+          isSystem = true;
+        };
+        enableDemoAgent = true;  # Allows user to grant permission via GUI
+      };
+
+      environment.systemPackages = with pkgs; [
+        gnome-weather
+      ];
     })
 
     # Hyprland-specific configuration
