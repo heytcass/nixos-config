@@ -1,3 +1,4 @@
+# flake.nix
 {
   description = "Tom's NixOS Configuration ❄️";
 
@@ -11,9 +12,14 @@
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
-    # Add lanzaboote input
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v0.4.1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Add home-manager as a new input
+    home-manager = {
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -23,15 +29,24 @@
     nixpkgs, 
     hyprland, 
     nixos-hardware,
-    lanzaboote 
+    lanzaboote,
+    home-manager
   }: {
     nixosConfigurations."gti" = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
         nixos-hardware.nixosModules.dell-xps-13-9370
         hyprland.nixosModules.default
-        lanzaboote.nixosModules.lanzaboote  # Add lanzaboote module
+        lanzaboote.nixosModules.lanzaboote
         ./hosts/gti
+        
+        # Add home-manager as NixOS module
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;  # Use the system's pkgs
+          home-manager.useUserPackages = true;  # Install to /etc/profiles
+          home-manager.users.tom = import ./home/tom;  # Your home config
+        }
       ];
     };
   };
