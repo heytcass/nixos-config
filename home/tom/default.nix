@@ -16,6 +16,7 @@
     # Add aliases
     shellAliases = {
       rebuild = "sudo nixos-rebuild switch --flake .#gti";
+      needsreboot = "nixos-needsreboot";
     };
   };
 

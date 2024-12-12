@@ -16,10 +16,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Add home-manager as a new input
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Add nixos-needsreboot
+    nixos-needsreboot = {
+      url = "https://codeberg.org/Mynacol/nixos-needsreboot/archive/main.tar.gz";
     };
   };
 
@@ -29,7 +33,8 @@
     hyprland, 
     nixos-hardware,
     lanzaboote,
-    home-manager
+    home-manager,
+    nixos-needsreboot
   }: {
     nixosConfigurations."gti" = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
@@ -39,13 +44,23 @@
         lanzaboote.nixosModules.lanzaboote
         ./hosts/gti
         
-        # Add home-manager as NixOS module
         home-manager.nixosModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.users.tom = import ./home/tom;
-          home-manager.backupFileExtension = "backup-before-home-manager";  
+        }
+
+        # Add activation script for nixos-needsreboot
+        {
+          system.activationScripts = {
+            nixos-needsreboot = {
+              supportsDryActivation = true;
+              text = ''
+                ${nixos-needsreboot.packages.x86_64-linux.default}/bin/nixos-needsreboot "$systemConfig" || true
+              '';
+            };
+          };
         }
       ];
     };
