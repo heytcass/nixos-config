@@ -77,7 +77,7 @@
       enable = true;
       enableFishIntegration = true;  # Instead of enableAliases
       git = true;
-      icons = true;
+      icons = "auto";
       extraOptions = [
         "--group-directories-first"
         "--header"
