@@ -75,7 +75,7 @@
 
     eza = {
       enable = true;
-      enableAliases = true;
+      enableFishIntegration = true;  # Instead of enableAliases
       git = true;
       icons = true;
       extraOptions = [
