@@ -85,7 +85,7 @@
     kitty = {
       enable = true;
       font = {
-        name = "FiraCode Nerd Font";
+        name = "Hack Nerd Font Mono";
         size = 12;
       };
       settings = {
@@ -274,7 +274,7 @@
   # GNOME Terminal font configuration
   dconf.settings = {
     "org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9" = {
-      "font" = "FiraCode Nerd Font 12";
+      "font" = "Hack Nerd Font Mono 12";
       "use-system-font" = false;
     };
   };
