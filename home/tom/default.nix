@@ -6,7 +6,6 @@
     homeDirectory = "/home/tom";
     stateVersion = "24.11";
     
-    # Modern Unix tools
     packages = with pkgs; [
       # Modern Unix tools
       bat          # Better cat
@@ -21,17 +20,35 @@
       httpie      # Modern curl
       
       # Development tools
+      fzf         # Fuzzy finder
       gh           # GitHub CLI
       git         # Version control
-      fzf         # Fuzzy finder
+      glow        # Terminal Markdown renderer
+      marp-cli    # Terminal Markdown presenter
       
+      # System tools
+      bitwarden-cli # Terminal BitWarden client
+      cyme # Modern Unix `lsusb`
+      pciutils    # Terminal PCI info
+      usbutils    # Terminal USB info
+      wavemon     # Terminal WiFi monitor
+      writedisk   # Modern Unix `dd`
+
       # File management
       ueberzugpp  # Terminal image previews
       chafa       # Terminal image viewer
       unzip       # Zip files
       p7zip       # 7z files
+
+      # Fonts
+      nerd-fonts.fira-code
+      nerd-fonts.jetbrains-mono
+      nerd-fonts.hack
     ];
   };
+
+  # Enable fonts
+  fonts.fontconfig.enable = true;
 
   programs = {
     home-manager.enable = true;
@@ -61,6 +78,19 @@
         http = "httpie";
         send = "croc send";
         receive = "croc";
+      };
+    };
+
+    # Terminal configuration
+    kitty = {
+      enable = true;
+      font = {
+        name = "FiraCode Nerd Font";
+        size = 12;
+      };
+      settings = {
+        adjust_line_height = "120%";
+        disable_ligatures = "cursor";
       };
     };
 
@@ -238,6 +268,14 @@
         editor = "micro";
         prompt = "enabled";
       };
+    };
+  };
+
+  # GNOME Terminal font configuration
+  dconf.settings = {
+    "org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9" = {
+      "font" = "FiraCode Nerd Font 12";
+      "use-system-font" = false;
     };
   };
 

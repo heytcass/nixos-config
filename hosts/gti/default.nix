@@ -45,7 +45,7 @@
       mainUser = {
         name = "tom";
         realName = "Tom Cassady";
-        extraGroups = [ "networkmanager" "wheel" ];
+        extraGroups = [ "networkmanager" "wheel" "dialout" ];
         shell = pkgs.fish;  # Set fish as default shell
       };
       locale.region = "en_US.UTF-8";
