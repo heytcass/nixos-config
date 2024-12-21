@@ -34,6 +34,11 @@ with lib;
             default = 1.0;
             description = "Scale factor for the monitor";
           };
+          transform = mkOption {
+            type = types.str;
+            default = "";
+            description = "Transform (e.g., rotate-90)";
+          };
         };
       });
       default = [];
@@ -77,6 +82,7 @@ with lib;
 
       systemPackages = with pkgs; [
         # Core components
+        kitty            # Terminal
         waybar           # Status bar
         wofi             # Application launcher
         dunst           # Notification daemon
@@ -114,7 +120,7 @@ with lib;
       "input"
     ];
 
-    # Optional: Enable services commonly used with Hyprland
+    # Enable services commonly used with Hyprland
     security.pam.services.swaylock = {}; # Required for swaylock
   };
 }

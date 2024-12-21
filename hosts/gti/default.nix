@@ -24,7 +24,7 @@
     };
     desktop = {
       enable = true;
-      environment = "gnome";
+      environment = "gnome";  # Changed from "gnome" to "hyprland"
       keyboard = {
         layout = "us";
         variant = "colemak";
@@ -46,7 +46,7 @@
         name = "tom";
         realName = "Tom Cassady";
         extraGroups = [ "networkmanager" "wheel" "dialout" ];
-        shell = pkgs.fish;  # Set fish as default shell
+        shell = pkgs.fish;
       };
       locale.region = "en_US.UTF-8";
     };
@@ -61,19 +61,28 @@
       wayland.enable = true;
     };
     hyprland = {
-      enable = false;  # Set to true when ready to switch
+      enable = true;
       monitors = [
         {
-          name = "eDP-1";    # Adjust these for your monitor
+          name = "DP-3";    # Primary monitor
           resolution = "1920x1080@60";
-          position = "0x0";
+          position = "0x393";
           scale = 1.0;
         }
+        {
+          name = "eDP-1";   # Laptop screen
+          resolution = "1920x1080@60";
+          position = "1920x1050";
+          scale = 1.0;
+        }
+        {
+          name = "DP-4";    # Vertical monitor
+          resolution = "1920x1080@60";
+          position = "3840x0";
+          scale = 1.0;
+          transform = "rotate-90";
+        }
       ];
-      wallpaper = {
-        enable = false;      # Enable when you have a wallpaper ready
-        path = "";          # Add your wallpaper path when ready
-      };
       theme.colors = {
         background = "rgb(1d1f21)";
         foreground = "rgb(c5c8c6)";
