@@ -37,6 +37,23 @@
       nixos-rebuild-flake = "sudo nixos-rebuild switch --flake ~/.nixos-config#gti";
       claude-code = "npx @anthropic-ai/claude-code";
     };
+    initExtra = ''
+      eval "$(starship init bash)"
+    '';
+  };
+  
+  # Starship prompt configuration
+  programs.starship = {
+    enable = true;
+    settings = {
+      add_newline = true;
+      command_timeout = 1000;
+      format = "$all";
+      nix_shell = {
+        format = "via [$symbol$state( \($name\))]($style) ";
+        symbol = "❄️ ";
+      };
+    };
   };
   
   # Set Ghostty as default terminal
