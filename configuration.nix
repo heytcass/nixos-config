@@ -83,8 +83,8 @@
   # Exclude unwanted GNOME packages
   environment.gnome.excludePackages = [ 
     pkgs.gnome-tour
-    pkgs.gnome.geary
-    pkgs.gnome.epiphany  # GNOME Web browser
+    pkgs.geary           # Email client
+    pkgs.epiphany        # GNOME Web browser
   ];
   
   # Disable NixOS documentation
