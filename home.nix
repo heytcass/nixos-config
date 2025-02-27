@@ -61,17 +61,16 @@
     TERMINAL = "ghostty";
   };
 
-  # Ghostty terminal configuration with minimal settings
+  # Ghostty terminal configuration with Adwaita Dark theme
   programs.ghostty = {
     enable = true;
     settings = {
-      # Font settings only
+      # Font settings
       "font-family" = "FiraCode Nerd Font";
       "font-size" = "12";
       
-      # Basic theme
-      "background" = "#1d1d1d";
-      "foreground" = "#c0bfbc";
+      # Theme
+      "theme" = "Adwaita Dark";
     };
   };
 
