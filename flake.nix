@@ -33,6 +33,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "backup";  # Add backup option
               home-manager.users.tom = import ./home.nix;
             }
           ];
