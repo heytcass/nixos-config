@@ -44,44 +44,17 @@
     TERMINAL = "ghostty";
   };
 
-  # Ghostty terminal configuration
+  # Ghostty terminal configuration with minimal settings
   programs.ghostty = {
     enable = true;
     settings = {
-      # Font settings
+      # Font settings only
       "font-family" = "FiraCode Nerd Font";
       "font-size" = "12";
-      "font-feature" = [
-        "liga"
-        "calt"
-        "ss01"
-        "ss02"
-        "ss03"
-        "ss04"
-        "ss05"
-      ];
-
-      # Window settings
-      "window-padding-x" = "10";
-      "window-padding-y" = "10";
-      "window-theme" = "dark";
-      "window-save-state" = "always";
-      "cursor-style" = "block";
-      "cursor-style-blink" = "true";
-
-      # Adwaita Dark theme
+      
+      # Basic theme
       "background" = "#1d1d1d";
       "foreground" = "#c0bfbc";
-      "selection-background" = "#3584e4";
-      "selection-foreground" = "#ffffff";
-      "cursor-color" = "#c0bfbc";
-
-      # Color palette (all in one line format)
-      "palette" = "#1d1d1d #ed333b #57e389 #f8e45c #3584e4 #c061cb #5bc8af #c0bfbc #8f8f8f #f66151 #8ff0a4 #f9f06b #62a0ea #dc8add #93ddc2 #f6f5f4";
-
-      # UI preferences
-      "confirm-close-surface" = "false";
-      "mouse-hide-while-typing" = "true";
     };
   };
 
