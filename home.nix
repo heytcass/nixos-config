@@ -28,13 +28,18 @@
     # Additional git configuration can go here
   };
 
-  # Terminal configuration (you can expand this)
+  # Terminal configuration
   programs.bash = {
     enable = true;
     shellAliases = {
       nixos-rebuild-flake = "sudo nixos-rebuild switch --flake ~/.nixos-config#gti";
     };
   };
+  
+  # Set Ghostty as default terminal
+#  home.sessionVariables = {
+#    TERMINAL = "ghostty";
+#  };
 
   # VSCode if you use it
   # programs.vscode = {

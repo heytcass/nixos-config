@@ -79,6 +79,11 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # Enable fonts
+  fonts.packages = with pkgs; [
+    nerd-fonts.fira-code
+  ];
+
   # System-wide packages - only include essential system packages here
   # User-specific packages will be managed by Home Manager
   environment.systemPackages = with pkgs; [
