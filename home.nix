@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, unstable, ... }:
 
 {
   # Home Manager needs a bit of information about you and the
@@ -17,9 +17,11 @@
     gh
     ripgrep
     node2nix
-    # Terminal
     ghostty
     # Add any other user packages you want here
+  ] ++ [
+    # Packages from unstable channel
+    unstable.claude-code
   ];
 
   # Git configuration
@@ -35,7 +37,6 @@
     enable = true;
     shellAliases = {
       nixos-rebuild-flake = "sudo nixos-rebuild switch --flake ~/.nixos-config#gti";
-      claude-code = "npx @anthropic-ai/claude-code";
     };
     initExtra = ''
       eval "$(starship init bash)"
