@@ -17,6 +17,8 @@
     gh
     ripgrep
     node2nix
+    # Terminal
+    ghostty
     # Add any other user packages you want here
   ];
 
@@ -38,9 +40,9 @@
   };
   
   # Set Ghostty as default terminal
-#  home.sessionVariables = {
-#    TERMINAL = "ghostty";
-#  };
+  home.sessionVariables = {
+    TERMINAL = "ghostty";
+  };
 
   # VSCode if you use it
   # programs.vscode = {
