@@ -44,6 +44,24 @@
     TERMINAL = "ghostty";
   };
 
+  # Ghostty terminal configuration
+  programs.ghostty = {
+    enable = true;
+    settings = {
+      font-family = "FiraCode Nerd Font";
+      font-size = 12;
+      
+      # Additional settings you might want
+      confirm-close = false;
+      window-padding-x = 10;
+      window-padding-y = 10;
+      
+      # Theme settings
+      background = "#282c34";
+      foreground = "#abb2bf";
+    };
+  };
+
   # VSCode if you use it
   # programs.vscode = {
   #   enable = true;
