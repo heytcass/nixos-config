@@ -85,10 +85,12 @@
     pkgs.gnome-tour
     pkgs.geary           # Email client
     pkgs.epiphany        # GNOME Web browser
-    pkgs.gnome-music    # Music player
-    pkgs.totem         # Video player
-    pkgs.simple-scan   # Document scanner
-    pkgs.yelp          # Help viewer
+    pkgs.gnome-music     # Music player
+    pkgs.totem           # Video player
+    pkgs.simple-scan     # Document scanner
+    pkgs.yelp            # Help viewer
+    pkgs.gnome-console   # Terminal (using Ghostty instead)
+    pkgs.gnome-maps      # Maps application
   ];
   
   # Disable NixOS documentation
