@@ -56,7 +56,7 @@
   };
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -66,7 +66,7 @@
   };
 
   # Enable kmscon terminal
-  services.kmscon.enable = true;
+  # services.kmscon.enable = true;
 
   # Define a user account.
   users.users.tom = {
