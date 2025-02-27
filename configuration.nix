@@ -81,7 +81,11 @@
   services.xserver.excludePackages = [ pkgs.xterm ];
   
   # Exclude unwanted GNOME packages
-  environment.gnome.excludePackages = [ pkgs.gnome-tour ];
+  environment.gnome.excludePackages = [ 
+    pkgs.gnome-tour
+    pkgs.gnome.geary
+    pkgs.gnome.epiphany  # GNOME Web browser
+  ];
   
   # Disable NixOS documentation
   documentation.nixos.enable = false;
