@@ -10,9 +10,12 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    
+    # Hardware configurations
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nixos-hardware, ... }@inputs:
     let
       system = "x86_64-linux"; # Change if you're using a different architecture
       pkgs = nixpkgs.legacyPackages.${system};
@@ -27,6 +30,9 @@
           modules = [
             # Your system configuration
             ./configuration.nix
+            
+            # Dell XPS 9370 hardware configuration
+            nixos-hardware.nixosModules.dell-xps-13-9370
             
             # Home Manager module
             home-manager.nixosModules.home-manager
