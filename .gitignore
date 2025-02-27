@@ -1,0 +1,15 @@
+# Nix build outputs
+result
+result-*
+
+# Direnv files
+.direnv/
+
+# Editor-specific files
+.vscode/
+.idea/
+*.swp
+*~
+
+# Sensitive information
+secrets.nix
