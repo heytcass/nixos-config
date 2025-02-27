@@ -76,6 +76,15 @@
       variant = "colemak";
     };
   };
+  
+  # Exclude XTerm
+  services.xserver.excludePackages = [ pkgs.xterm ];
+  
+  # Exclude unwanted GNOME packages
+  environment.gnome.excludePackages = [ pkgs.gnome-tour ];
+  
+  # Disable NixOS documentation
+  documentation.nixos.enable = false;
 
   #######################
   # AUDIO

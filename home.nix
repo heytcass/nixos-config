@@ -33,6 +33,7 @@
     enable = true;
     shellAliases = {
       nixos-rebuild-flake = "sudo nixos-rebuild switch --flake ~/.nixos-config#gti";
+      claude-code = "npx @anthropic-ai/claude-code";
     };
   };
   
