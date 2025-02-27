@@ -85,6 +85,10 @@
     pkgs.gnome-tour
     pkgs.geary           # Email client
     pkgs.epiphany        # GNOME Web browser
+    pkgs.gnome.gnome-music    # Music player
+    pkgs.gnome.totem         # Video player
+    pkgs.gnome.simple-scan   # Document scanner
+    pkgs.gnome.yelp          # Help viewer
   ];
   
   # Disable NixOS documentation
