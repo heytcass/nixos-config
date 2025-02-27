@@ -7,6 +7,24 @@
 - Check configuration for errors: `nix flake check`
 - Update flake inputs: `nix flake update`
 
+## Ghostty Configuration
+To configure Ghostty with FiraCode font, create a file at `~/.config/ghostty/config` with:
+```
+# Ghostty terminal configuration
+
+# Font settings
+font-family = FiraCode Nerd Font
+font-size = 12
+
+# Window padding
+window-padding-x = 10
+window-padding-y = 10
+
+# Theme settings (One Dark inspired)
+background = #282c34
+foreground = #abb2bf
+```
+
 ## Style Guidelines
 - **Formatting**: 2-space indentation, 80-character line limit where practical
 - **Naming**: Use descriptive camelCase for variables and function arguments
