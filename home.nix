@@ -13,6 +13,7 @@
   home.packages = with pkgs; [
     google-chrome
     bitwarden-desktop
+    discord
     nodejs
     gh
     ripgrep
@@ -22,6 +23,9 @@
   ] ++ [
     # Packages from unstable channel
     unstable.claude-code
+  ] ++ [
+    # GNOME extensions
+    pkgs.gnomeExtensions.appindicator
   ];
 
   # Git configuration
@@ -74,6 +78,7 @@
       "theme" = "Adwaita Dark";
     };
   };
+
 
   # VSCode if you use it
   # programs.vscode = {
