@@ -19,6 +19,7 @@
     ripgrep
     node2nix
     ghostty
+    nil # Nix Language Server for VSCode
     # Add any other user packages you want here
   ] ++ [
     # Packages from unstable channel
