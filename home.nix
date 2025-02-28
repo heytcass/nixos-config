@@ -80,13 +80,49 @@
   };
 
 
-  # VSCode if you use it
-  # programs.vscode = {
-  #   enable = true;
-  #   extensions = with pkgs.vscode-extensions; [
-  #     # Add extensions you want
-  #   ];
-  # };
+  # VSCode configuration
+  programs.vscode = {
+    enable = true;
+    profiles.default = {
+      extensions = with pkgs.vscode-extensions; [
+        # Nix extensions
+        jnoortheen.nix-ide
+        arrterian.nix-env-selector
+        bbenoist.nix
+        
+        # YAML extensions
+        redhat.vscode-yaml
+        
+        # General useful extensions
+        esbenp.prettier-vscode
+      ];
+      
+      userSettings = {
+        "editor.fontFamily" = "FiraCode Nerd Font";
+        "editor.fontSize" = 13;
+        "editor.fontLigatures" = true;
+        "editor.renderWhitespace" = "boundary";
+        "editor.rulers" = [ 80 120 ];
+        "editor.wordWrap" = "off";
+        "files.trimTrailingWhitespace" = true;
+        "workbench.colorTheme" = "Default Dark+";
+        
+        # Nix settings
+        "nix.enableLanguageServer" = true;
+        "nix.serverPath" = "nil";
+        
+        # YAML settings
+        "yaml.format.enable" = true;
+        "yaml.validate" = true;
+        "[yaml]" = {
+          "editor.insertSpaces" = true;
+          "editor.tabSize" = 2;
+          "editor.autoIndent" = "keep";
+          "editor.defaultFormatter" = "esbenp.prettier-vscode";
+        };
+      };
+    };
+  };
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
