@@ -79,6 +79,7 @@ shell-integration-features = no-cursor
 - **Imports**: Place imports at the top of files, with descriptive comments
 - **Error Handling**: Use `lib.mkIf` for conditional configurations
 - **Comments**: Add comments for non-obvious configurations and options
+- **Reverting Changes**: Always use Git (`git reset` or `git revert`) to revert changes rather than manual edits
 
 ## Repository Structure
 - `flake.nix`: Main entry point, defines inputs and outputs (flake-based configuration)
@@ -93,3 +94,12 @@ shell-integration-features = no-cursor
 - To search for packages: `nix search nixpkgs package-name`
 - For ad-hoc command execution: `nix run nixpkgs#package -- args`
 - When building projects: `nix build .#output` instead of `nix-build`
+
+## Version Control Best Practices
+- **Commit Often**: Make small, focused commits with clear messages
+- **Test Before Committing**: Always run `nixos-rebuild build` before committing changes
+- **Reverting Changes**: 
+  - For uncommitted changes: `git restore <file>` or `git reset --hard` (all files)
+  - For committed changes: `git revert <commit>` to create a new commit that undoes changes
+- **Experimental Changes**: Create a branch with `git checkout -b experiment` for major changes
+- **Before Deployment**: Always pull latest changes with `git pull` and resolve any conflicts
