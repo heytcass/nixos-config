@@ -3,14 +3,14 @@
 
   inputs = {
     # Core dependencies
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.761040.tar.gz";
     
     # Latest unstable for newer packages
     nixpkgs-unstable.url = "github:nixos/nixpkgs/master";
     
     # Home Manager
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "https://flakehub.com/f/nix-community/home-manager/0.2411.3881.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     
@@ -19,7 +19,7 @@
     
     # NixOS Generators
     nixos-generators = {
-      url = "github:nix-community/nixos-generators";
+      url = "https://flakehub.com/f/nix-community/nixos-generators/0.1.473.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     
