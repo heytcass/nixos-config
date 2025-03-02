@@ -10,7 +10,7 @@
     
     # Home Manager
     home-manager = {
-      url = "https://flakehub.com/f/nix-community/home-manager/0.2411.3881.tar.gz";
+      url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     
@@ -23,11 +23,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     
+    # VSCode extensions
+    nix-vscode-extensions = {
+      url = "github:nix-community/nix-vscode-extensions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    
     # FlakeHub CLI
     fh.url = "https://flakehub.com/f/DeterminateSystems/fh/*";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nixos-hardware, nixos-generators, fh, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nixos-hardware, nixos-generators, nix-vscode-extensions, fh, ... }@inputs:
     let
       system = "x86_64-linux"; # Change if you're using a different architecture
       pkgs = nixpkgs.legacyPackages.${system};
@@ -59,7 +65,7 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.backupFileExtension = "backup";  # Add backup option
-              home-manager.extraSpecialArgs = { inherit unstable; };
+              home-manager.extraSpecialArgs = { inherit unstable inputs; };
               home-manager.users.tom = import ./home.nix;
             }
           ];
