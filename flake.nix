@@ -16,9 +16,18 @@
     
     # Hardware configurations
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    
+    # NixOS Generators
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    
+    # FlakeHub CLI
+    fh.url = "https://flakehub.com/f/DeterminateSystems/fh/*";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nixos-hardware, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nixos-hardware, nixos-generators, fh, ... }@inputs:
     let
       system = "x86_64-linux"; # Change if you're using a different architecture
       pkgs = nixpkgs.legacyPackages.${system};

@@ -130,6 +130,8 @@
   # System-wide packages - only essential system tools
   environment.systemPackages = with pkgs; [
     git  # Keep git at system level for easy management of your flake repo
+    inputs.fh.packages.${pkgs.system}.default  # FlakeHub CLI tool
+    inputs.nixos-generators.packages.${pkgs.system}.default  # NixOS Generators
   ];
 
   # Fonts
