@@ -1,11 +1,18 @@
 # NixOS Configuration Helper
 
+## Flakes Best Practices
+Always prefer flake-based commands over legacy commands when possible. Flakes provide better reproducibility, dependency management, and version control.
+
 ## Common Commands
 - Build and switch to new configuration: `sudo nixos-rebuild switch --flake ~/.nixos-config#gti`
 - Build but don't activate: `sudo nixos-rebuild build --flake ~/.nixos-config#gti`
 - Test configuration: `sudo nixos-rebuild test --flake ~/.nixos-config#gti`
 - Check configuration for errors: `nix flake check`
-- Update flake inputs: `nix flake update`
+- Update all flake inputs: `nix flake update`
+- Update specific flake input: `nix flake lock --update-input nixpkgs`
+- View flake outputs: `nix flake show`
+- Run programs from flakes: `nix run nixpkgs#hello`
+- Start development shell from flake: `nix develop`
 
 ## Ghostty Configuration
 To configure Ghostty with FiraCode font and Adwaita Dark theme, create a file at `~/.config/ghostty/config` with:
@@ -74,7 +81,15 @@ shell-integration-features = no-cursor
 - **Comments**: Add comments for non-obvious configurations and options
 
 ## Repository Structure
-- `flake.nix`: Main entry point, defines inputs and outputs
+- `flake.nix`: Main entry point, defines inputs and outputs (flake-based configuration)
 - `configuration.nix`: System-wide NixOS configuration
 - `home.nix`: User-specific configuration via Home Manager
 - `hardware-configuration.nix`: Hardware-specific settings (don't edit manually)
+
+## Flake-Based Development
+- When installing new packages, prefer adding them to your flake configuration rather than using `nix-env -i`
+- For temporary development environments, use `nix develop` with a flake
+- When using tools like `nix-shell`, prefer flake-based alternatives: `nix shell nixpkgs#package`
+- To search for packages: `nix search nixpkgs package-name`
+- For ad-hoc command execution: `nix run nixpkgs#package -- args`
+- When building projects: `nix build .#output` instead of `nix-build`
