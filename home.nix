@@ -31,6 +31,13 @@
       categories = [ "System" "Monitor" ];
       noDisplay = true;
     };
+    micro = {
+      name = "Micro";
+      exec = "micro";
+      terminal = true;
+      categories = [ "Development" "TextEditor" ];
+      noDisplay = true;
+    };
   };
 
   #############################################################################
