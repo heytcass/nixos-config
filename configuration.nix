@@ -19,8 +19,8 @@
 
   # Nix package manager configuration
   nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
     auto-optimise-store = true;
+    experimental-features = [ "flakes" "nix-command" ];
   };
 
   # Boot configuration
@@ -82,15 +82,15 @@
   
   # Exclude unwanted GNOME packages
   environment.gnome.excludePackages = [ 
-    pkgs.gnome-tour
-    pkgs.geary           # Email client
     pkgs.epiphany        # GNOME Web browser
-    pkgs.gnome-music     # Music player
-    pkgs.totem           # Video player
-    pkgs.simple-scan     # Document scanner
-    pkgs.yelp            # Help viewer
+    pkgs.geary           # Email client
     pkgs.gnome-console   # Terminal (using Ghostty instead)
     pkgs.gnome-maps      # Maps application
+    pkgs.gnome-music     # Music player
+    pkgs.gnome-tour
+    pkgs.simple-scan     # Document scanner
+    pkgs.totem           # Video player
+    pkgs.yelp            # Help viewer
   ];
   
   # Disable NixOS documentation
@@ -117,9 +117,9 @@
   #######################
 
   users.users.tom = {
-    isNormalUser = true;
     description = "Tom Cassady";
-    extraGroups = [ "networkmanager" "wheel" "dialout" ];
+    extraGroups = [ "dialout" "networkmanager" "wheel" ];
+    isNormalUser = true;
     # User-specific packages are managed in home.nix
   };
 

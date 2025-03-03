@@ -5,14 +5,9 @@
   # Input sources: Where Nix should get dependencies
   # -----------------------------------------------------------------------
   inputs = {
-    # Core package collections
-    nixpkgs = {
-      url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.761040.tar.gz";
-    };
-    
-    # Latest unstable for cutting-edge packages
-    nixpkgs-unstable = {
-      url = "github:nixos/nixpkgs/master";
+    # FlakeHub CLI - package registry management tool
+    fh = {
+      url = "https://flakehub.com/f/DeterminateSystems/fh/*";
     };
     
     # Home Manager - Manages user environments
@@ -32,15 +27,20 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     
+    # Core package collections
+    nixpkgs = {
+      url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.761040.tar.gz";
+    };
+    
+    # Latest unstable for cutting-edge packages
+    nixpkgs-unstable = {
+      url = "github:nixos/nixpkgs/master";
+    };
+    
     # VSCode extensions registry
     nix-vscode-extensions = {
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    
-    # FlakeHub CLI - package registry management tool
-    fh = {
-      url = "https://flakehub.com/f/DeterminateSystems/fh/*";
     };
   };
 
@@ -49,13 +49,13 @@
   # -----------------------------------------------------------------------
   outputs = { 
     self, 
+    fh,
+    home-manager,
+    nix-vscode-extensions,
+    nixos-generators,
+    nixos-hardware,
     nixpkgs, 
     nixpkgs-unstable, 
-    home-manager, 
-    nixos-hardware, 
-    nixos-generators, 
-    nix-vscode-extensions, 
-    fh, 
     ... 
   }@inputs:
     let

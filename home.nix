@@ -1,43 +1,59 @@
-{ config, pkgs, unstable, inputs, ... }:
+{ pkgs, unstable, inputs, ... }:
 
 {
-  # Home Manager needs a bit of information about you and the
-  # paths it should manage.
+  #############################################################################
+  # Home Manager Basic Configuration
+  #############################################################################
+  
+  # User identity configuration
   home.username = "tom";
   home.homeDirectory = "/home/tom";
-
-  # Let Home Manager install and manage itself.
+  
+  # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
-
-  # User packages that were in your configuration.nix
+  
+  # Set Home Manager compatibility version
+  # This helps avoid breakage when a new Home Manager release 
+  # introduces backwards incompatible changes
+  home.stateVersion = "24.11";
+  
+  # Environment variables
+  home.sessionVariables = {
+    TERMINAL = "ghostty";
+  };
+  
+  #############################################################################
+  # Package Management
+  #############################################################################
+  
   home.packages = with pkgs; [
-    google-chrome
+    # Browsers and Personal Tools
     bitwarden-desktop
+    google-chrome
+    
+    # Communication and Media
+    deckmaster
     discord
-    nodejs
+    
+    # Development Tools
     gh
-    ripgrep
-    node2nix
     ghostty
     nil # Nix Language Server for VSCode
-    # Add any other user packages you want here
-  ] ++ [
-    # Packages from unstable channel
+    
+    # Unstable Channel Packages
     unstable.claude-code
-  ] ++ [
-    # GNOME extensions
+    
+    # GNOME Extensions
     pkgs.gnomeExtensions.appindicator
+    
+    # Add any other user packages below
   ];
-
-  # Git configuration
-  programs.git = {
-    enable = true;
-    userName = "Tom Cassady";
-    userEmail = "heytcass@gmail.com";
-    # Additional git configuration can go here
-  };
-
-  # Terminal configuration
+  
+  #############################################################################
+  # Shell and Terminal Configuration
+  #############################################################################
+  
+  # Bash configuration
   programs.bash = {
     enable = true;
     shellAliases = {
@@ -48,7 +64,7 @@
     '';
   };
   
-  # Starship prompt configuration
+  # Starship prompt
   programs.starship = {
     enable = true;
     settings = {
@@ -62,12 +78,7 @@
     };
   };
   
-  # Set Ghostty as default terminal
-  home.sessionVariables = {
-    TERMINAL = "ghostty";
-  };
-
-  # Ghostty terminal configuration with Adwaita Dark theme
+  # Ghostty terminal emulator
   programs.ghostty = {
     enable = true;
     settings = {
@@ -79,26 +90,38 @@
       "theme" = "Adwaita Dark";
     };
   };
-
-
-  # VSCode configuration
+  
+  #############################################################################
+  # Development Tools Configuration
+  #############################################################################
+  
+  # Git
+  programs.git = {
+    enable = true;
+    userName = "Tom Cassady";
+    userEmail = "heytcass@gmail.com";
+    # Additional git configuration can go here
+  };
+  
+  # VSCode
   programs.vscode = {
     enable = true;
     profiles.default = {
       extensions = with inputs.nix-vscode-extensions.extensions.${pkgs.system}.vscode-marketplace; [
         # Nix extensions
-        jnoortheen.nix-ide
         arrterian.nix-env-selector
         bbenoist.nix
-        
-        # YAML extensions
-        redhat.vscode-yaml
+        jnoortheen.nix-ide
         
         # General useful extensions
         esbenp.prettier-vscode
+        
+        # YAML extensions
+        redhat.vscode-yaml
       ];
       
       userSettings = {
+        # Editor appearance
         "editor.fontFamily" = "FiraCode Nerd Font";
         "editor.fontSize" = 13;
         "editor.fontLigatures" = true;
@@ -113,21 +136,15 @@
         "nix.serverPath" = "nil";
         
         # YAML settings
-        "yaml.format.enable" = true;
-        "yaml.validate" = true;
         "[yaml]" = {
-          "editor.insertSpaces" = true;
-          "editor.tabSize" = 2;
           "editor.autoIndent" = "keep";
           "editor.defaultFormatter" = "esbenp.prettier-vscode";
+          "editor.insertSpaces" = true;
+          "editor.tabSize" = 2;
         };
+        "yaml.format.enable" = true;
+        "yaml.validate" = true;
       };
     };
   };
-
-  # This value determines the Home Manager release that your
-  # configuration is compatible with. This helps avoid breakage
-  # when a new Home Manager release introduces backwards
-  # incompatible changes.
-  home.stateVersion = "24.11";
 }
