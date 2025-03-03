@@ -99,6 +99,7 @@
     };
     initExtra = ''
       eval "$(starship init bash)"
+      # zoxide must be initialized at the end of bash config
       eval "$(zoxide init bash)"
     '';
   };
