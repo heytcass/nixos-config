@@ -4,55 +4,56 @@
   #############################################################################
   # Home Manager Basic Configuration
   #############################################################################
-  
+
   # User identity configuration
   home.username = "tom";
   home.homeDirectory = "/home/tom";
-  
+
   # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
-  
+
   # Set Home Manager compatibility version
-  # This helps avoid breakage when a new Home Manager release 
+  # This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes
   home.stateVersion = "24.11";
-  
+
   # Environment variables
   home.sessionVariables = {
     TERMINAL = "ghostty";
   };
-  
+
   #############################################################################
   # Package Management
   #############################################################################
-  
+
   home.packages = with pkgs; [
     # Browsers and Personal Tools
     bitwarden-desktop
     google-chrome
-    
+    todoist-electron
+
     # Communication and Media
     deckmaster
     discord
-    
+
     # Development Tools
     gh
     ghostty
     nil # Nix Language Server for VSCode
-    
+
     # Unstable Channel Packages
     unstable.claude-code
-    
+
     # GNOME Extensions
     pkgs.gnomeExtensions.appindicator
-    
+
     # Add any other user packages below
   ];
-  
+
   #############################################################################
   # Shell and Terminal Configuration
   #############################################################################
-  
+
   # Bash configuration
   programs.bash = {
     enable = true;
@@ -63,7 +64,7 @@
       eval "$(starship init bash)"
     '';
   };
-  
+
   # Starship prompt
   programs.starship = {
     enable = true;
@@ -77,7 +78,7 @@
       };
     };
   };
-  
+
   # Ghostty terminal emulator
   programs.ghostty = {
     enable = true;
@@ -85,16 +86,16 @@
       # Font settings
       "font-family" = "FiraCode Nerd Font";
       "font-size" = "12";
-      
+
       # Theme
       "theme" = "Adwaita Dark";
     };
   };
-  
+
   #############################################################################
   # Development Tools Configuration
   #############################################################################
-  
+
   # Git
   programs.git = {
     enable = true;
@@ -102,7 +103,7 @@
     userEmail = "heytcass@gmail.com";
     # Additional git configuration can go here
   };
-  
+
   # VSCode
   programs.vscode = {
     enable = true;
@@ -112,14 +113,14 @@
         arrterian.nix-env-selector
         bbenoist.nix
         jnoortheen.nix-ide
-        
+
         # General useful extensions
         esbenp.prettier-vscode
-        
+
         # YAML extensions
         redhat.vscode-yaml
       ];
-      
+
       userSettings = {
         # Editor appearance
         "editor.fontFamily" = "FiraCode Nerd Font";
@@ -130,11 +131,11 @@
         "editor.wordWrap" = "off";
         "files.trimTrailingWhitespace" = true;
         "workbench.colorTheme" = "Default Dark+";
-        
+
         # Nix settings
         "nix.enableLanguageServer" = true;
         "nix.serverPath" = "nil";
-        
+
         # YAML settings
         "[yaml]" = {
           "editor.autoIndent" = "keep";
