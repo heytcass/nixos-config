@@ -62,12 +62,21 @@
     bottom # Modern system monitor
     jq # JSON processor
     difftastic # Modern diff tool
+    fzf # Fuzzy finder
+    lazygit # Terminal UI for git
+    micro # Simple text editor
+    tldr # Simplified man pages with examples
+    tmux # Terminal multiplexer
 
     # Unstable Channel Packages
     unstable.claude-code
 
     # GNOME Extensions
     pkgs.gnomeExtensions.appindicator
+    pkgs.gnomeExtensions.vitals # System monitoring in GNOME panel
+
+    # Networking
+    tailscale # Zero-config VPN (service enabled in configuration.nix)
 
     # Add any other user packages below
   ];
@@ -142,6 +151,31 @@
     enable = true;
     enableBashIntegration = true;
     options = ["--cmd cd"];
+  };
+  
+  # FZF - Command-line fuzzy finder
+  programs.fzf = {
+    enable = true;
+    enableBashIntegration = true;
+  };
+  
+  # Tmux - Terminal multiplexer
+  programs.tmux = {
+    enable = true;
+    baseIndex = 1;
+    keyMode = "vi";
+    mouse = true;
+    terminal = "screen-256color";
+    extraConfig = ''
+      # Improve colors
+      set -g default-terminal "screen-256color"
+      set -ga terminal-overrides ",*256col*:Tc"
+      
+      # Set new panes to open in current directory
+      bind c new-window -c "#{pane_current_path}"
+      bind '"' split-window -c "#{pane_current_path}"
+      bind % split-window -h -c "#{pane_current_path}"
+    '';
   };
 
   programs.ripgrep = {

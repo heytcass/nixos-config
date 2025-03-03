@@ -40,6 +40,12 @@
     hostName = "gti";
     networkmanager.enable = true;
   };
+  
+  # Tailscale VPN
+  services.tailscale = {
+    enable = true;
+    useRoutingFeatures = "client"; # Enable subnet routing
+  };
 
   #######################
   # LOCALIZATION
