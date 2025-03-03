@@ -21,6 +21,17 @@
   home.sessionVariables = {
     TERMINAL = "ghostty";
   };
+  
+  # Hide specific desktop entries
+  xdg.desktopEntries = {
+    bottom = {
+      name = "Bottom";
+      exec = "btm";
+      terminal = true;
+      categories = [ "System" "Monitor" ];
+      noDisplay = true;
+    };
+  };
 
   #############################################################################
   # Package Management
@@ -35,7 +46,6 @@
     # Communication and Media
     deckmaster
     discord
-    emote
 
     # Development Tools
     gh
@@ -75,7 +85,7 @@
       nrs = "sudo nixos-rebuild switch --flake ~/.nixos-config#gti";
       nrb = "sudo nixos-rebuild build --flake ~/.nixos-config#gti";
       nrt = "sudo nixos-rebuild test --flake ~/.nixos-config#gti";
-      
+
       # Modern Unix tool aliases
       cat = "bat --paging=never";
       ls = "eza --icons";
@@ -106,7 +116,7 @@
       };
     };
   };
-  
+
   # Modern Unix tool configurations
   programs.bat = {
     enable = true;
