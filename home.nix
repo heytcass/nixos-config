@@ -74,6 +74,11 @@
     micro # Simple text editor
     tldr # Simplified man pages with examples
     tmux # Terminal multiplexer
+    fastfetch # System information tool
+    cyme # Modern mail client
+    dogdns # DNS client
+    speedtest-go # Internet speed test
+    pciutils # PCI utilities
 
     # Unstable Channel Packages
     unstable.claude-code
@@ -84,6 +89,8 @@
 
     # Networking
     tailscale # Zero-config VPN (service enabled in configuration.nix)
+    bitwarden-cli # Bitwarden CLI client
+    girouette # Network monitoring
 
     # Add any other user packages below
   ];
