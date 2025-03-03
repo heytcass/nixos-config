@@ -35,6 +35,7 @@
     # Communication and Media
     deckmaster
     discord
+    emote
 
     # Development Tools
     gh
