@@ -21,6 +21,7 @@
   nix.settings = {
     auto-optimise-store = true;
     experimental-features = [ "flakes" "nix-command" ];
+    download-buffer-size = 10485760; # 10 MiB (default is 1 MiB)
   };
 
   # Boot configuration

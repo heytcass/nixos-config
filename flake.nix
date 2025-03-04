@@ -27,6 +27,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     
+    # NixOS Needs Reboot - Tool to notify of required reboots
+    nixos-needsreboot = {
+      url = "https://flakehub.com/f/wimpysworld/nixos-needsreboot/0.2.5.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    
     # Core package collections
     nixpkgs = {
       url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.761040.tar.gz";
@@ -54,6 +60,7 @@
     nix-vscode-extensions,
     nixos-generators,
     nixos-hardware,
+    nixos-needsreboot,
     nixpkgs, 
     nixpkgs-unstable, 
     ... 
@@ -93,6 +100,14 @@
             
             # Hardware-specific configuration (Dell XPS 9370)
             nixos-hardware.nixosModules.dell-xps-13-9370
+            
+            # NixOS Needs Reboot notification
+            {
+              imports = [];
+              config = { 
+                environment.systemPackages = [ nixos-needsreboot.packages.x86_64-linux.default ];
+              };
+            }
             
             # Home Manager configuration
             home-manager.nixosModules.home-manager
