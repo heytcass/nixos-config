@@ -141,6 +141,15 @@
     inputs.nixos-generators.packages.${pkgs.system}.default  # NixOS Generators
   ];
 
+  # Run nixos-needsreboot after each rebuild
+  system.activationScripts.nixos-needsreboot = {
+    text = ''
+      echo "Checking if reboot is needed..."
+      ${pkgs.lib.getExe inputs.nixos-needsreboot.packages.${pkgs.system}.default} || true
+    '';
+    deps = [];
+  };
+
   # Fonts
   fonts.packages = with pkgs; [
     nerd-fonts.fira-code
