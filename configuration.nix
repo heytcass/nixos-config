@@ -84,6 +84,9 @@
     };
   };
   
+  # Enable Wayland support for Electron apps like Slack
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
+  
   # Exclude XTerm
   services.xserver.excludePackages = [ pkgs.xterm ];
   
@@ -139,6 +142,7 @@
     git  # Keep git at system level for easy management of your flake repo
     inputs.fh.packages.${pkgs.system}.default  # FlakeHub CLI tool
     inputs.nixos-generators.packages.${pkgs.system}.default  # NixOS Generators
+    slack  # Communication platform
   ];
 
   # Run nixos-needsreboot after each rebuild
