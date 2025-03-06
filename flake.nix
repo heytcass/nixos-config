@@ -9,6 +9,7 @@
     impermanence.url = "https://flakehub.com/f/nix-community/impermanence/0.1.179.tar.gz";
     determinate = {
       url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     
     # FlakeHub CLI - package registry management tool
@@ -104,6 +105,9 @@
             
             # Hardware-specific configuration (Dell XPS 9370)
             nixos-hardware.nixosModules.dell-xps-13-9370
+            
+            # Determinate Nix module
+            inputs.determinate.nixosModules.default
             
             # NixOS Needs Reboot notification
             {
