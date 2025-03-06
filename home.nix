@@ -241,6 +241,12 @@
 
         # YAML extensions
         redhat.vscode-yaml
+
+        # Markdown extensions
+        yzhang.markdown-all-in-one
+        davidanson.vscode-markdownlint
+        bierner.markdown-preview-github-styles
+        bierner.markdown-emoji
       ];
 
       userSettings = {
@@ -267,6 +273,21 @@
         };
         "yaml.format.enable" = true;
         "yaml.validate" = true;
+
+        # Markdown settings
+        "[markdown]" = {
+          "editor.defaultFormatter" = "yzhang.markdown-all-in-one";
+          "editor.formatOnSave" = true;
+          "editor.wordWrap" = "on";
+          "editor.renderWhitespace" = "all";
+          "editor.acceptSuggestionOnEnter" = "off";
+        };
+        "markdown.extension.toc.updateOnSave" = true;
+        "markdown.extension.preview.autoShowPreviewToSide" = false;
+        "markdownlint.config" = {
+          "MD024" = false; # Allow duplicate headings
+          "MD033" = false; # Allow inline HTML
+        };
       };
     };
   };

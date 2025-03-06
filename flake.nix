@@ -5,6 +5,12 @@
   # Input sources: Where Nix should get dependencies
   # -----------------------------------------------------------------------
   inputs = {
+    # Determinate Systems
+    impermanence.url = "https://flakehub.com/f/nix-community/impermanence/0.1.179.tar.gz";
+    determinate = {
+      url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
+    };
+    
     # FlakeHub CLI - package registry management tool
     fh = {
       url = "https://flakehub.com/f/DeterminateSystems/fh/*";
@@ -55,6 +61,7 @@
   # -----------------------------------------------------------------------
   outputs = { 
     self, 
+    determinate,
     fh,
     home-manager,
     nix-vscode-extensions,
@@ -62,15 +69,12 @@
     nixos-hardware,
     nixos-needsreboot,
     nixpkgs, 
-    nixpkgs-unstable, 
+    nixpkgs-unstable, impermanence, 
     ... 
   }@inputs:
     let
       # System architecture
       system = "x86_64-linux";
-      
-      # Standard package set from the stable Nixpkgs
-      pkgs = nixpkgs.legacyPackages.${system};
       
       # Configure unstable package set with allowUnfree enabled
       unstable = import nixpkgs-unstable {
