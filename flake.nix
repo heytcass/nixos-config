@@ -12,6 +12,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     
+    # Claude Desktop
+    claude-desktop = {
+      url = "github:k3d3/claude-desktop-linux-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
+    
     # FlakeHub CLI - package registry management tool
     fh = {
       url = "https://flakehub.com/f/DeterminateSystems/fh/*";
@@ -50,6 +57,11 @@
       url = "github:nixos/nixpkgs/master";
     };
     
+    # Flake Utils - Common utilities for flake-based projects
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+    };
+    
     # VSCode extensions registry
     nix-vscode-extensions = {
       url = "github:nix-community/nix-vscode-extensions";
@@ -62,8 +74,10 @@
   # -----------------------------------------------------------------------
   outputs = { 
     self, 
+    claude-desktop,
     determinate,
     fh,
+    flake-utils,
     home-manager,
     nix-vscode-extensions,
     nixos-generators,

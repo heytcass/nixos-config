@@ -143,6 +143,7 @@
     inputs.fh.packages.${pkgs.system}.default  # FlakeHub CLI tool
     inputs.nixos-generators.packages.${pkgs.system}.default  # NixOS Generators
     slack  # Communication platform
+    inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs  # Claude Desktop with FHS support
   ];
 
   # Run nixos-needsreboot after each rebuild
