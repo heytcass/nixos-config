@@ -4,7 +4,7 @@
 { config, pkgs, inputs, ... }:
 
 {
-  imports = [ 
+  imports = [
     # Include the results of the hardware scan
     ./hardware-configuration.nix
   ];
@@ -41,7 +41,7 @@
     hostName = "gti";
     networkmanager.enable = true;
   };
-  
+
   # Tailscale VPN
   services.tailscale = {
     enable = true;
@@ -76,22 +76,22 @@
     enable = true;
     displayManager.gdm.enable = true;
     desktopManager.gnome.enable = true;
-    
+
     # Keyboard settings
     xkb = {
       layout = "us";
       variant = "colemak";
     };
   };
-  
+
   # Enable Wayland support for Electron apps like Slack
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
-  
+
   # Exclude XTerm
   services.xserver.excludePackages = [ pkgs.xterm ];
-  
+
   # Exclude unwanted GNOME packages
-  environment.gnome.excludePackages = [ 
+  environment.gnome.excludePackages = [
     pkgs.epiphany        # GNOME Web browser
     pkgs.geary           # Email client
     pkgs.gnome-console   # Terminal (using Ghostty instead)
@@ -102,7 +102,7 @@
     pkgs.totem           # Video player
     pkgs.yelp            # Help viewer
   ];
-  
+
   # Disable NixOS documentation
   documentation.nixos.enable = false;
 
@@ -144,6 +144,7 @@
     inputs.nixos-generators.packages.${pkgs.system}.default  # NixOS Generators
     slack  # Communication platform
     inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs  # Claude Desktop with FHS support
+    nodejs # For Claude Desktop
   ];
 
   # Run nixos-needsreboot after each rebuild

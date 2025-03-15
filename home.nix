@@ -22,8 +22,9 @@
     TERMINAL = "ghostty";
   };
   
-  # Hide specific desktop entries
+  # Desktop entries - both hiding entries and adding new ones
   xdg.desktopEntries = {
+    # Hide specific desktop entries
     bottom = {
       name = "Bottom";
       exec = "btm";
@@ -38,6 +39,16 @@
       categories = [ "Development" "TextEditor" ];
       noDisplay = true;
     };
+    
+    # Add Claude Desktop entry
+    claude-desktop = {
+      name = "Claude Desktop";
+      exec = "claude-desktop";
+      icon = "claude-desktop"; # If an icon exists in the system
+      comment = "Claude AI Desktop Application";
+      categories = [ "Development" "Utility" "X-AI" ];
+      terminal = false;
+    };
   };
 
   #############################################################################
@@ -49,6 +60,7 @@
     bitwarden-desktop
     google-chrome
     todoist-electron
+    obsidian # Note-taking and knowledge base app
 
     # Communication and Media
     deckmaster
