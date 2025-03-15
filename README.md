@@ -67,7 +67,7 @@ The script will:
 Build a custom installation ISO that includes this configuration:
 
 ```bash
-nix build .#formats.x86_64-linux.install-iso
+nix build .#packages.x86_64-linux.install-iso
 ```
 
 The resulting ISO will be in `./result/iso/`.
