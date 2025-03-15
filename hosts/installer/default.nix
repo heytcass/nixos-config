@@ -3,6 +3,8 @@
 { config, pkgs, lib, modulesPath, ... }:
 
 {
+  # Allow unfree packages like Google Chrome
+  nixpkgs.config.allowUnfree = true;
   imports = [
     # Base installer module
     "${modulesPath}/installer/cd-dvd/installation-cd-graphical-calamares.nix"
@@ -44,7 +46,7 @@
 
   # Enable your preferred shell environment
   programs.bash = {
-    enableCompletion = true;
+    completion.enable = true;
     interactiveShellInit = ''
       # Add your custom bash settings here
       alias ls='eza --icons'
@@ -61,7 +63,7 @@
   '';
 
   # Set up auto-login to the graphical environment
-  services.xserver.displayManager.autoLogin = {
+  services.displayManager.autoLogin = {
     enable = true;
     user = "nixos";
   };
