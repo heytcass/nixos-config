@@ -200,7 +200,7 @@
       };
       
       # Installation ISO with the configuration files for both hosts
-      formats.x86_64-linux.install-iso = nixos-generators.nixosGenerate {
+      packages.x86_64-linux.install-iso = nixos-generators.nixosGenerate {
         system = "x86_64-linux";
         format = "install-iso";
         modules = [
