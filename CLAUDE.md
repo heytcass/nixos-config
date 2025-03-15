@@ -1,7 +1,29 @@
 # NixOS Configuration Helper
 
+## System Overview
+- **Hardware**: Dell XPS 13-9370 (configured via nixos-hardware)
+- **Desktop Environment**: GNOME with Wayland support
+- **Terminal**: Ghostty with FiraCode Nerd Font
+- **Shell**: Bash with Starship prompt
+- **Keyboard Layout**: Colemak
+- **Host Name**: gti
+
 ## Flakes Best Practices
 Always prefer flake-based commands over legacy commands when possible. Flakes provide better reproducibility, dependency management, and version control.
+
+## Repository Structure
+- `flake.nix`: Main entry point, defines inputs and outputs (flake-based configuration)
+- `configuration.nix`: System-wide NixOS configuration
+- `home.nix`: User-specific configuration via Home Manager
+- `hardware-configuration.nix`: Hardware-specific settings (don't edit manually)
+
+## Flake Structure
+- **Key Inputs**:
+  - nixpkgs (stable and unstable channels)
+  - home-manager for user environment
+  - claude-desktop (AI assistant)
+  - nix-vscode-extensions for VS Code setup
+  - determinate, flake-utils, impermanence, nixos-generators
 
 ## Common Commands
 - Build and switch to new configuration: `sudo nixos-rebuild switch --flake ~/.nixos-config#gti`
@@ -13,6 +35,43 @@ Always prefer flake-based commands over legacy commands when possible. Flakes pr
 - View flake outputs: `nix flake show`
 - Run programs from flakes: `nix run nixpkgs#hello`
 - Start development shell from flake: `nix develop`
+
+## Bash Aliases (from home.nix)
+- `nrs`: Shorthand for rebuild and switch
+- `nrb`: Shorthand for rebuild and build
+- `nrt`: Shorthand for rebuild and test
+- Modern Unix replacements:
+  - `cat` → `bat --paging=never`
+  - `ls` → `eza --icons`
+  - `ll` → `eza -la --icons`
+  - `lt` → `eza --tree --icons`
+  - `find` → `fd`
+  - `grep` → `rg`
+  - `df` → `duf`
+  - `top` → `btm`
+  - `du` → `duf`
+
+## Core Applications
+- **Terminal**: Ghostty (configured in home.nix)
+- **Browser**: Google Chrome
+- **Text Editor**: VS Code with Nix extensions
+- **AI Assistant**: Claude Desktop (with FHS support)
+- **Communication**: Slack, Discord
+- **Notes**: Obsidian
+- **Password Manager**: Bitwarden Desktop
+- **Task Management**: Todoist
+
+## Modern Unix Tools
+The configuration uses modern replacements for traditional Unix tools:
+- `bat` (replaces cat)
+- `eza` (replaces ls)
+- `fd` (replaces find)
+- `ripgrep` (replaces grep)
+- `zoxide` (enhances cd)
+- `bottom` (replaces top)
+- `difftastic` (replaces diff)
+- `fzf` (fuzzy finder)
+- `lazygit` (git TUI)
 
 ## Ghostty Configuration
 To configure Ghostty with FiraCode font and Adwaita Dark theme, create a file at `~/.config/ghostty/config` with:
@@ -80,12 +139,6 @@ shell-integration-features = no-cursor
 - **Error Handling**: Use `lib.mkIf` for conditional configurations
 - **Comments**: Add comments for non-obvious configurations and options
 - **Reverting Changes**: Always use Git (`git reset` or `git revert`) to revert changes rather than manual edits
-
-## Repository Structure
-- `flake.nix`: Main entry point, defines inputs and outputs (flake-based configuration)
-- `configuration.nix`: System-wide NixOS configuration
-- `home.nix`: User-specific configuration via Home Manager
-- `hardware-configuration.nix`: Hardware-specific settings (don't edit manually)
 
 ## Flake-Based Development
 - When installing new packages, prefer adding them to your flake configuration rather than using `nix-env -i`

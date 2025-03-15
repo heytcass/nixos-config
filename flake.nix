@@ -101,11 +101,26 @@
       
       # Import nixpkgs library functions
       lib = nixpkgs.lib;
+      
+      # Add NixOS Needs Reboot to any configuration
+      needsRebootModule = { pkgs, ... }: {
+        imports = [];
+        config = { 
+          environment.systemPackages = [ nixos-needsreboot.packages.x86_64-linux.default ];
+          system.activationScripts.nixos-needsreboot = {
+            text = ''
+              echo "Checking if reboot is needed..."
+              ${nixos-needsreboot.packages.x86_64-linux.default}/bin/nixos-needsreboot || true
+            '';
+            deps = [];
+          };
+        };
+      };
     in
     {
       # Define NixOS system configurations
       nixosConfigurations = {
-        # System configuration for hostname "gti"
+        # System configuration for hostname "gti" - Dell XPS 13-9370 with GNOME
         gti = lib.nixosSystem {
           inherit system;
           
@@ -114,8 +129,11 @@
           
           # List of configuration modules
           modules = [
-            # Core system configuration
-            ./configuration.nix
+            # Common configuration
+            ./hosts/common
+            
+            # Host-specific configuration
+            ./hosts/gti
             
             # Hardware-specific configuration (Dell XPS 9370)
             nixos-hardware.nixosModules.dell-xps-13-9370
@@ -124,12 +142,7 @@
             inputs.determinate.nixosModules.default
             
             # NixOS Needs Reboot notification
-            {
-              imports = [];
-              config = { 
-                environment.systemPackages = [ nixos-needsreboot.packages.x86_64-linux.default ];
-              };
-            }
+            needsRebootModule
             
             # Home Manager configuration
             home-manager.nixosModules.home-manager
@@ -140,11 +153,118 @@
                 useUserPackages = true;    # Install user packages system-wide
                 backupFileExtension = "backup";  # Backup modified files
                 extraSpecialArgs = { inherit unstable inputs; };  # Pass vars to home.nix
-                users.tom = import ./home.nix;  # User-specific config
+                users.tom = import ./hosts/common/users/tom.nix;  # User-specific config
               };
             }
           ];
         };
+        
+        # System configuration for hostname "transporter" - Dell Latitude 7280 with Hyprland
+        transporter = lib.nixosSystem {
+          inherit system;
+          
+          # Pass useful variables to all modules
+          specialArgs = { inherit inputs unstable; };
+          
+          # List of configuration modules
+          modules = [
+            # Common configuration
+            ./hosts/common
+            
+            # Host-specific configuration
+            ./hosts/transporter
+            
+            # Hardware-specific configuration (Dell Latitude 7280)
+            nixos-hardware.nixosModules.dell-latitude-7280
+            
+            # Determinate Nix module
+            inputs.determinate.nixosModules.default
+            
+            # NixOS Needs Reboot notification
+            needsRebootModule
+            
+            # Home Manager configuration
+            home-manager.nixosModules.home-manager
+            {
+              # Home Manager settings
+              home-manager = {
+                useGlobalPkgs = true;      # Use the same pkgs as NixOS
+                useUserPackages = true;    # Install user packages system-wide
+                backupFileExtension = "backup";  # Backup modified files
+                extraSpecialArgs = { inherit unstable inputs; };  # Pass vars to home.nix
+                users.tom = import ./hosts/common/users/tom.nix;  # User-specific config
+              };
+            }
+          ];
+        };
+      };
+      
+      # Installation ISO with the configuration files for both hosts
+      formats.x86_64-linux.install-iso = nixos-generators.nixosGenerate {
+        system = "x86_64-linux";
+        format = "install-iso";
+        modules = [
+          ({ pkgs, lib, ... }: {
+            isoImage.edition = "nixos-config";
+            
+            # Include Git for cloning the repo during installation
+            environment.systemPackages = with pkgs; [ 
+              git 
+              vim
+              wget
+              gparted
+              parted
+            ];
+            
+            # Create a placeholder for the installation script
+            system.activationScripts.installation-script = lib.stringAfter [ "users" ] ''
+              cat > /root/install.sh << 'EOF'
+#!/usr/bin/env bash
+set -e
+
+# Check for hostname argument
+if [ $# -ne 1 ]; then
+  echo "Usage: $0 [gti|transporter]"
+  exit 1
+fi
+
+HOSTNAME=$1
+if [ "$HOSTNAME" != "gti" ] && [ "$HOSTNAME" != "transporter" ]; then
+  echo "Error: Hostname must be either 'gti' or 'transporter'"
+  exit 1
+fi
+
+echo "Installing NixOS on $HOSTNAME..."
+
+# This is where you would add the disk partitioning commands
+# Example for a basic EFI setup:
+#
+# DISK=/dev/nvme0n1  # Change this to match your actual disk
+# parted "$DISK" -- mklabel gpt
+# parted "$DISK" -- mkpart ESP fat32 1MiB 512MiB
+# parted "$DISK" -- set 1 boot on
+# parted "$DISK" -- mkpart primary 512MiB 100%
+# 
+# mkfs.fat -F 32 -n boot "$DISK"p1
+# mkfs.ext4 -L nixos "$DISK"p2
+#
+# mount "$DISK"p2 /mnt
+# mkdir -p /mnt/boot
+# mount "$DISK"p1 /mnt/boot
+
+# Clone the NixOS config repository
+mkdir -p /mnt/home/tom
+git clone https://github.com/yourusername/nixos-config /mnt/home/tom/.nixos-config
+
+# Install NixOS with the specified hostname configuration
+nixos-install --flake /mnt/home/tom/.nixos-config#$HOSTNAME
+
+echo "Installation complete! You can now reboot into your new system."
+EOF
+              chmod +x /root/install.sh
+            '';
+          })
+        ];
       };
     };
 }
