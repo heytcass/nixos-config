@@ -62,15 +62,33 @@ The script will:
 - Install NixOS with the appropriate configuration
 - Set up boot loader and initial configuration
 
-### Creating a Custom Install ISO
+### Creating Installation ISOs
 
-Build a custom installation ISO that includes this configuration:
+There are two types of installation ISOs you can build:
+
+#### 1. Basic Installation ISO
+
+This is a minimal NixOS installation environment with just the essential tools:
 
 ```bash
-nix build .#packages.x86_64-linux.install-iso
+nix build .#packages.x86_64-linux.install-iso-basic
 ```
 
-The resulting ISO will be in `./result/iso/`.
+#### 2. Custom Installation ISO with Your Environment
+
+This creates an ISO that includes your personal desktop environment (GNOME), keyboard layout, fonts, and favorite applications:
+
+```bash
+nix build .#packages.x86_64-linux.install-iso-custom
+```
+
+The resulting ISO will be in `./result/iso/` and can be written to a USB drive with:
+
+```bash
+sudo dd if=./result/iso/nixos-custom-installer.iso of=/dev/sdX bs=4M status=progress
+```
+
+(Replace `/dev/sdX` with your USB drive device)
 
 ## Desktop Environments
 

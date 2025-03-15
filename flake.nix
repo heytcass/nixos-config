@@ -199,72 +199,42 @@
         };
       };
       
-      # Installation ISO with the configuration files for both hosts
-      packages.x86_64-linux.install-iso = nixos-generators.nixosGenerate {
-        system = "x86_64-linux";
-        format = "install-iso";
-        modules = [
-          ({ pkgs, lib, ... }: {
-            isoImage.edition = "nixos-config";
-            
-            # Include Git for cloning the repo during installation
-            environment.systemPackages = with pkgs; [ 
-              git 
-              vim
-              wget
-              gparted
-              parted
-            ];
-            
-            # Create a placeholder for the installation script
-            system.activationScripts.installation-script = lib.stringAfter [ "users" ] ''
-              cat > /root/install.sh << 'EOF'
-#!/usr/bin/env bash
-set -e
-
-# Check for hostname argument
-if [ $# -ne 1 ]; then
-  echo "Usage: $0 [gti|transporter]"
-  exit 1
-fi
-
-HOSTNAME=$1
-if [ "$HOSTNAME" != "gti" ] && [ "$HOSTNAME" != "transporter" ]; then
-  echo "Error: Hostname must be either 'gti' or 'transporter'"
-  exit 1
-fi
-
-echo "Installing NixOS on $HOSTNAME..."
-
-# This is where you would add the disk partitioning commands
-# Example for a basic EFI setup:
-#
-# DISK=/dev/nvme0n1  # Change this to match your actual disk
-# parted "$DISK" -- mklabel gpt
-# parted "$DISK" -- mkpart ESP fat32 1MiB 512MiB
-# parted "$DISK" -- set 1 boot on
-# parted "$DISK" -- mkpart primary 512MiB 100%
-# 
-# mkfs.fat -F 32 -n boot "$DISK"p1
-# mkfs.ext4 -L nixos "$DISK"p2
-#
-# mount "$DISK"p2 /mnt
-# mkdir -p /mnt/boot
-# mount "$DISK"p1 /mnt/boot
-
-# Clone the NixOS config repository
-mkdir -p /mnt/home/tom
-git clone https://github.com/yourusername/nixos-config /mnt/home/tom/.nixos-config
-
-# Install NixOS with the specified hostname configuration
-nixos-install --flake /mnt/home/tom/.nixos-config#$HOSTNAME
-
-echo "Installation complete! You can now reboot into your new system."
-EOF
-              chmod +x /root/install.sh
-            '';
-          })
-        ];
+      # Custom installation ISOs with your personal environment and configuration
+      packages.x86_64-linux = {
+        # Basic installation ISO with minimal environment
+        install-iso-basic = nixos-generators.nixosGenerate {
+          system = "x86_64-linux";
+          format = "install-iso";
+          modules = [
+            ({ pkgs, lib, ... }: {
+              isoImage.edition = "nixos-config";
+              
+              # Include Git for cloning the repo during installation
+              environment.systemPackages = with pkgs; [ 
+                git 
+                vim
+                wget
+                gparted
+                parted
+              ];
+              
+              # Create a placeholder for the installation script
+              system.activationScripts.installation-script = lib.stringAfter [ "users" ] ''
+                cp ${./install.sh} /root/
+                chmod +x /root/install.sh
+              '';
+            })
+          ];
+        };
+        
+        # Full installation ISO with your custom environment
+        install-iso-custom = nixos-generators.nixosGenerate {
+          system = "x86_64-linux";
+          format = "install-iso";
+          modules = [
+            ./hosts/installer
+          ];
+        };
       };
     };
 }
