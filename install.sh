@@ -119,17 +119,20 @@ run_cmd "mount $BOOT_PART /mnt/boot"
 echo "Generating hardware configuration..."
 run_cmd "nixos-generate-config --root /mnt"
 
+# Prepare the configuration directory
+if [[ -d "/home/tom/.nixos-config" ]]; then
+  echo "Copying existing configuration..."
+  run_cmd "mkdir -p /mnt/home/tom"
+  run_cmd "cp -r /home/tom/.nixos-config /mnt/home/tom/"
+else
+  echo "Cloning configuration from Git..."
+  run_cmd "mkdir -p /mnt/home/tom"
+  run_cmd "git clone https://github.com/heytcass/nixos-config /mnt/home/tom/.nixos-config"
+fi
+
 echo "Copying hardware configuration..."
 run_cmd "mkdir -p /mnt/home/tom/.nixos-config/hosts/$HOSTNAME"
 run_cmd "cp /mnt/etc/nixos/hardware-configuration.nix /mnt/home/tom/.nixos-config/hosts/$HOSTNAME/hardware.nix"
-
-if [[ -d "/home/tom/.nixos-config" ]]; then
-  echo "Copying existing configuration..."
-  run_cmd "cp -r /home/tom/.nixos-config/* /mnt/home/tom/.nixos-config/"
-else
-  echo "Cloning configuration from Git..."
-  run_cmd "git clone https://github.com/yourusername/nixos-config /mnt/home/tom/.nixos-config"
-fi
 
 echo "Installing NixOS for $HOSTNAME..."
 if [[ $DRY_RUN -eq 0 ]]; then
