@@ -22,6 +22,8 @@ show_usage() {
 
 # Parse command line options
 DRY_RUN=0
+HOSTNAME=""
+DISK=""
 
 while [[ $# -gt 0 ]]; do
   case $1 in
