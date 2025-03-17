@@ -92,8 +92,10 @@
     inputs.fh.packages.${pkgs.system}.default  # FlakeHub CLI tool
     inputs.nixos-generators.packages.${pkgs.system}.default  # NixOS Generators
     slack  # Communication platform
-    inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs  # Claude Desktop with FHS support
+    # Temporarily removing Claude Desktop due to hash mismatch
+    # inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs
     nodejs # For Claude Desktop
+    tailscale # Tailscale GUI app
   ];
 
   # Run nixos-needsreboot after each rebuild
