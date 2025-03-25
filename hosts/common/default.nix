@@ -92,8 +92,7 @@
     inputs.fh.packages.${pkgs.system}.default  # FlakeHub CLI tool
     inputs.nixos-generators.packages.${pkgs.system}.default  # NixOS Generators
     slack  # Communication platform
-    # Temporarily removing Claude Desktop due to hash mismatch
-    # inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs
+    inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs  # Claude Desktop AI assistant
     nodejs # For Claude Desktop
     tailscale # Tailscale GUI app
   ];

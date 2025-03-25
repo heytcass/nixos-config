@@ -21,7 +21,7 @@
   home.sessionVariables = {
     TERMINAL = "ghostty";
   };
-  
+
   # Desktop entries - both hiding entries and adding new ones
   xdg.desktopEntries = {
     # Hide specific desktop entries
@@ -178,13 +178,13 @@
     enableBashIntegration = true;
     options = ["--cmd cd"];
   };
-  
+
   # FZF - Command-line fuzzy finder
   programs.fzf = {
     enable = true;
     enableBashIntegration = true;
   };
-  
+
   # Tmux - Terminal multiplexer
   programs.tmux = {
     enable = true;
@@ -196,7 +196,7 @@
       # Improve colors
       set -g default-terminal "screen-256color"
       set -ga terminal-overrides ",*256col*:Tc"
-      
+
       # Set new panes to open in current directory
       bind c new-window -c "#{pane_current_path}"
       bind '"' split-window -c "#{pane_current_path}"
