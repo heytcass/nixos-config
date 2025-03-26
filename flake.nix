@@ -141,8 +141,7 @@
             # Determinate Nix module
             inputs.determinate.nixosModules.default
             
-            # NixOS Needs Reboot notification
-            needsRebootModule
+            # NixOS Needs Reboot notification imported via common module
             
             # Home Manager configuration
             home-manager.nixosModules.home-manager
@@ -180,8 +179,7 @@
             # Determinate Nix module
             inputs.determinate.nixosModules.default
             
-            # NixOS Needs Reboot notification
-            needsRebootModule
+            # NixOS Needs Reboot notification imported via common module
             
             # Home Manager configuration
             home-manager.nixosModules.home-manager

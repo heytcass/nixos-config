@@ -97,6 +97,12 @@
     tailscale # Tailscale GUI app
   ];
 
+
+  # Fonts
+  fonts.packages = with pkgs; [
+    nerd-fonts.fira-code
+  ];
+  
   # Run nixos-needsreboot after each rebuild
   system.activationScripts.nixos-needsreboot = {
     text = ''
@@ -105,11 +111,6 @@
     '';
     deps = [];
   };
-
-  # Fonts
-  fonts.packages = with pkgs; [
-    nerd-fonts.fira-code
-  ];
 
   # Enable Wayland support for Electron apps like Slack
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
