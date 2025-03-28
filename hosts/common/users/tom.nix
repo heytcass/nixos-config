@@ -148,40 +148,40 @@
       
       username = {
         format = "[$user]($style) ";
-        style_user = "cyan bold";
+        style_user = "#d9e2f7 bold";
         show_always = false;
       };
       
       hostname = {
         format = "[@$hostname]($style) ";
-        style = "green bold";
+        style = "#9aa3b8 bold";
         ssh_only = true;
       };
       
       directory = {
         truncation_length = 3;
         truncate_to_repo = true;
-        style = "blue bold";
+        style = "#d9e2f7 bold";
         format = "[$path]($style) ";
         home_symbol = "🏠";
         read_only = " 🔒";
       };
       
       character = {
-        success_symbol = "[❯](green bold)";
-        error_symbol = "[❯](red bold)";
-        vimcmd_symbol = "[❮](green bold)";
+        success_symbol = "[❯](#9aa3b8 bold)";
+        error_symbol = "[❯](#cc5216 bold)";
+        vimcmd_symbol = "[❮](#9aa3b8 bold)";
       };
       
       git_branch = {
         format = "[$symbol$branch]($style) ";
         symbol = "󰘬 ";
-        style = "purple bold";
+        style = "#d9e2f7 bold";
       };
       
       git_status = {
         format = "[$all_status$ahead_behind]($style)";
-        style = "yellow bold";
+        style = "#cc5216 bold";
         conflicted = "≠";
         ahead = "⇡";
         behind = "⇣";
@@ -196,12 +196,12 @@
       
       nix_shell = {
         format = "[❄️ $state( \($name\))]($style) ";
-        style = "cyan bold";
+        style = "#9aa3b8 bold";
       };
       
       cmd_duration = {
         format = "took [$duration]($style) ";
-        style = "yellow";
+        style = "#cc5216";
         min_time = 2000;
       };
       
@@ -209,7 +209,7 @@
       memory_usage = {
         format = "$symbol[$ram_pct]($style) ";
         symbol = "🧠 ";
-        style = "dimmed white";
+        style = "#9aa3b8";
         threshold = 75;
         disabled = false;
       };
@@ -222,9 +222,9 @@
         discharging_symbol = "🔋";
         empty_symbol = "💀";
         display = [
-          { threshold = 15; style = "red bold"; }
-          { threshold = 30; style = "yellow bold"; }
-          { threshold = 100; style = "green"; }
+          { threshold = 15; style = "#cc5216 bold"; }
+          { threshold = 30; style = "#cc5216"; }
+          { threshold = 100; style = "#9aa3b8"; }
         ];
         disabled = false;
       };
@@ -232,7 +232,7 @@
       # Time module
       time = {
         format = "🕙 [$time]($style) ";
-        style = "bright-black";
+        style = "#9aa3b8";
         disabled = false;
         time_format = "%I:%M%p"; # 12-hour format with AM/PM
       };
@@ -243,19 +243,19 @@
         nixos_config = {
           when = "test -d $HOME/.nixos-config";
           format = "[󱄅 NixOS Config]($style) ";
-          style = "bold blue";
+          style = "#9aa3b8 bold";
         };
         # Indicators for file extensions
         nix_files = {
           when = "test -n \"$(find . -maxdepth 1 -name '*.nix' -print -quit)\"";
           format = "[❄️ Nix]($style) ";
-          style = "bold cyan";
+          style = "#9aa3b8 bold";
           disabled = false;
         };
         yaml_files = {
           when = "test -n \"$(find . -maxdepth 1 \\( -name '*.yml' -o -name '*.yaml' \\) -print -quit)\"";
           format = "[📄 YAML]($style) ";
-          style = "bold yellow";
+          style = "#d9e2f7 bold";
           disabled = false;
         };
       };
@@ -264,21 +264,21 @@
       python = {
         format = "[$symbol$pyenv_prefix($version )($virtualenv )]($style)";
         symbol = "🐍 ";
-        style = "yellow";
+        style = "#9aa3b8";
         detect_extensions = [ "py" ];
       };
       
       nodejs = {
         format = "[$symbol($version )]($style)";
         symbol = "⬢ ";
-        style = "green";
+        style = "#9aa3b8";
         detect_extensions = [ "js" "jsx" "ts" "tsx" ];
       };
       
       rust = {
         format = "[$symbol($version )]($style)";
         symbol = "🦀 ";
-        style = "red";
+        style = "#cc5216";
         detect_extensions = [ "rs" ];
       };
       
@@ -293,7 +293,7 @@
   programs.bat = {
     enable = true;
     config = {
-      theme = "Dracula";
+      theme = "ansi";
       style = "plain";
     };
   };
@@ -356,9 +356,58 @@
       # Font settings
       "font-family" = "FiraCode Nerd Font";
       "font-size" = "12";
+      "font-feature" = [
+        "liga"
+        "calt"
+        "ss01"
+        "ss02"
+        "ss03"
+        "ss04"
+        "ss05"
+      ];
 
-      # Theme
-      "theme" = "Adwaita Dark";
+      # Window settings
+      "window-padding-x" = "10";
+      "window-padding-y" = "10";
+      "window-theme" = "dark";
+      "window-save-state" = "true";
+      "cursor-style" = "block";
+      "cursor-style-blink" = "true";
+      
+      # Custom color palette
+      "background" = "#0d314e"; # Navy Blue
+      "foreground" = "#d9e2f7"; # Serenity
+      "selection-background" = "#cc5216"; # Burnt Sienna
+      "selection-foreground" = "#d9e2f7"; # Serenity
+      "cursor-color" = "#9aa3b8"; # Blue Gray
+      
+      # Normal colors
+      "palette" = [
+        "#0d314e" # Navy Blue
+        "#cc5216" # Burnt Sienna
+        "#9aa3b8" # Blue Gray
+        "#d9e2f7" # Serenity
+        "#0d314e" # Navy Blue
+        "#cc5216" # Burnt Sienna
+        "#9aa3b8" # Blue Gray
+        "#d9e2f7" # Serenity
+      ];
+      
+      # Bright colors
+      "palette-8" = "#9aa3b8"; # Blue Gray
+      "palette-9" = "#cc5216"; # Burnt Sienna
+      "palette-10" = "#d9e2f7"; # Serenity
+      "palette-11" = "#9aa3b8"; # Blue Gray
+      "palette-12" = "#0d314e"; # Navy Blue
+      "palette-13" = "#cc5216"; # Burnt Sienna
+      "palette-14" = "#9aa3b8"; # Blue Gray
+      "palette-15" = "#d9e2f7"; # Serenity
+      
+      # UI preferences
+      "confirm-close-surface" = "false";
+      "mouse-hide-while-typing" = "true";
+      "scrollback-lines" = "10000";
+      "shell-integration-features" = "no-cursor";
     };
   };
 
