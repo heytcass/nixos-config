@@ -102,18 +102,12 @@
       # Import nixpkgs library functions
       lib = nixpkgs.lib;
       
-      # Add NixOS Needs Reboot to any configuration
+      # NixOS Needs Reboot package module
+      # Note: The activation script is already defined in hosts/common/default.nix
       needsRebootModule = { pkgs, ... }: {
         imports = [];
         config = { 
           environment.systemPackages = [ nixos-needsreboot.packages.x86_64-linux.default ];
-          system.activationScripts.nixos-needsreboot = {
-            text = ''
-              echo "Checking if reboot is needed..."
-              ${nixos-needsreboot.packages.x86_64-linux.default}/bin/nixos-needsreboot || true
-            '';
-            deps = [];
-          };
         };
       };
     in

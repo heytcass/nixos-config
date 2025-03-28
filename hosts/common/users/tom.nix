@@ -139,12 +139,156 @@
   programs.starship = {
     enable = true;
     settings = {
-      add_newline = true;
+      scan_timeout = 10;
       command_timeout = 1000;
-      format = "$all";
+      add_newline = false;
+      
+      # Enhanced single line prompt with additional modules
+      format = "$username$hostname$directory$custom$git_branch$git_status$python$nodejs$rust$nix_shell$memory_usage$battery$cmd_duration$time$character";
+      
+      username = {
+        format = "[$user]($style) ";
+        style_user = "cyan bold";
+        show_always = false;
+      };
+      
+      hostname = {
+        format = "[@$hostname]($style) ";
+        style = "green bold";
+        ssh_only = true;
+      };
+      
+      directory = {
+        truncation_length = 3;
+        truncate_to_repo = true;
+        style = "blue bold";
+        format = "[$path]($style) ";
+        home_symbol = "🏠";
+        read_only = " 🔒";
+      };
+      
+      character = {
+        success_symbol = "[❯](green bold)";
+        error_symbol = "[❯](red bold)";
+        vimcmd_symbol = "[❮](green bold)";
+      };
+      
+      git_branch = {
+        format = "[$symbol$branch]($style) ";
+        symbol = "󰘬 ";
+        style = "purple bold";
+      };
+      
+      git_status = {
+        format = "[$all_status$ahead_behind]($style)";
+        style = "yellow bold";
+        conflicted = "≠";
+        ahead = "⇡";
+        behind = "⇣";
+        diverged = "⇕";
+        untracked = "?";
+        stashed = "$";
+        modified = "!";
+        staged = "+";
+        renamed = "»";
+        deleted = "✘";
+      };
+      
       nix_shell = {
-        format = "via [$symbol$state( \($name\))]($style) ";
-        symbol = "❄️ ";
+        format = "[❄️ $state( \($name\))]($style) ";
+        style = "cyan bold";
+      };
+      
+      cmd_duration = {
+        format = "took [$duration]($style) ";
+        style = "yellow";
+        min_time = 2000;
+      };
+      
+      # Memory usage - shows current RAM usage
+      memory_usage = {
+        format = "$symbol[$ram_pct]($style) ";
+        symbol = "🧠 ";
+        style = "dimmed white";
+        threshold = 75;
+        disabled = false;
+      };
+      
+      # Battery - only shows when charging or below 100%
+      battery = {
+        format = "[$symbol$percentage]($style) ";
+        full_symbol = "🔋";
+        charging_symbol = "⚡";
+        discharging_symbol = "🔋";
+        empty_symbol = "💀";
+        display = [
+          { threshold = 15; style = "red bold"; }
+          { threshold = 30; style = "yellow bold"; }
+          { threshold = 100; style = "green"; }
+        ];
+        disabled = false;
+      };
+      
+      # Time module
+      time = {
+        format = "🕙 [$time]($style) ";
+        style = "bright-black";
+        disabled = false;
+        time_format = "%I:%M%p"; # 12-hour format with AM/PM
+      };
+      
+      # Custom indicators for specific contexts
+      custom = {
+        files = {
+          # Show special indicator when in the NixOS config directory
+          ".nixos-config" = {
+            format = "[󱄅 NixOS Config]($style) ";
+            style = "bold blue";
+          };
+          # Indicators for file extensions
+          "*.nix" = {
+            format = "[❄️ Nix]($style) ";
+            style = "bold cyan";
+            disabled = false;
+          };
+          "*.yml" = {
+            format = "[📄 YAML]($style) ";
+            style = "bold yellow";
+            disabled = false;
+          };
+          "*.yaml" = {
+            format = "[📄 YAML]($style) ";
+            style = "bold yellow";
+            disabled = false;
+          };
+        };
+      };
+      
+      # Language version modules
+      python = {
+        format = "[$symbol$pyenv_prefix($version )($virtualenv )]($style)";
+        symbol = "🐍 ";
+        style = "yellow";
+        detect_extensions = [ "py" ];
+      };
+      
+      nodejs = {
+        format = "[$symbol($version )]($style)";
+        symbol = "⬢ ";
+        style = "green";
+        detect_extensions = [ "js" "jsx" "ts" "tsx" ];
+      };
+      
+      rust = {
+        format = "[$symbol($version )]($style)";
+        symbol = "🦀 ";
+        style = "red";
+        detect_extensions = [ "rs" ];
+      };
+      
+      # Completely disable line_break module
+      line_break = {
+        disabled = true;
       };
     };
   };
@@ -172,7 +316,7 @@
   programs.zoxide = {
     enable = true;
     enableBashIntegration = true;
-    options = ["--cmd cd"];
+    options = [ "--cmd cd" ];
   };
   
   # FZF - Command-line fuzzy finder
@@ -528,7 +672,7 @@
           "format" = "{capacity}% {icon}";
           "format-charging" = "{capacity}% ";
           "format-plugged" = "{capacity}% ";
-          "format-icons" = ["" "" "" "" ""];
+          "format-icons" = [ "" "" "" "" "" ];
         };
         
         "network" = {
@@ -554,7 +698,7 @@
             "phone" = "";
             "portable" = "";
             "car" = "";
-            "default" = ["" "" ""];
+            "default" = [ "" "" "" ];
           };
           "on-click" = "pavucontrol";
         };
