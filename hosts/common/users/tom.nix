@@ -239,28 +239,24 @@
       
       # Custom indicators for specific contexts
       custom = {
-        files = {
-          # Show special indicator when in the NixOS config directory
-          ".nixos-config" = {
-            format = "[󱄅 NixOS Config]($style) ";
-            style = "bold blue";
-          };
-          # Indicators for file extensions
-          "*.nix" = {
-            format = "[❄️ Nix]($style) ";
-            style = "bold cyan";
-            disabled = false;
-          };
-          "*.yml" = {
-            format = "[📄 YAML]($style) ";
-            style = "bold yellow";
-            disabled = false;
-          };
-          "*.yaml" = {
-            format = "[📄 YAML]($style) ";
-            style = "bold yellow";
-            disabled = false;
-          };
+        # Show special indicator when in the NixOS config directory
+        nixos_config = {
+          when = "test -d $HOME/.nixos-config";
+          format = "[󱄅 NixOS Config]($style) ";
+          style = "bold blue";
+        };
+        # Indicators for file extensions
+        nix_files = {
+          when = "test -n \"$(find . -maxdepth 1 -name '*.nix' -print -quit)\"";
+          format = "[❄️ Nix]($style) ";
+          style = "bold cyan";
+          disabled = false;
+        };
+        yaml_files = {
+          when = "test -n \"$(find . -maxdepth 1 \\( -name '*.yml' -o -name '*.yaml' \\) -print -quit)\"";
+          format = "[📄 YAML]($style) ";
+          style = "bold yellow";
+          disabled = false;
         };
       };
       
