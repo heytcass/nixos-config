@@ -370,43 +370,12 @@
       "window-padding-x" = "10";
       "window-padding-y" = "10";
       "window-theme" = "dark";
-      "window-save-state" = "true";
       "cursor-style" = "block";
       "cursor-style-blink" = "true";
-      
-      # Custom color palette
-      "background" = "#0d314e"; # Navy Blue
-      "foreground" = "#d9e2f7"; # Serenity
-      "selection-background" = "#cc5216"; # Burnt Sienna
-      "selection-foreground" = "#d9e2f7"; # Serenity
-      "cursor-color" = "#9aa3b8"; # Blue Gray
-      
-      # Normal colors
-      "palette" = [
-        "#0d314e" # Navy Blue
-        "#cc5216" # Burnt Sienna
-        "#9aa3b8" # Blue Gray
-        "#d9e2f7" # Serenity
-        "#0d314e" # Navy Blue
-        "#cc5216" # Burnt Sienna
-        "#9aa3b8" # Blue Gray
-        "#d9e2f7" # Serenity
-      ];
-      
-      # Bright colors
-      "palette-8" = "#9aa3b8"; # Blue Gray
-      "palette-9" = "#cc5216"; # Burnt Sienna
-      "palette-10" = "#d9e2f7"; # Serenity
-      "palette-11" = "#9aa3b8"; # Blue Gray
-      "palette-12" = "#0d314e"; # Navy Blue
-      "palette-13" = "#cc5216"; # Burnt Sienna
-      "palette-14" = "#9aa3b8"; # Blue Gray
-      "palette-15" = "#d9e2f7"; # Serenity
       
       # UI preferences
       "confirm-close-surface" = "false";
       "mouse-hide-while-typing" = "true";
-      "scrollback-lines" = "10000";
       "shell-integration-features" = "no-cursor";
     };
   };
