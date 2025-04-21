@@ -408,6 +408,9 @@
         # YAML extensions
         redhat.vscode-yaml
 
+        # Python extensions
+        ms-python.python
+
         # Markdown extensions
         yzhang.markdown-all-in-one
         davidanson.vscode-markdownlint
