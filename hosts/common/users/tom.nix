@@ -19,7 +19,7 @@
   home.sessionVariables = {
     TERMINAL = "ghostty";
   };
-  
+
   # Desktop entries - both hiding entries and adding new ones
   xdg.desktopEntries = {
     # Hide specific desktop entries
@@ -37,7 +37,7 @@
       categories = [ "Development" "TextEditor" ];
       noDisplay = true;
     };
-    
+
     # Add Claude Desktop entry
     claude-desktop = {
       name = "Claude Desktop";
@@ -58,11 +58,11 @@
     bitwarden-desktop
     google-chrome
     todoist-electron
-    obsidian # Note-taking and knowledge base app
 
     # Communication and Media
     deckmaster
     discord
+    spotify
 
     # Development Tools
     gh
@@ -142,22 +142,22 @@
       scan_timeout = 10;
       command_timeout = 1000;
       add_newline = false;
-      
+
       # Enhanced single line prompt with additional modules
       format = "$username$hostname$directory$custom$git_branch$git_status$python$nodejs$rust$nix_shell$memory_usage$battery$cmd_duration$time$character";
-      
+
       username = {
         format = "[$user]($style) ";
         style_user = "#d9e2f7 bold";
         show_always = false;
       };
-      
+
       hostname = {
         format = "[@$hostname]($style) ";
         style = "#9aa3b8 bold";
         ssh_only = true;
       };
-      
+
       directory = {
         truncation_length = 3;
         truncate_to_repo = true;
@@ -166,19 +166,19 @@
         home_symbol = "🏠";
         read_only = " 🔒";
       };
-      
+
       character = {
         success_symbol = "[❯](#9aa3b8 bold)";
         error_symbol = "[❯](#cc5216 bold)";
         vimcmd_symbol = "[❮](#9aa3b8 bold)";
       };
-      
+
       git_branch = {
         format = "[$symbol$branch]($style) ";
         symbol = "󰘬 ";
         style = "#d9e2f7 bold";
       };
-      
+
       git_status = {
         format = "[$all_status$ahead_behind]($style)";
         style = "#cc5216 bold";
@@ -193,18 +193,18 @@
         renamed = "»";
         deleted = "✘";
       };
-      
+
       nix_shell = {
         format = "[❄️ $state( \($name\))]($style) ";
         style = "#9aa3b8 bold";
       };
-      
+
       cmd_duration = {
         format = "took [$duration]($style) ";
         style = "#cc5216";
         min_time = 2000;
       };
-      
+
       # Memory usage - shows current RAM usage
       memory_usage = {
         format = "$symbol[$ram_pct]($style) ";
@@ -213,7 +213,7 @@
         threshold = 75;
         disabled = false;
       };
-      
+
       # Battery - only shows when charging or below 100%
       battery = {
         format = "[$symbol$percentage]($style) ";
@@ -228,7 +228,7 @@
         ];
         disabled = false;
       };
-      
+
       # Time module
       time = {
         format = "🕙 [$time]($style) ";
@@ -236,7 +236,7 @@
         disabled = false;
         time_format = "%I:%M%p"; # 12-hour format with AM/PM
       };
-      
+
       # Custom indicators for specific contexts
       custom = {
         # Show special indicator when in the NixOS config directory
@@ -259,7 +259,7 @@
           disabled = false;
         };
       };
-      
+
       # Language version modules
       python = {
         format = "[$symbol$pyenv_prefix($version )($virtualenv )]($style)";
@@ -267,21 +267,21 @@
         style = "#9aa3b8";
         detect_extensions = [ "py" ];
       };
-      
+
       nodejs = {
         format = "[$symbol($version )]($style)";
         symbol = "⬢ ";
         style = "#9aa3b8";
         detect_extensions = [ "js" "jsx" "ts" "tsx" ];
       };
-      
+
       rust = {
         format = "[$symbol($version )]($style)";
         symbol = "🦀 ";
         style = "#cc5216";
         detect_extensions = [ "rs" ];
       };
-      
+
       # Completely disable line_break module
       line_break = {
         disabled = true;
@@ -314,13 +314,13 @@
     enableBashIntegration = true;
     options = [ "--cmd cd" ];
   };
-  
+
   # FZF - Command-line fuzzy finder
   programs.fzf = {
     enable = true;
     enableBashIntegration = true;
   };
-  
+
   # Tmux - Terminal multiplexer
   programs.tmux = {
     enable = true;
@@ -332,7 +332,7 @@
       # Improve colors
       set -g default-terminal "screen-256color"
       set -ga terminal-overrides ",*256col*:Tc"
-      
+
       # Set new panes to open in current directory
       bind c new-window -c "#{pane_current_path}"
       bind '"' split-window -c "#{pane_current_path}"
@@ -372,7 +372,7 @@
       "window-theme" = "dark";
       "cursor-style" = "block";
       "cursor-style-blink" = "true";
-      
+
       # UI preferences
       "confirm-close-surface" = "false";
       "mouse-hide-while-typing" = "true";
@@ -464,22 +464,22 @@
   # Hyprland configuration (conditional - will be enabled only on transporter)
   wayland.windowManager.hyprland = {
     # Will be enabled conditionally in the host-specific configuration
-    enable = lib.mkDefault false; 
-    
+    enable = lib.mkDefault false;
+
     # Use the Hyprland package from nixpkgs
     package = pkgs.hyprland;
-    
+
     # System integration
     systemd.enable = true;
     xwayland.enable = true;
-    
+
     # Hyprland configuration
     settings = {
       # Monitor configuration
       monitor = [
         "eDP-1,preferred,auto,1" # Laptop built-in display
       ];
-      
+
       # Input configuration
       input = {
         kb_layout = "us";
@@ -490,7 +490,7 @@
           tap-to-click = true;
         };
       };
-      
+
       # General settings
       general = {
         gaps_in = 5;
@@ -500,7 +500,7 @@
         "col.inactive_border" = "rgba(595959aa)";
         layout = "dwindle";
       };
-      
+
       # Decoration settings
       decoration = {
         rounding = 5;
@@ -513,7 +513,7 @@
         shadow_range = 4;
         shadow_render_power = 3;
       };
-      
+
       # Animation settings
       animations = {
         enabled = true;
@@ -526,25 +526,25 @@
           "workspaces, 1, 6, default"
         ];
       };
-      
+
       # Window layout settings
       dwindle = {
         pseudotile = true;
         preserve_split = true;
       };
-      
+
       # Miscellaneous
       misc = {
         force_default_wallpaper = 0;
       };
-      
+
       # Window rules
       windowrulev2 = [
         "float,class:^(pavucontrol)$"
         "float,class:^(nm-connection-editor)$"
         "float,title:^(btop)$"
       ];
-      
+
       # Key bindings
       "$mod" = "SUPER";
       bind = [
@@ -552,13 +552,13 @@
         "$mod, Return, exec, ghostty"  # Terminal
         "$mod, D, exec, wofi --show drun"  # App launcher
         "$mod, Q, killactive,"  # Close window
-        
+
         # Window management
         "$mod, V, togglefloating,"  # Toggle floating
         "$mod, J, layoutmsg, cyclenext"  # Cycle next window
         "$mod, K, layoutmsg, cycleprev"  # Cycle previous window
         "$mod, F, fullscreen, 0"  # Toggle fullscreen
-        
+
         # Workspace switching
         "$mod, 1, workspace, 1"
         "$mod, 2, workspace, 2"
@@ -569,7 +569,7 @@
         "$mod, 7, workspace, 7"
         "$mod, 8, workspace, 8"
         "$mod, 9, workspace, 9"
-        
+
         # Move window to workspace
         "$mod SHIFT, 1, movetoworkspace, 1"
         "$mod SHIFT, 2, movetoworkspace, 2"
@@ -580,23 +580,23 @@
         "$mod SHIFT, 7, movetoworkspace, 7"
         "$mod SHIFT, 8, movetoworkspace, 8"
         "$mod SHIFT, 9, movetoworkspace, 9"
-        
+
         # Screenshots
         ", Print, exec, grim -g \"$(slurp)\" - | wl-copy"  # Screenshot area to clipboard
         "SHIFT, Print, exec, grim -g \"$(slurp)\" ~/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png"  # Screenshot area to file
-        
+
         # Volume control
         ", XF86AudioRaiseVolume, exec, pamixer -i 5"
         ", XF86AudioLowerVolume, exec, pamixer -d 5"
         ", XF86AudioMute, exec, pamixer -t"
       ];
-      
+
       # Mouse bindings
       bindm = [
         "$mod, mouse:272, movewindow"  # Move windows with mouse
         "$mod, mouse:273, resizewindow"  # Resize windows with mouse
       ];
-      
+
       # Startup applications
       exec-once = [
         "waybar"  # Status bar
@@ -605,38 +605,38 @@
       ];
     };
   };
-  
+
   # Waybar configuration for Hyprland
   programs.waybar = {
     enable = true;
     systemd.enable = true;
-    
+
     style = ''
       * {
         font-family: "FiraCode Nerd Font";
         font-size: 13px;
       }
-      
+
       window#waybar {
         background-color: rgba(29, 29, 29, 0.8);
         color: #c0bfbc;
         transition-property: background-color;
         transition-duration: .5s;
       }
-      
+
       #workspaces button {
         padding: 0 5px;
         background-color: transparent;
         color: #c0bfbc;
         border-bottom: 3px solid transparent;
       }
-      
+
       #workspaces button.active {
         background-color: #3584e4;
         color: #ffffff;
         border-bottom: 3px solid #ffffff;
       }
-      
+
       #clock,
       #battery,
       #cpu,
@@ -650,36 +650,36 @@
         padding: 0 10px;
         margin: 0 4px;
       }
-      
+
       #battery.charging {
         color: #57e389;
       }
-      
+
       #battery.warning:not(.charging) {
         color: #f66151;
       }
     '';
-    
+
     settings = {
       mainBar = {
         layer = "top";
         position = "top";
         height = 30;
-        
+
         modules-left = ["hyprland/workspaces"];
         modules-center = ["hyprland/window"];
         modules-right = ["pulseaudio" "network" "cpu" "memory" "battery" "clock" "tray"];
-        
+
         "hyprland/workspaces" = {
           format = "{name}";
           "on-click" = "activate";
         };
-        
+
         "clock" = {
           "tooltip-format" = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
           "format-alt" = "{:%Y-%m-%d}";
         };
-        
+
         "battery" = {
           "states" = {
             "good" = 95;
@@ -691,7 +691,7 @@
           "format-plugged" = "{capacity}% ";
           "format-icons" = [ "" "" "" "" "" ];
         };
-        
+
         "network" = {
           "format-wifi" = "{essid} ({signalStrength}%) ";
           "format-ethernet" = "{ipaddr}/{cidr} ";
@@ -700,7 +700,7 @@
           "format-disconnected" = "Disconnected ⚠";
           "format-alt" = "{ifname}: {ipaddr}/{cidr}";
         };
-        
+
         "pulseaudio" = {
           "format" = "{volume}% {icon} {format_source}";
           "format-bluetooth" = "{volume}% {icon} {format_source}";
@@ -719,56 +719,56 @@
           };
           "on-click" = "pavucontrol";
         };
-        
+
         "cpu" = {
           "format" = "{usage}% ";
           "tooltip" = false;
         };
-        
+
         "memory" = {
           "format" = "{}% ";
         };
       };
     };
   };
-  
+
   # Other Hyprland-related programs
   programs.wofi = {
-    enable = lib.mkDefault false;  # Will be enabled conditionally 
+    enable = lib.mkDefault false;  # Will be enabled conditionally
     style = ''
       window {
         margin: 0px;
         background-color: #1d1d1d;
         border-radius: 10px;
       }
-      
+
       #input {
         margin: 5px;
         border: none;
         background-color: #2d2d2d;
         color: #c0bfbc;
       }
-      
+
       #outer-box {
         margin: 5px;
         border: none;
       }
-      
+
       #scroll {
         margin: 5px;
         border: none;
       }
-      
+
       #text {
         margin: 5px;
         color: #c0bfbc;
       }
-      
+
       #entry:selected {
         background-color: #3584e4;
         border-radius: 5px;
       }
-      
+
       #entry:selected * {
         color: #ffffff;
       }
