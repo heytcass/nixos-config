@@ -41,12 +41,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     
-    # NixOS Needs Reboot - Tool to notify of required reboots
-    nixos-needsreboot = {
-      url = "https://flakehub.com/f/wimpysworld/nixos-needsreboot/0.2.5.tar.gz";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    
     # Core package collections
     nixpkgs = {
       url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.761040.tar.gz";
@@ -82,7 +76,6 @@
     nix-vscode-extensions,
     nixos-generators,
     nixos-hardware,
-    nixos-needsreboot,
     nixpkgs, 
     nixpkgs-unstable, impermanence, 
     ... 
@@ -101,15 +94,6 @@
       
       # Import nixpkgs library functions
       lib = nixpkgs.lib;
-      
-      # NixOS Needs Reboot package module
-      # Note: The activation script is already defined in hosts/common/default.nix
-      needsRebootModule = { pkgs, ... }: {
-        imports = [];
-        config = { 
-          environment.systemPackages = [ nixos-needsreboot.packages.x86_64-linux.default ];
-        };
-      };
     in
     {
       # Define NixOS system configurations
@@ -134,8 +118,6 @@
             
             # Determinate Nix module
             inputs.determinate.nixosModules.default
-            
-            # NixOS Needs Reboot notification imported via common module
             
             # Home Manager configuration
             home-manager.nixosModules.home-manager
@@ -172,8 +154,6 @@
             
             # Determinate Nix module
             inputs.determinate.nixosModules.default
-            
-            # NixOS Needs Reboot notification imported via common module
             
             # Home Manager configuration
             home-manager.nixosModules.home-manager
