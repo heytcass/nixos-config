@@ -102,15 +102,6 @@
   fonts.packages = with pkgs; [
     nerd-fonts.fira-code
   ];
-  
-  # Run nixos-needsreboot after each rebuild
-  system.activationScripts.nixos-needsreboot = {
-    text = ''
-      echo "Checking if reboot is needed..."
-      ${pkgs.lib.getExe inputs.nixos-needsreboot.packages.${pkgs.system}.default} || true
-    '';
-    deps = [];
-  };
 
   # Enable Wayland support for Electron apps like Slack
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
