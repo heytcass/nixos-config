@@ -63,6 +63,7 @@
     deckmaster
     discord
     spotify
+    zoom-us
 
     # Development Tools
     gh
