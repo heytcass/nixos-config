@@ -85,7 +85,6 @@
   environment = {
     gnome.excludePackages = with pkgs; [
       epiphany
-      geary
       gnome-maps
       gnome-music
       gnome-tour
