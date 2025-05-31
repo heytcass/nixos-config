@@ -1,5 +1,7 @@
 # NixOS Configuration
 
+[![Build NixOS Configuration](https://github.com/heytcass/nixos-config/workflows/Build%20NixOS%20Configuration/badge.svg)](https://github.com/heytcass/nixos-config/actions/workflows/build.yml)
+
 Personal NixOS configuration using flakes for reproducible system management with automated maintenance.
 
 ## 🖥️ System Overview
