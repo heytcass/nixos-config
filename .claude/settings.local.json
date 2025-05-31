@@ -18,7 +18,10 @@
       "Bash(gh repo view:*)",
       "Bash(gh auth:*)",
       "Bash(git config:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh api:*)",
+      "Bash(git commit:*)"
     ],
     "deny": []
   }
