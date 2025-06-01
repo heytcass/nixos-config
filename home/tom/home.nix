@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  inputs,
   ...
 }: {
   # User configuration
@@ -34,6 +35,9 @@
     entr          # Run commands when files change
     croc          # Easy file transfer
     magic-wormhole-rs  # Secure file sharing
+    
+    # Claude Desktop with FHS for MCP servers
+    inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs
   ];
 
   # Dotfiles (currently managed through GUI/sync)
@@ -53,6 +57,10 @@
     };
     yazi = {
       name = "yazi";
+      noDisplay = true;
+    };
+    fish = {
+      name = "fish";
       noDisplay = true;
     };
   };

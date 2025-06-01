@@ -12,9 +12,15 @@
     
     # NixOS Hardware
     nixos-hardware.url = "github:NixOS/nixos-hardware";
+    
+    # Claude Desktop
+    claude-desktop = {
+      url = "github:k3d3/claude-desktop-linux-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-hardware, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, nixos-hardware, claude-desktop, ... }@inputs: {
     nixosConfigurations = {
       gti = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -30,6 +36,7 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.tom = import ./home/tom/home.nix;
+            home-manager.extraSpecialArgs = { inherit inputs; };
           }
         ];
       };
