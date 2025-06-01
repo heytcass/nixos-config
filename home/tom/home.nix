@@ -141,16 +141,16 @@
         git_status = {
           style = "bold yellow";
           format = ''([\[$all_status$ahead_behind\]]($style) )'';
-          ahead = "⇡\${count}";
-          behind = "⇣\${count}";
-          diverged = "⇕⇡\${ahead_count}⇣\${behind_count}";
-          conflicted = " \${count}";
-          deleted = " \${count}";
-          renamed = " \${count}";
-          modified = " \${count}";
-          staged = " \${count}";
-          untracked = " \${count}";
-          stashed = " \${count}";
+          ahead = "⇡$count";
+          behind = "⇣$count";
+          diverged = "⇕⇡$ahead_count⇣$behind_count";
+          conflicted = " $count";
+          deleted = " $count";
+          renamed = " $count";
+          modified = " $count";
+          staged = " $count";
+          untracked = " $count";
+          stashed = " $count";
         };
         
         cmd_duration = {
@@ -204,7 +204,7 @@
         
         python = {
           symbol = " ";
-          format = "[''${symbol}''${pyenv_prefix}($version )(\\($virtualenv\\) )]($style)";
+          format = "[\${symbol}\${pyenv_prefix}(\$version )(\$virtualenv )](\$style)";
           style = "bold yellow";
         };
         
@@ -228,7 +228,7 @@
         
         kubernetes = {
           symbol = "☸ ";
-          format = "[$symbol$context( \\($namespace\\))]($style) ";
+          format = "[$symbol$context( ($namespace))]($style) ";
           style = "bold cyan";
           disabled = false;
         };
