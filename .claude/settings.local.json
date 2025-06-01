@@ -22,7 +22,10 @@
       "Bash(gh run view:*)",
       "Bash(gh api:*)",
       "Bash(git commit:*)",
-      "Bash(git pull:*)"
+      "Bash(git pull:*)",
+      "Bash(gh status:*)",
+      "Bash(gh diff:*)",
+      "Bash(gh log:*)"
     ],
     "deny": []
   }
