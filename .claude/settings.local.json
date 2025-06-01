@@ -25,7 +25,9 @@
       "Bash(git pull:*)",
       "Bash(gh status:*)",
       "Bash(gh diff:*)",
-      "Bash(gh log:*)"
+      "Bash(gh log:*)",
+      "Bash(gh run list:*)",
+      "Bash(echo $SHELL)"
     ],
     "deny": []
   }

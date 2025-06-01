@@ -67,6 +67,9 @@
   # Audio
   security.rtkit.enable = true;
 
+  # Programs
+  programs.fish.enable = true;
+
   # Services
   services = {
     desktopManager.gnome.enable = true;
@@ -127,6 +130,7 @@
     description = "Tom Cassady";
     extraGroups = [ "networkmanager" "wheel" ];
     isNormalUser = true;
+    shell = pkgs.fish;
     packages = with pkgs; [
       bitwarden-desktop
       claude-code
