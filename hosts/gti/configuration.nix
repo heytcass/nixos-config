@@ -39,8 +39,25 @@
 
   # Nix configuration
   nix = {
-    settings.experimental-features = [ "flakes" "nix-command" ];
+    settings = {
+      experimental-features = [ "flakes" "nix-command" ];
+      substituters = [
+        "https://cache.nixos.org/"
+        "https://nix-community.cachix.org"
+      ];
+      trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
+      auto-optimise-store = true;
+      builders-use-substitutes = true;
+    };
     optimise.automatic = true;
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
   };
   nixpkgs.config.allowUnfree = true;
 
@@ -54,6 +71,7 @@
   services = {
     desktopManager.gnome.enable = true;
     displayManager.gdm.enable = true;
+    fwupd.enable = true;
     pipewire = {
       enable = true;
       alsa = {
@@ -94,6 +112,8 @@
     ];
     sessionVariables.NIXOS_OZONE_WL = "1";
     systemPackages = with pkgs; [
+      fwupd-efi
+      gnome-firmware
       gnomeExtensions.user-themes
       gnomeExtensions.appindicator
       gnomeExtensions.vitals
