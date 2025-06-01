@@ -101,50 +101,136 @@
       enableFishIntegration = true;
       enableBashIntegration = true;
       settings = {
-        format = "$all$character";
-        right_format = "$time";
+        format = ''
+          $username$hostname$directory$git_branch$git_status$nix_shell$package$nodejs$python$rust$golang$docker_context$kubernetes$cmd_duration$line_break$character'';
+        right_format = "$time$battery";
         
         character = {
-          success_symbol = "[➜](bold green)";
-          error_symbol = "[➜](bold red)";
+          success_symbol = "[❯](bold green)";
+          error_symbol = "[❯](bold red)";
+          vimcmd_symbol = "[❮](bold green)";
+        };
+        
+        username = {
+          show_always = false;
+          style_user = "bold blue";
+          style_root = "bold red";
+          format = "[$user]($style) ";
+        };
+        
+        hostname = {
+          ssh_only = true;
+          format = "[@$hostname]($style) ";
+          style = "bold cyan";
         };
         
         directory = {
+          style = "bold cyan";
+          format = "[$path]($style)[$read_only]($read_only_style) ";
           truncation_length = 3;
           truncate_to_repo = false;
+          read_only = " 󰌾";
         };
         
         git_branch = {
-          format = "[$symbol$branch]($style) ";
           symbol = " ";
+          format = "[$symbol$branch]($style) ";
+          style = "bold purple";
         };
         
         git_status = {
-          conflicted = "⚡";
-          ahead = "⇡";
-          behind = "⇣";
-          diverged = "⇕";
-          untracked = "?";
-          stashed = "$";
-          modified = "!";
-          staged = "+";
-          renamed = "»";
-          deleted = "✘";
-        };
-        
-        time = {
-          disabled = false;
-          format = "[$time]($style)";
-          time_format = "%H:%M";
+          style = "bold yellow";
+          format = ''([\[$all_status$ahead_behind\]]($style) )'';
+          ahead = "⇡\${count}";
+          behind = "⇣\${count}";
+          diverged = "⇕⇡\${ahead_count}⇣\${behind_count}";
+          conflicted = " \${count}";
+          deleted = " \${count}";
+          renamed = " \${count}";
+          modified = " \${count}";
+          staged = " \${count}";
+          untracked = " \${count}";
+          stashed = " \${count}";
         };
         
         cmd_duration = {
           min_time = 2000;
-          format = "[$duration]($style) ";
+          format = "[ $duration]($style) ";
+          style = "bold yellow";
+        };
+        
+        time = {
+          disabled = false;
+          format = "[ $time]($style)";
+          style = "bold white";
+          time_format = "%H:%M";
+        };
+        
+        battery = {
+          full_symbol = " ";
+          charging_symbol = " ";
+          discharging_symbol = " ";
+          unknown_symbol = " ";
+          empty_symbol = " ";
+          display = [
+            {
+              threshold = 10;
+              style = "bold red";
+            }
+            {
+              threshold = 30;
+              style = "bold yellow";
+            }
+          ];
         };
         
         nix_shell = {
-          format = "[nix $name]($style) ";
+          symbol = " ";
+          format = "[$symbol$name]($style) ";
+          style = "bold blue";
+        };
+        
+        package = {
+          symbol = "󰏗 ";
+          format = "[$symbol$version]($style) ";
+          style = "bold green";
+        };
+        
+        nodejs = {
+          symbol = " ";
+          format = "[$symbol($version )]($style)";
+          style = "bold green";
+        };
+        
+        python = {
+          symbol = " ";
+          format = "[''${symbol}''${pyenv_prefix}($version )(\\($virtualenv\\) )]($style)";
+          style = "bold yellow";
+        };
+        
+        rust = {
+          symbol = " ";
+          format = "[$symbol($version )]($style)";
+          style = "bold orange";
+        };
+        
+        golang = {
+          symbol = " ";
+          format = "[$symbol($version )]($style)";
+          style = "bold cyan";
+        };
+        
+        docker_context = {
+          symbol = " ";
+          format = "[$symbol$context]($style) ";
+          style = "bold blue";
+        };
+        
+        kubernetes = {
+          symbol = "☸ ";
+          format = "[$symbol$context( \\($namespace\\))]($style) ";
+          style = "bold cyan";
+          disabled = false;
         };
       };
     };
