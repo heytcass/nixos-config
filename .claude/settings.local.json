@@ -30,7 +30,8 @@
       "Bash(echo $SHELL)",
       "Bash(nix flake check:*)",
       "Bash(gh workflow run:*)",
-      "Bash(gh pr list:*)"
+      "Bash(gh pr list:*)",
+      "Bash(git clean:*)"
     ],
     "deny": []
   }
