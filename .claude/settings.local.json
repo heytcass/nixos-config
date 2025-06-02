@@ -28,7 +28,9 @@
       "Bash(gh log:*)",
       "Bash(gh run list:*)",
       "Bash(echo $SHELL)",
-      "Bash(nix flake check:*)"
+      "Bash(nix flake check:*)",
+      "Bash(gh workflow run:*)",
+      "Bash(gh pr list:*)"
     ],
     "deny": []
   }
