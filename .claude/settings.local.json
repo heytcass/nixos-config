@@ -34,5 +34,6 @@
       "Bash(git clean:*)"
     ],
     "deny": []
-  }
+  },
+  "enableAllProjectMcpServers": false
 }
