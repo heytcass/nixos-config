@@ -128,7 +128,7 @@
   # Users
   users.users.tom = {
     description = "Tom Cassady";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "dialout" ];
     isNormalUser = true;
     shell = pkgs.fish;
     packages = with pkgs; [
