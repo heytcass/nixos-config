@@ -31,7 +31,17 @@
       "Bash(nix flake check:*)",
       "Bash(gh workflow run:*)",
       "Bash(gh pr list:*)",
-      "Bash(git clean:*)"
+      "Bash(git clean:*)",
+      "Bash(gh pull:*)",
+      "Bash(git fetch:*)",
+      "Bash(git checkout:*)",
+      "Bash(git branch:*)",
+      "Bash(gh repo edit:*)",
+      "Bash(git remote set-head:*)",
+      "Bash(git for-each-ref:*)",
+      "Bash(nix flake metadata:*)",
+      "Bash(nix flake lock:*)",
+      "Bash(gh workflow list:*)"
     ],
     "deny": []
   },
