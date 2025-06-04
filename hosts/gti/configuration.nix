@@ -64,11 +64,26 @@
   # Time zone
   time.timeZone = "America/Detroit";
 
+  # Graphics and Gaming
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
   # Audio
   security.rtkit.enable = true;
 
   # Programs
-  programs.fish.enable = true;
+  programs = {
+    fish.enable = true;
+    steam = {
+      enable = true;
+      gamescopeSession.enable = true;
+      remotePlay.openFirewall = true;
+      dedicatedServer.openFirewall = true;
+      localNetworkGameTransfers.openFirewall = true;
+    };
+  };
 
   # Services
   services = {
