@@ -47,7 +47,9 @@
       "Bash(gh repo-list:*)",
       "Bash(gh branch:*)",
       "Bash(git cherry-pick:*)",
-      "Bash(gh push:*)"
+      "Bash(gh push:*)",
+      "Bash(rg:*)",
+      "Bash(code --version)"
     ],
     "deny": []
   },

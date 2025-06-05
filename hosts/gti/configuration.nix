@@ -128,7 +128,10 @@
       totem
       yelp
     ];
-    sessionVariables.NIXOS_OZONE_WL = "1";
+    sessionVariables = {
+      NIXOS_OZONE_WL = "1";
+      ELECTRON_OZONE_PLATFORM_HINT = "auto";
+    };
     systemPackages = with pkgs; [
       fwupd-efi
       gnome-firmware
@@ -137,6 +140,9 @@
       gnomeExtensions.vitals
       gnomeExtensions.pop-shell
       gnomeExtensions.blur-my-shell
+      gnomeExtensions.solaar-extension
+      logitech-udev-rules
+      solaar
     ];
   };
 
@@ -151,6 +157,7 @@
       claude-code
       google-chrome
       slack
+      zoom-us
     ];
   };
 
