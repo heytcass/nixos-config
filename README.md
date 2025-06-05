@@ -65,6 +65,7 @@ nix flake show
 ### Enhanced Shell Environment
 
 **Fish Shell** with automatic command aliases and **Starship Prompt** featuring:
+
 - 🔋 Battery status with charging indicators
 - 📁 Directory path with read-only lock icons  
 - 🐙 Git branch with status symbols ( ,  ,  , etc.)
@@ -176,7 +177,7 @@ This repository includes GitHub Actions workflows for hands-off maintenance:
 
 ### Hardware Changes
 
-- **Regenerate hardware config**: Run `nixos-generate-config` 
+- **Regenerate hardware config**: Run `nixos-generate-config`
 - **Update settings**: Modify `hosts/gti/hardware-configuration.nix` as needed
 - **Hardware modules**: Consider additional nixos-hardware modules for new devices
 
