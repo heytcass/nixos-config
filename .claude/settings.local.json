@@ -41,7 +41,13 @@
       "Bash(git for-each-ref:*)",
       "Bash(nix flake metadata:*)",
       "Bash(nix flake lock:*)",
-      "Bash(gh workflow list:*)"
+      "Bash(gh workflow list:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(gh repo-list:*)",
+      "Bash(gh branch:*)",
+      "Bash(git cherry-pick:*)",
+      "Bash(gh push:*)"
     ],
     "deny": []
   },
