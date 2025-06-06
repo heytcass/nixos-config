@@ -36,8 +36,11 @@
     croc          # Easy file transfer
     magic-wormhole-rs  # Secure file sharing
     
+    # Gaming tools
+    protonup-qt   # GUI tool for managing Proton versions
+    
     # Claude Desktop with FHS for MCP servers
-    # inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs
+    inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs
   ];
 
   # Dotfiles (currently managed through GUI/sync)
@@ -47,7 +50,9 @@
   services.ssh-agent.enable = true;
 
   # Environment variables
-  home.sessionVariables = {};
+  home.sessionVariables = {
+    STEAM_EXTRA_COMPAT_TOOLS_PATHS = "$HOME/.steam/root/compatibilitytools.d";
+  };
 
   # Hide terminal apps from launcher
   xdg.desktopEntries = {
