@@ -14,10 +14,10 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     
     # Claude Desktop
-    claude-desktop = {
-      url = "github:heytcass/claude-desktop-linux-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # claude-desktop = {
+    #   url = "github:heytcass/claude-desktop-linux-flake";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
   };
 
   outputs = { self, nixpkgs, home-manager, nixos-hardware, claude-desktop, ... }@inputs: {
