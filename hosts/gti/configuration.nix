@@ -83,9 +83,9 @@
       dedicatedServer.openFirewall = true;
       localNetworkGameTransfers.openFirewall = true;
     };
-    gamemode.enable = true;
-    gamemode.settings = {
-      enableOnSteam = true;
+    gamemode = {
+      enable = true;
+      enableRenice = true;
     };    
   };
 
