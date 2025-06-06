@@ -37,7 +37,7 @@
     magic-wormhole-rs  # Secure file sharing
     
     # Claude Desktop with FHS for MCP servers
-    inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs
+    # inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs
   ];
 
   # Dotfiles (currently managed through GUI/sync)
