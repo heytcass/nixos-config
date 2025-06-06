@@ -20,7 +20,7 @@
     # };
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-hardware, claude-desktop, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, nixos-hardware, ... }@inputs: {
     nixosConfigurations = {
       gti = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
