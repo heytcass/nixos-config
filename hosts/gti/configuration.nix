@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  inputs,
   ...
 }: {
   imports = [ ./hardware-configuration.nix ];
@@ -147,6 +148,9 @@
       gnomeExtensions.solaar-extension
       logitech-udev-rules
       solaar
+      
+      # Claude Desktop with FHS for MCP servers
+      inputs.claude-desktop.packages.${system}.claude-desktop-with-fhs
     ];
   };
 

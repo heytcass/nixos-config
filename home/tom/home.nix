@@ -38,9 +38,6 @@
     
     # Gaming tools
     protonup-qt   # GUI tool for managing Proton versions
-    
-    # Claude Desktop with FHS for MCP servers
-    inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs
   ];
 
   # Dotfiles (currently managed through GUI/sync)
