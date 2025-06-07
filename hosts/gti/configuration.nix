@@ -150,7 +150,7 @@
       solaar
       
       # Claude Desktop with FHS for MCP servers
-      inputs.claude-desktop.packages.${system}.claude-desktop-with-fhs
+      inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs
     ];
   };
 
@@ -163,8 +163,11 @@
     packages = with pkgs; [
       bitwarden-desktop
       claude-code
+      discord
       google-chrome
       slack
+      spotify
+      todoist-electron
       zoom-us
     ];
   };
