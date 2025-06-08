@@ -161,7 +161,9 @@
     isNormalUser = true;
     shell = pkgs.fish;
     packages = with pkgs; [
+      apostrophe
       bitwarden-desktop
+      boatswain
       claude-code
       discord
       google-chrome
