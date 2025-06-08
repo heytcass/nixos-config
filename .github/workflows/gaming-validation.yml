@@ -35,6 +35,7 @@ jobs:
 
       - name: Enable gaming-related Nix features
         run: |
+          mkdir -p ~/.config/nix
           echo "extra-platforms = x86_64-linux i686-linux" >> ~/.config/nix/nix.conf
           echo "extra-sandbox-paths = /dev/kvm" >> ~/.config/nix/nix.conf
 
@@ -48,7 +49,7 @@ jobs:
           echo "🚂 Validating Steam configuration..."
           
           # Check if Steam is enabled
-          STEAM_ENABLED=$(nix eval --raw .#nixosConfigurations.gti.config.programs.steam.enable)
+          STEAM_ENABLED=$(nix eval --expr '.#nixosConfigurations.gti.config.programs.steam.enable' --apply 'x: if x then "true" else "false"')
           echo "Steam enabled: $STEAM_ENABLED"
           
           if [ "$STEAM_ENABLED" = "true" ]; then
@@ -57,14 +58,14 @@ jobs:
             echo "- Steam: ✅ Enabled" >> $GITHUB_STEP_SUMMARY
             
             # Check GameScope session
-            GAMESCOPE_ENABLED=$(nix eval --raw .#nixosConfigurations.gti.config.programs.steam.gamescopeSession.enable)
+            GAMESCOPE_ENABLED=$(nix eval --expr '.#nixosConfigurations.gti.config.programs.steam.gamescopeSession.enable' --apply 'x: if x then "true" else "false"')
             echo "GameScope session: $GAMESCOPE_ENABLED"
             echo "- GameScope Session: $([ "$GAMESCOPE_ENABLED" = "true" ] && echo '✅' || echo '❌') $GAMESCOPE_ENABLED" >> $GITHUB_STEP_SUMMARY
             
             # Check firewall settings
-            REMOTE_PLAY=$(nix eval --raw .#nixosConfigurations.gti.config.programs.steam.remotePlay.openFirewall)
-            DEDICATED_SERVER=$(nix eval --raw .#nixosConfigurations.gti.config.programs.steam.dedicatedServer.openFirewall)
-            LOCAL_TRANSFERS=$(nix eval --raw .#nixosConfigurations.gti.config.programs.steam.localNetworkGameTransfers.openFirewall)
+            REMOTE_PLAY=$(nix eval --expr '.#nixosConfigurations.gti.config.programs.steam.remotePlay.openFirewall' --apply 'x: if x then "true" else "false"')
+            DEDICATED_SERVER=$(nix eval --expr '.#nixosConfigurations.gti.config.programs.steam.dedicatedServer.openFirewall' --apply 'x: if x then "true" else "false"')
+            LOCAL_TRANSFERS=$(nix eval --expr '.#nixosConfigurations.gti.config.programs.steam.localNetworkGameTransfers.openFirewall' --apply 'x: if x then "true" else "false"')
             
             echo "- Remote Play Firewall: $([ "$REMOTE_PLAY" = "true" ] && echo '✅' || echo '❌') $REMOTE_PLAY" >> $GITHUB_STEP_SUMMARY
             echo "- Dedicated Server Firewall: $([ "$DEDICATED_SERVER" = "true" ] && echo '✅' || echo '❌') $DEDICATED_SERVER" >> $GITHUB_STEP_SUMMARY
@@ -78,7 +79,7 @@ jobs:
         run: |
           echo "🎯 Validating GameMode configuration..."
           
-          GAMEMODE_ENABLED=$(nix eval --raw .#nixosConfigurations.gti.config.programs.gamemode.enable)
+          GAMEMODE_ENABLED=$(nix eval --expr '.#nixosConfigurations.gti.config.programs.gamemode.enable' --apply 'x: if x then "true" else "false"')
           echo "GameMode enabled: $GAMEMODE_ENABLED"
           
           echo "## 🎯 GameMode Configuration" >> $GITHUB_STEP_SUMMARY
@@ -102,8 +103,8 @@ jobs:
           echo "🎨 Validating graphics configuration..."
           
           # Check hardware graphics settings
-          GRAPHICS_ENABLED=$(nix eval --raw .#nixosConfigurations.gti.config.hardware.graphics.enable)
-          GRAPHICS_32BIT=$(nix eval --raw .#nixosConfigurations.gti.config.hardware.graphics.enable32Bit)
+          GRAPHICS_ENABLED=$(nix eval --expr '.#nixosConfigurations.gti.config.hardware.graphics.enable' --apply 'x: if x then "true" else "false"')
+          GRAPHICS_32BIT=$(nix eval --expr '.#nixosConfigurations.gti.config.hardware.graphics.enable32Bit' --apply 'x: if x then "true" else "false"')
           
           echo "## 🎨 Graphics Configuration" >> $GITHUB_STEP_SUMMARY
           echo "- Hardware Graphics: $([ "$GRAPHICS_ENABLED" = "true" ] && echo '✅' || echo '❌') $GRAPHICS_ENABLED" >> $GITHUB_STEP_SUMMARY
@@ -181,15 +182,15 @@ jobs:
           ISSUES=0
           
           # Steam validation
-          STEAM_ENABLED=$(nix eval --raw .#nixosConfigurations.gti.config.programs.steam.enable)
+          STEAM_ENABLED=$(nix eval --expr '.#nixosConfigurations.gti.config.programs.steam.enable' --apply 'x: if x then "true" else "false"')
           [ "$STEAM_ENABLED" != "true" ] && ISSUES=$((ISSUES + 1))
           
           # GameMode validation  
-          GAMEMODE_ENABLED=$(nix eval --raw .#nixosConfigurations.gti.config.programs.gamemode.enable)
+          GAMEMODE_ENABLED=$(nix eval --expr '.#nixosConfigurations.gti.config.programs.gamemode.enable' --apply 'x: if x then "true" else "false"')
           [ "$GAMEMODE_ENABLED" != "true" ] && ISSUES=$((ISSUES + 1))
           
           # Graphics validation
-          GRAPHICS_ENABLED=$(nix eval --raw .#nixosConfigurations.gti.config.hardware.graphics.enable)
+          GRAPHICS_ENABLED=$(nix eval --expr '.#nixosConfigurations.gti.config.hardware.graphics.enable' --apply 'x: if x then "true" else "false"')
           [ "$GRAPHICS_ENABLED" != "true" ] && ISSUES=$((ISSUES + 1))
           
           if [ $ISSUES -eq 0 ]; then
@@ -218,9 +219,9 @@ jobs:
             echo "Generated: $(date -u)"
             echo ""
             echo "## Configuration Status"
-            echo "- Steam: $(nix eval --raw .#nixosConfigurations.gti.config.programs.steam.enable)"
-            echo "- GameMode: $(nix eval --raw .#nixosConfigurations.gti.config.programs.gamemode.enable)" 
-            echo "- Graphics: $(nix eval --raw .#nixosConfigurations.gti.config.hardware.graphics.enable)"
+            echo "- Steam: $(nix eval --expr '.#nixosConfigurations.gti.config.programs.steam.enable' --apply 'x: if x then "true" else "false"')"
+            echo "- GameMode: $(nix eval --expr '.#nixosConfigurations.gti.config.programs.gamemode.enable' --apply 'x: if x then "true" else "false"')" 
+            echo "- Graphics: $(nix eval --expr '.#nixosConfigurations.gti.config.hardware.graphics.enable' --apply 'x: if x then "true" else "false"')"
             echo "- Kernel: $(nix eval --raw .#nixosConfigurations.gti.config.boot.kernelPackages.kernel.version)"
             echo ""
             echo "## Hardware Target"
