@@ -50,7 +50,18 @@
       "Bash(gh push:*)",
       "Bash(rg:*)",
       "Bash(code --version)",
-      "Bash(nix flake update:*)"
+      "Bash(nix flake update:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(git -C /home/tom/git/claude-desktop-linux-flake add pkgs/claude-desktop.nix)",
+      "Bash(git -C /home/tom/git/claude-desktop-linux-flake commit -m \"Update Claude Desktop to version 0.10.14\n\n- Update version from 0.9.3 to 0.10.14\n- Add cache-busting URL parameter to match upstream\n- Maintain correct hash from upstream fix\n- Resolves hash mismatch issues in CI builds\")",
+      "Bash(git -C /home/tom/git/claude-desktop-linux-flake push origin main)",
+      "Bash(WebFetch:*)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(git -C /home/tom/git/claude-desktop-linux-flake pull origin main)",
+      "Bash(git -C /home/tom/git/claude-desktop-linux-flake commit -m \"Update Claude Desktop to version 0.10.14\n\n- Update version from 0.9.3 to 0.10.14  \n- Update cache-busting URL parameter to match version\n- Update hash to match upstream fix\n- Resolves hash mismatch issues in CI builds\")",
+      "Bash(git -C /home/tom/git/claude-desktop-linux-flake checkout main)",
+      "Bash(git -C /home/tom/git/claude-desktop-linux-flake merge feature/dark-menu-theming)"
     ],
     "deny": []
   },
