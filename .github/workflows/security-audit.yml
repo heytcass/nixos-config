@@ -28,6 +28,11 @@ jobs:
   security-scan:
     runs-on: ubuntu-latest
     steps:
+      - name: Maximize build space for security audit
+        uses: wimpysworld/nothing-but-nix@main
+        with:
+          hatchet: carve
+
       - name: Checkout repository
         uses: actions/checkout@v4
 

@@ -23,6 +23,11 @@ jobs:
       packages: write
     
     steps:
+    - name: Maximize build space for ISO
+      uses: wimpysworld/nothing-but-nix@main
+      with:
+        hatchet: cleave
+
     - name: Checkout repository
       uses: actions/checkout@v4
       with:

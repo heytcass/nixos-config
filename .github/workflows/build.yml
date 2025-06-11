@@ -11,6 +11,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Maximize build space
+        uses: wimpysworld/nothing-but-nix@main
+        with:
+          hatchet: cleave
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
