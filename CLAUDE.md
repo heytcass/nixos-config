@@ -5,27 +5,40 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Development Commands
 
 ### System Management
-- **Build and switch configuration**: `sudo nixos-rebuild switch --flake .#gti`
-- **Build without switching**: `sudo nixos-rebuild build --flake .#gti`
-- **Test configuration**: `sudo nixos-rebuild test --flake .#gti`
+- **Build and switch configuration**: 
+  - `sudo nixos-rebuild switch --flake .#gti` (Dell XPS 13 9370 main workstation)
+  - `sudo nixos-rebuild switch --flake .#transporter` (Dell Latitude 7280 secondary laptop)
+- **Build without switching**: `sudo nixos-rebuild build --flake .#<hostname>`
+- **Test configuration**: `sudo nixos-rebuild test --flake .#<hostname>`
+- **Build ISO**: `nix build .#nixosConfigurations.iso.config.system.build.isoImage`
 - **Update flake inputs**: `nix flake update`
 - **Check flake**: `nix flake check`
 - **Garbage collect**: `sudo nix-collect-garbage -d` (remove old generations)
 - **List generations**: `sudo nix-env -p /nix/var/nix/profiles/system --list-generations`
 
 ### Configuration Structure
-This is a flake-based NixOS configuration for the "gti" host using Home Manager integration.
+This is a modular flake-based NixOS configuration supporting multiple hosts with shared common modules.
 
 **Key Architecture:**
-- `flake.nix` - Main entry point defining inputs (nixpkgs, home-manager, nixos-hardware) and system configuration
-- `hosts/gti/configuration.nix` - System-level NixOS configuration (services, users, packages)
-- `hosts/gti/hardware-configuration.nix` - Auto-generated hardware-specific settings (do not edit manually)
-- `home/tom/home.nix` - User-specific Home Manager configuration with modern CLI tools and enhanced shell setup
+- `flake.nix` - Main entry point defining inputs (nixpkgs, home-manager, nixos-hardware, claude-desktop) and all host configurations
+- `hosts/<hostname>/configuration.nix` - Host-specific settings and module imports
+- `hosts/<hostname>/hardware-configuration.nix` - Auto-generated hardware-specific settings (do not edit manually)
+- `modules/common/` - Shared configuration modules:
+  - `base.nix` - Core system configuration
+  - `desktop.nix` - GNOME desktop environment setup
+  - `development.nix` - Development tools and environment
+  - `gaming.nix` - Gaming-specific packages and settings (optional per host)
+  - `users.nix` - User account configuration
+- `home/tom/home.nix` - User-specific Home Manager configuration shared across all hosts
 
 **Important Details:**
 - Uses `home-manager.useGlobalPkgs = true` - do NOT set nixpkgs options in home.nix
-- Targets Dell XPS 13 9370 with nixos-hardware module for optimal hardware support
+- **Supported hosts:**
+  - `gti`: Dell XPS 13 9370 (main workstation) with gaming.nix module
+  - `transporter`: Dell Latitude 7280 (secondary laptop) without gaming.nix
+  - `iso`: Live ISO configuration for installation/recovery
 - Uses unstable nixpkgs channel for latest packages
+- Each host uses appropriate nixos-hardware module for optimal hardware support
 - System uses latest Linux kernel and GNOME desktop with GDM
 - Keyboard layout set to Colemak variant for ergonomic typing
 - Plymouth boot splash enabled for smooth boot experience
@@ -33,6 +46,7 @@ This is a flake-based NixOS configuration for the "gti" host using Home Manager 
 - Git credential helper configured system-wide
 - fwupd enabled for firmware updates
 - Modern shell environment with Fish and enhanced Starship prompt
+- Claude Desktop integration via custom flake input
 
 **Service Configuration Updates:**
 - Use `services.displayManager.gdm.enable` (not `services.xserver.displayManager.gdm.enable`)
@@ -57,6 +71,12 @@ This is a flake-based NixOS configuration for the "gti" host using Home Manager 
   - `bottom` → advanced system monitor
   - `gping` → ping with real-time graphs
   - `dua` → visual disk usage analyzer
+  - `yazi` → terminal file manager
+  - `dogdns` → modern dig replacement
+  - `bandwhich` → network usage by process
+  - `mtr` → better traceroute
+  - `hyperfine` → command-line benchmarking
+  - `tldr` → simplified man pages
 
 ### Git Configuration
 - **User**: Tom Cassady (heytcass@gmail.com)
@@ -67,32 +87,53 @@ This is a flake-based NixOS configuration for the "gti" host using Home Manager 
 ## Common Tasks
 
 ### Package Management
-- **Add system packages**: Edit `users.users.tom.packages` in `hosts/gti/configuration.nix`
+- **Add system packages**: Edit the appropriate module in `modules/common/`:
+  - `development.nix` for development tools
+  - `gaming.nix` for gaming-related packages
+  - `desktop.nix` for desktop applications
+  - `base.nix` for core system packages
 - **Add user packages**: Edit `home.packages` in `home/tom/home.nix`
+- **Host-specific packages**: Add directly to `hosts/<hostname>/configuration.nix` if needed
 - **Add development tools**: Consider using `shell.nix` or `flake.nix` for project-specific environments
 
 ### Configuration Changes
-- **Modify system services**: Edit services section in `hosts/gti/configuration.nix`
+- **Modify shared system services**: Edit services section in appropriate `modules/common/` file
+- **Host-specific services**: Edit services section in `hosts/<hostname>/configuration.nix`
 - **Update shell aliases**: Edit `programs.fish.shellAliases` or `programs.bash.shellAliases` in `home/tom/home.nix`
 - **Customize starship prompt**: Edit `programs.starship.settings` in `home/tom/home.nix`
-- **Change hardware**: Regenerate `hardware-configuration.nix` with `nixos-generate-config`
+- **Change hardware**: Regenerate `hardware-configuration.nix` with `nixos-generate-config` for specific host
+- **Add new host**: Create new directory in `hosts/` and add configuration to `flake.nix`
 
 ### Maintenance
-- **Apply changes**: Run `sudo nixos-rebuild switch --flake .#gti` after any configuration edits
+- **Apply changes**: Run `sudo nixos-rebuild switch --flake .#<hostname>` after any configuration edits
 - **Update dependencies**: Run `nix flake update` to update all flake inputs
+- **Build ISO**: Run `nix build .#nixosConfigurations.iso.config.system.build.isoImage`
 - **Clean up**: Use `sudo nix-collect-garbage -d` to remove old generations and free disk space
 - **Backup important data**: Configuration is in git, but backup `/home/tom` user data separately
 
 ## File Structure Overview
 ```
 /home/tom/.nixos/
-├── flake.nix                    # Main flake configuration
+├── flake.nix                    # Main flake configuration with all hosts
 ├── flake.lock                   # Locked dependency versions
-├── hosts/gti/
-│   ├── configuration.nix        # System configuration
-│   └── hardware-configuration.nix  # Hardware-specific settings
-├── home/tom/
-│   └── home.nix                 # User environment configuration
+├── hosts/                       # Host-specific configurations
+│   ├── gti/                     # Dell XPS 13 9370 (main workstation)
+│   │   ├── configuration.nix    # Host-specific settings
+│   │   └── hardware-configuration.nix  # Hardware-specific settings
+│   ├── transporter/             # Dell Latitude 7280 (secondary laptop)
+│   │   ├── configuration.nix    # Host-specific settings
+│   │   └── hardware-configuration.nix  # Hardware-specific settings
+│   └── iso/                     # Live ISO configuration
+│       └── configuration.nix    # ISO-specific settings
+├── modules/common/              # Shared configuration modules
+│   ├── base.nix                 # Core system configuration
+│   ├── desktop.nix              # GNOME desktop environment
+│   ├── development.nix          # Development tools and environment
+│   ├── gaming.nix               # Gaming-specific packages and settings
+│   └── users.nix                # User account configuration
+├── home/tom/                    # User Home Manager configuration
+│   ├── home.nix                 # User environment shared across hosts
+│   └── secrets/                 # User secrets (git-ignored)
 ├── CLAUDE.md                    # This file
 └── README.md                    # Project documentation
 ```

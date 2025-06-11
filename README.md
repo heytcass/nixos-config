@@ -6,7 +6,14 @@ Personal NixOS configuration using flakes for reproducible system management wit
 
 ## 🖥️ System Overview
 
-- **Host**: Dell XPS 13 9370 (`gti`) with nixos-hardware optimization
+This is a modular NixOS configuration supporting multiple hosts with shared configuration modules:
+
+### Supported Hosts
+- **gti**: Dell XPS 13 9370 (main workstation) with full desktop, gaming, and development setup
+- **transporter**: Dell Latitude 7280 (secondary laptop) with desktop and development setup
+- **iso**: Live ISO configuration for installation and recovery
+
+### Common Features
 - **Desktop**: GNOME with GDM and Wayland optimization
 - **Kernel**: Latest Linux kernel with firmware updates (fwupd)
 - **Boot**: systemd-boot with Plymouth splash screen
@@ -19,16 +26,33 @@ Personal NixOS configuration using flakes for reproducible system management wit
 ```text
 ├── flake.nix                      # Main flake configuration with inputs
 ├── flake.lock                     # Locked dependency versions
-├── hosts/gti/
-│   ├── configuration.nix          # System-level NixOS configuration
-│   └── hardware-configuration.nix # Auto-generated hardware settings
-├── home/tom/
-│   └── home.nix                   # User Home Manager configuration
+├── hosts/                         # Host-specific configurations
+│   ├── gti/                       # Dell XPS 13 9370 (main workstation)
+│   │   ├── configuration.nix      # Host-specific settings
+│   │   └── hardware-configuration.nix # Auto-generated hardware settings
+│   ├── transporter/               # Dell Latitude 7280 (secondary laptop)
+│   │   ├── configuration.nix      # Host-specific settings
+│   │   └── hardware-configuration.nix # Auto-generated hardware settings
+│   └── iso/                       # Live ISO configuration
+│       └── configuration.nix      # ISO-specific settings
+├── modules/common/                # Shared configuration modules
+│   ├── base.nix                   # Core system configuration
+│   ├── desktop.nix                # GNOME desktop environment
+│   ├── development.nix            # Development tools and environment
+│   ├── gaming.nix                 # Gaming-specific packages and settings
+│   └── users.nix                  # User account configuration
+├── home/tom/                      # User Home Manager configuration
+│   ├── home.nix                   # User environment and packages
+│   └── secrets/                   # User secrets (git-ignored)
 ├── CLAUDE.md                      # AI assistant guidance for this repo
 ├── README.md                      # This documentation
 └── .github/workflows/             # Automated maintenance workflows
-    ├── build.yml                  # Build validation
+    ├── build.yml                  # Multi-host build validation
+    ├── build-iso.yml              # ISO image build testing
+    ├── claude.yml                 # Claude Desktop integration
     ├── flake-checker.yml          # Dependency health checks
+    ├── gaming-validation.yml      # Gaming environment validation
+    ├── security-audit.yml         # Security scanning
     └── update-flake-lock.yml      # Weekly dependency updates
 ```
 
@@ -37,14 +61,18 @@ Personal NixOS configuration using flakes for reproducible system management wit
 ### Building the Configuration
 
 ```bash
-# Build system configuration
-sudo nixos-rebuild switch --flake .#gti
+# Build system configuration for specific host
+sudo nixos-rebuild switch --flake .#gti          # Main workstation
+sudo nixos-rebuild switch --flake .#transporter # Secondary laptop
 
 # Build without switching (test first)
 sudo nixos-rebuild build --flake .#gti
 
 # Test configuration temporarily
 sudo nixos-rebuild test --flake .#gti
+
+# Build ISO image
+nix build .#nixosConfigurations.iso.config.system.build.isoImage
 ```
 
 ### Managing Dependencies
@@ -90,15 +118,18 @@ Includes modern CLI replacements with convenient aliases:
 - `bandwhich` (network usage by process)
 - `hyperfine` (command-line benchmarking)
 
-### System Configuration
+### Modular System Architecture
 
+- **Shared modules** for consistent configuration across hosts
+- **Host-specific customization** via individual configuration files
 - **Colemak keyboard layout** for ergonomic typing
 - **Auto-optimization** enabled (weekly Nix store optimization)
-- **Latest kernel** with hardware-specific optimizations
+- **Latest kernel** with hardware-specific optimizations via nixos-hardware
 - **Wayland optimization** with NIXOS_OZONE_WL environment variables
 - **Curated GNOME** with unnecessary applications removed
 - **fwupd integration** for automatic firmware updates
-- **Build caching** for faster rebuilds
+- **Gaming support** (optional per host via gaming.nix module)
+- **Live ISO** for installation and system recovery
 
 ### Development Environment
 
@@ -120,23 +151,28 @@ This repository includes GitHub Actions workflows for hands-off maintenance:
 
 ### Continuous Integration
 
-- **Build Validation**: Tests all configurations on push/PR
+- **Multi-Host Build Validation**: Tests all host configurations on push/PR
+- **ISO Build Testing**: Validates live ISO generation
+- **Gaming Environment Validation**: Tests gaming-specific configurations
 - **Flake Health Checks**: Validates dependency sources and freshness
-- Ensures configurations always build successfully
+- **Claude Desktop Integration**: Automated testing of AI development tools
+- Ensures all configurations always build successfully
 
 ### Security & Quality
 
+- **Security Auditing**: Regular vulnerability scanning of system packages
 - **Dependency Scanning**: Checks for outdated or unsupported inputs
-- **Build Verification**: Validates both NixOS and Home Manager configs
-- **Automated Testing**: Runs comprehensive checks on every change
+- **Multi-Host Build Verification**: Validates all host configurations and Home Manager configs
+- **Comprehensive Testing**: Gaming, desktop, development environments tested automatically
 
 ## 📋 System Components
 
 ### Core System
 
 - NixOS unstable channel
-- Home Manager integration
-- nixos-hardware Dell XPS 13 9370 module
+- Home Manager integration with shared user configuration
+- nixos-hardware modules for Dell XPS 13 9370 and Dell Latitude 7280
+- Modular architecture with shared common modules
 - Auto-optimization enabled
 
 ### Desktop Environment
@@ -153,14 +189,17 @@ This repository includes GitHub Actions workflows for hands-off maintenance:
 - Bitwarden (password management)
 - Google Chrome (web browsing)
 - Slack (communication)
-- Claude Code (AI-powered development)
+- Claude Desktop (AI-powered development)
+- VS Code (code editor)
+- Gaming tools (protonup-qt for Steam/Proton management)
 
 ## 🔧 Customization
 
 ### Adding Packages
 
-- **System packages**: Edit `users.users.tom.packages` in `hosts/gti/configuration.nix`
+- **System packages**: Edit the appropriate module in `modules/common/` (e.g., `development.nix`, `gaming.nix`)
 - **User packages**: Edit `home.packages` in `home/tom/home.nix`
+- **Host-specific packages**: Add to individual host configurations if needed
 - **Development tools**: Consider project-specific `shell.nix` or `flake.nix` files
 
 ### Shell and Prompt Customization
@@ -171,24 +210,29 @@ This repository includes GitHub Actions workflows for hands-off maintenance:
 
 ### System Services
 
-- **Modify services**: Edit the `services` section in `hosts/gti/configuration.nix`
+- **Modify shared services**: Edit the appropriate module in `modules/common/`
+- **Host-specific services**: Edit services in individual host configurations
 - **Enable new features**: Add hardware or service modules to configuration
-- **Apply changes**: Run `sudo nixos-rebuild switch --flake .#gti`
+- **Apply changes**: Run `sudo nixos-rebuild switch --flake .#<hostname>`
 
 ### Hardware Changes
 
-- **Regenerate hardware config**: Run `nixos-generate-config`
-- **Update settings**: Modify `hosts/gti/hardware-configuration.nix` as needed
-- **Hardware modules**: Consider additional nixos-hardware modules for new devices
+- **Regenerate hardware config**: Run `nixos-generate-config` and update appropriate host
+- **Update settings**: Modify `hosts/<hostname>/hardware-configuration.nix` as needed
+- **Hardware modules**: Add appropriate nixos-hardware modules to host configuration
+- **New hosts**: Create new directory in `hosts/` and add to `flake.nix`
 
 ### Maintenance Commands
 
 ```bash
-# Apply configuration changes
-sudo nixos-rebuild switch --flake .#gti
+# Apply configuration changes (replace <hostname> with gti, transporter, etc.)
+sudo nixos-rebuild switch --flake .#<hostname>
 
 # Update all dependencies  
 nix flake update
+
+# Build ISO image
+nix build .#nixosConfigurations.iso.config.system.build.isoImage
 
 # Clean up old generations
 sudo nix-collect-garbage -d
