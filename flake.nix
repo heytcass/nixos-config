@@ -28,8 +28,22 @@
         modules = [
           ./hosts/gti/configuration.nix
           
-          # Dell XPS 9370 hardware support
-          nixos-hardware.nixosModules.dell-xps-13-9370
+          # Add Home Manager module
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.tom = import ./home/tom/home.nix;
+            home-manager.extraSpecialArgs = { inherit inputs; };
+          }
+        ];
+      };
+      
+      transporter = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
+        modules = [
+          ./hosts/transporter/configuration.nix
           
           # Add Home Manager module
           home-manager.nixosModules.home-manager

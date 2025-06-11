@@ -49,6 +49,9 @@
   # Environment variables
   home.sessionVariables = {
     STEAM_EXTRA_COMPAT_TOOLS_PATHS = "$HOME/.steam/root/compatibilitytools.d";
+    EDITOR = "micro";
+    SYSTEMD_EDITOR = "micro";
+    VISUAL = "micro";
   };
 
   # Hide terminal apps from launcher
@@ -63,6 +66,10 @@
     };
     fish = {
       name = "fish";
+      noDisplay = true;
+    };
+    micro = {
+      name = "micro";
       noDisplay = true;
     };
   };
@@ -86,6 +93,7 @@
         ping = "gping";
         du = "dua interactive";
         tree = "eza --tree";
+        nano = "micro";
       };
     };
     
@@ -103,6 +111,7 @@
         ping = "gping";
         du = "dua interactive";
         tree = "eza --tree";
+        nano = "micro";
       };
     };
     
