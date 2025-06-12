@@ -26,7 +26,7 @@ jobs:
     - name: Maximize build space for ISO
       uses: wimpysworld/nothing-but-nix@main
       with:
-        hatchet: cleave
+        hatchet-protocol: cleave
 
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -41,8 +41,8 @@ jobs:
         log-directives: nix_installer=trace
         backtrace: full
 
-    - name: Run the Magic Nix Cache
-      uses: DeterminateSystems/magic-nix-cache-action@main
+    - name: Run FlakeHub Cache
+      uses: DeterminateSystems/flakehub-cache-action@main
 
     - name: Set up Cachix
       uses: cachix/cachix-action@v15

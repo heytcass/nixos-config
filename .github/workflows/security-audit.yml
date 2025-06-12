@@ -31,7 +31,7 @@ jobs:
       - name: Maximize build space for security audit
         uses: wimpysworld/nothing-but-nix@main
         with:
-          hatchet: carve
+          hatchet-protocol: carve
 
       - name: Checkout repository
         uses: actions/checkout@v4
