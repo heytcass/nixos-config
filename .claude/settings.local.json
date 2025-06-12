@@ -61,7 +61,8 @@
       "Bash(git -C /home/tom/git/claude-desktop-linux-flake pull origin main)",
       "Bash(git -C /home/tom/git/claude-desktop-linux-flake commit -m \"Update Claude Desktop to version 0.10.14\n\n- Update version from 0.9.3 to 0.10.14  \n- Update cache-busting URL parameter to match version\n- Update hash to match upstream fix\n- Resolves hash mismatch issues in CI builds\")",
       "Bash(git -C /home/tom/git/claude-desktop-linux-flake checkout main)",
-      "Bash(git -C /home/tom/git/claude-desktop-linux-flake merge feature/dark-menu-theming)"
+      "Bash(git -C /home/tom/git/claude-desktop-linux-flake merge feature/dark-menu-theming)",
+      "Bash(gh release list:*)"
     ],
     "deny": []
   },
