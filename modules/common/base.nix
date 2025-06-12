@@ -10,8 +10,54 @@
     loader = {
       efi.canTouchEfiVariables = true;
       systemd-boot.enable = true;
+      timeout = 2; # Faster boot timeout
     };
-    plymouth.enable = true;
+    
+    # Enhanced Plymouth configuration for cleaner boot
+    plymouth = {
+      enable = true;
+      theme = "breeze"; # Clean theme that matches well with GNOME
+    };
+    
+    # Kernel parameters for performance and clean boot
+    kernelParams = [
+      # Boot experience
+      "quiet"           # Suppress most kernel messages
+      "splash"          # Show splash screen
+      "vga=current"     # Keep current video mode
+      "rd.systemd.show_status=false"  # Hide systemd status in initrd
+      "rd.udev.log_level=3"           # Reduce udev log level
+      "udev.log_priority=3"           # Reduce udev log priority
+      
+      # Intel graphics optimization
+      "i915.enable_guc=2"      # Enable GuC and HuC firmware
+      "i915.enable_fbc=1"      # Enable framebuffer compression
+      "intel_iommu=on"         # Enable Intel IOMMU for security/virt
+      
+      # Performance optimizations
+      "transparent_hugepage=madvise"  # Better memory management
+      "numa_balancing=enable"         # NUMA balancing for multi-core
+    ];
+    
+    # Further reduce console messages during boot
+    consoleLogLevel = 3; # Only show errors and critical messages
+    
+    # Kernel sysctl parameters for performance
+    kernel.sysctl = {
+      # Memory management optimizations
+      "vm.swappiness" = 10; # Prefer RAM over swap
+      "vm.vfs_cache_pressure" = 50; # Keep filesystem cache longer
+      "vm.dirty_ratio" = 15; # Better write performance
+      "vm.dirty_background_ratio" = 5; # Background writeback tuning
+      
+      # Network performance
+      "net.core.default_qdisc" = "fq";
+      "net.ipv4.tcp_congestion_control" = "bbr";
+      
+      # File system performance
+      "fs.file-max" = 2097152;
+      "fs.inotify.max_user_watches" = 524288;
+    };
   };
 
   # Internationalization
@@ -79,6 +125,12 @@
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
+    
+    # Intel graphics hardware acceleration
+    extraPackages = with pkgs; [
+      intel-media-driver # VA-API support for Intel graphics
+      intel-vaapi-driver # Legacy VA-API support
+    ];
   };
 
   # Laptop optimizations
@@ -93,10 +145,13 @@
     tlp = {
       enable = true;
       settings = {
-        CPU_SCALING_GOVERNOR_ON_AC = "performance";
+        # Use Intel P-State driver for better efficiency
+        CPU_SCALING_GOVERNOR_ON_AC = "powersave";
         CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
         
-        CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+        # Intel P-State specific settings
+        CPU_SCALING_DRIVER = "intel_pstate";
+        CPU_ENERGY_PERF_POLICY_ON_AC = "balance_performance";
         CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
         
         CPU_MIN_PERF_ON_AC = 0;
@@ -120,7 +175,63 @@
 
     # Auto-mount USB devices
     udisks2.enable = true;
+    
+    # SSD optimization - safe weekly TRIM
+    fstrim.enable = true;
   };
+  
+  # I/O scheduler optimization for different storage types
+  services.udev.extraRules = ''
+    # Set I/O scheduler for NVMe devices
+    ACTION=="add|change", KERNEL=="nvme[0-9]*n[0-9]*", ATTR{queue/scheduler}="none"
+    # Set I/O scheduler for SATA SSDs
+    ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="mq-deadline"
+    # Optimize NVMe power management
+    ACTION=="add|change", KERNEL=="nvme[0-9]*", ATTR{power/control}="auto"
+  '';
+  
+  # Zram swap for better memory utilization
+  zramSwap = {
+    enable = true;
+    algorithm = "lz4"; # Fast compression
+    memoryPercent = 50; # Use 50% of RAM for compressed swap
+  };
+  
+  # Safe filesystem optimizations (avoid aggressive options that caused boot issues)
+  fileSystems."/".options = [ "noatime" ];
+  
+  # CPU frequency scaling optimization
+  powerManagement.cpuFreqGovernor = lib.mkDefault "powersave"; # Works well with intel_pstate
+  
+  # Systemd optimizations for faster boot and better performance
+  systemd = {
+    # Reduce service start timeouts
+    extraConfig = ''
+      DefaultTimeoutStartSec=30s
+      DefaultTimeoutStopSec=15s
+      DefaultDeviceTimeoutSec=15s
+    '';
+  };
+  
+  # Optimize systemd-journald separately
+  services.journald.extraConfig = ''
+    SystemMaxUse=100M
+    RuntimeMaxUse=50M
+    MaxRetentionSec=1week
+    ForwardToSyslog=no
+  '';
+  
+  # Move /tmp to tmpfs for better performance (RAM-based)
+  boot.tmp = {
+    useTmpfs = true;
+    tmpfsSize = "2G"; # Adjust based on your needs
+  };
+  
+  # Intel microcode updates for security and performance
+  hardware.cpu.intel.updateMicrocode = true;
+  
+  # IRQ balancing for better multi-core performance
+  services.irqbalance.enable = true;
 
   # Network management
   networking.networkmanager.enable = true;
