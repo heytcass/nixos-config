@@ -68,7 +68,8 @@
       "Bash(systemctl status:*)",
       "Bash(echo $LIBVA_DRIVER_NAME)",
       "Bash(nix-env:*)",
-      "Bash(nix search:*)"
+      "Bash(nix search:*)",
+      "Bash(nix flake show:*)"
     ],
     "deny": []
   },

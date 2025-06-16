@@ -18,6 +18,7 @@
       url = "github:heytcass/claude-desktop-linux-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    
   };
 
   outputs = { self, nixpkgs, home-manager, nixos-hardware, claude-desktop, ... }@inputs: {
@@ -62,6 +63,12 @@
         specialArgs = { inherit inputs; };
         modules = [
           ./hosts/iso/configuration.nix
+          # Apply ISO-specific overlays
+          ({ config, lib, pkgs, ... }: {
+            nixpkgs.overlays = [
+              (import ./overlays { inherit inputs; }).iso-optimizations
+            ];
+          })
         ];
       };
     };
