@@ -11,32 +11,44 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Build without switching**: `sudo nixos-rebuild build --flake .#<hostname>`
 - **Test configuration**: `sudo nixos-rebuild test --flake .#<hostname>`
 - **Build ISO**: `nix build .#nixosConfigurations.iso.config.system.build.isoImage`
+- **Development shell**: `nix develop` (includes nixd, nil, statix, deadnix, sops, age)
+- **Build Home Manager standalone**: `nix build .#homeConfigurations."tom@gti"`
 - **Update flake inputs**: `nix flake update`
 - **Check flake**: `nix flake check`
 - **Garbage collect**: `sudo nix-collect-garbage -d` (remove old generations)
 - **List generations**: `sudo nix-env -p /nix/var/nix/profiles/system --list-generations`
 
 ### Configuration Structure
-This is a modular flake-based NixOS configuration supporting multiple hosts with shared common modules.
+This is a modular flake-based NixOS configuration with a **mixin system** supporting multiple hosts with conditional feature loading.
 
 **Key Architecture:**
-- `flake.nix` - Main entry point defining inputs (nixpkgs, home-manager, nixos-hardware, claude-desktop) and all host configurations
-- `hosts/<hostname>/configuration.nix` - Host-specific settings and module imports
-- `hosts/<hostname>/hardware-configuration.nix` - Auto-generated hardware-specific settings (do not edit manually)
-- `modules/common/` - Shared configuration modules:
-  - `base.nix` - Core system configuration
-  - `desktop.nix` - GNOME desktop environment setup
-  - `development.nix` - Development tools and environment
-  - `gaming.nix` - Gaming-specific packages and settings (optional per host)
-  - `users.nix` - User account configuration
-- `home/tom/home.nix` - User-specific Home Manager configuration shared across all hosts
+- `flake.nix` - Main entry point with helper functions for DRY system generation
+- `lib/helpers.nix` - Helper functions for consistent system creation and type detection
+- `nixos/default.nix` - Base NixOS configuration with conditional mixin imports
+- `nixos/_mixins/` - Modular feature-based configuration components:
+  - `services/base.nix` - Core system configuration with conditional loading
+  - `desktop/gnome.nix` - GNOME desktop environment (skipped for ISO)
+  - `features/development.nix` - Development tools and environment
+  - `features/gaming.nix` - Gaming stack (workstation only)
+  - `services/users.nix` - User account configuration with conditional packages
+- `hosts/<hostname>/configuration.nix` - Minimal host-specific settings
+- `hosts/<hostname>/hardware-configuration.nix` - Auto-generated hardware settings
+- `home/tom/home.nix` - User-specific Home Manager configuration
+- `overlays/` - Package customizations and optimizations
+
+**Mixin System Benefits:**
+- **Conditional Loading**: Features automatically included/excluded based on system type
+- **DRY Architecture**: Helper functions eliminate configuration duplication
+- **Type Detection**: Automatic workstation/laptop/ISO detection for conditional features
+- **Modular Design**: Easy to add/remove features without touching core configuration
 
 **Important Details:**
 - Uses `home-manager.useGlobalPkgs = true` - do NOT set nixpkgs options in home.nix
 - **Supported hosts:**
-  - `gti`: Dell XPS 13 9370 (main workstation) with gaming.nix module
-  - `transporter`: Dell Latitude 7280 (secondary laptop) without gaming.nix
-  - `iso`: Live ISO configuration for installation/recovery
+  - `gti`: Dell XPS 13 9370 (main workstation) - automatically includes gaming features
+  - `transporter`: Dell Latitude 7280 (secondary laptop) - gaming features auto-excluded
+  - `iso`: Live ISO configuration - desktop/laptop features conditionally loaded
+- **System Type Detection**: Hostnames determine feature sets automatically
 - Uses unstable nixpkgs channel for latest packages
 - Each host uses appropriate nixos-hardware module for optimal hardware support
 - System uses latest Linux kernel and GNOME desktop with GDM
