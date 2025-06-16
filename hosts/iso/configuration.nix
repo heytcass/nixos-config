@@ -2,11 +2,7 @@
 
 {
   imports = [
-    # Core system modules
-    ../../modules/common/base.nix
-    ../../modules/common/users.nix
-    
-    # NixOS ISO module
+    # NixOS ISO module provides basic system configuration
     "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-gnome.nix"
   ];
 
@@ -97,12 +93,32 @@
   # Disable ZFS for Live ISO
   boot.supportedFilesystems.zfs = lib.mkForce false;
 
-  # Set default user password for live environment
-  users.users.tom.password = "nixos";
-  users.users.root.password = "nixos";
 
   # Enable passwordless sudo for tom user in live environment
   security.sudo.wheelNeedsPassword = false;
+
+  # Minimal essential configuration for ISO
+  nix.settings = {
+    experimental-features = [ "flakes" "nix-command" ];
+    substituters = [
+      "https://cache.nixos.org/"
+      "https://nix-community.cachix.org"
+    ];
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
+  };
+  nixpkgs.config.allowUnfree = true;
+
+  # Create a minimal tom user for the ISO
+  users.users.tom = {
+    description = "Tom Cassady";
+    extraGroups = [ "networkmanager" "wheel" ];
+    isNormalUser = true;
+    shell = pkgs.fish;
+    password = "nixos";
+  };
 
   # Override boot configuration for ISO compatibility
   boot.loader.timeout = lib.mkForce null; # Let ISO use default timeout
