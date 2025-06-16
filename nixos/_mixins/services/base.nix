@@ -189,9 +189,6 @@
     # IRQ balancing for better multi-core performance
     irqbalance.enable = true;
 
-    # Network management
-    networkmanager.enable = true;
-
     # Audio
     pipewire = {
       enable = true;
@@ -211,6 +208,9 @@
       ForwardToSyslog=no
     '';
   };
+  
+  # Network management (skip for ISO which has its own networking setup)
+  networking.networkmanager.enable = lib.mkIf (!isISO) true;
   
   # I/O scheduler optimization for different storage types
   services.udev.extraRules = lib.mkIf (!isISO) ''
