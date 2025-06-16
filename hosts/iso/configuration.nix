@@ -2,8 +2,8 @@
 
 {
   imports = [
-    # NixOS ISO module provides basic system configuration
-    "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-gnome.nix"
+    # NixOS minimal ISO module for smaller builds
+    "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
   ];
 
   # ISO-specific configuration

@@ -52,9 +52,25 @@ jobs:
         skipPush: true
 
     - name: Build NixOS ISO
+      timeout-minutes: 60
       run: |
         echo "Building NixOS ISO..."
+        echo "Initial system resources:"
+        free -h
+        df -h
+        
+        # Monitor resources during build
+        (while true; do
+          echo "$(date): Memory: $(free -h | grep Mem:), Disk: $(df -h /nix | tail -1)"
+          sleep 60
+        done) &
+        MONITOR_PID=$!
+        
+        # Build the ISO
         nix build .#nixosConfigurations.iso.config.system.build.isoImage -L --show-trace
+        
+        # Stop monitoring
+        kill $MONITOR_PID 2>/dev/null || true
         
         # Find the ISO file
         ISO_PATH=$(find result -name "*.iso" | head -1)
