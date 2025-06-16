@@ -19,58 +19,93 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     
-  };
-
-  outputs = { self, nixpkgs, home-manager, nixos-hardware, claude-desktop, ... }@inputs: {
-    nixosConfigurations = {
-      gti = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [
-          ./hosts/gti/configuration.nix
-          
-          # Add Home Manager module
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.tom = import ./home/tom/home.nix;
-            home-manager.extraSpecialArgs = { inherit inputs; };
-          }
-        ];
-      };
-      
-      transporter = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [
-          ./hosts/transporter/configuration.nix
-          
-          # Add Home Manager module
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.tom = import ./home/tom/home.nix;
-            home-manager.extraSpecialArgs = { inherit inputs; };
-          }
-        ];
-      };
-      
-      # Live ISO configuration
-      iso = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [
-          ./hosts/iso/configuration.nix
-          # Apply ISO-specific overlays
-          ({ config, lib, pkgs, ... }: {
-            nixpkgs.overlays = [
-              (import ./overlays { inherit inputs; }).iso-optimizations
-            ];
-          })
-        ];
-      };
+    # SOPS for secrets management (foundation for future use)
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
+
+  outputs = { self, nixpkgs, home-manager, nixos-hardware, claude-desktop, sops-nix, ... }@inputs:
+    let
+      inherit (self) outputs;
+      stateVersion = "25.05";
+      
+      # Import our helper functions
+      helper = import ./lib { inherit inputs outputs stateVersion; };
+    in
+    {
+      # Overlays for package customizations
+      overlays = import ./overlays { inherit inputs; };
+      
+      # NixOS configurations using helper functions
+      nixosConfigurations = {
+        # Workstation with gaming (Dell XPS 13 9370)
+        gti = helper.mkNixOS {
+          hostname = "gti";
+          desktop = "gnome";
+          modules = [
+            # Dell XPS 13 9370 hardware support
+            nixos-hardware.nixosModules.dell-xps-13-9370
+          ];
+        };
+        
+        # Laptop without gaming (Dell Latitude 7280) 
+        transporter = helper.mkNixOS {
+          hostname = "transporter";
+          desktop = "gnome";
+          modules = [
+            # Dell Latitude 7280 hardware support
+            nixos-hardware.nixosModules.dell-latitude-7280
+          ];
+        };
+        
+        # Live ISO configuration
+        iso = helper.mkNixOS {
+          hostname = "iso";
+          modules = [
+            # Apply ISO-specific overlays
+            ({ config, lib, pkgs, ... }: {
+              nixpkgs.overlays = [ outputs.overlays.iso-optimizations ];
+            })
+          ];
+        };
+      };
+      
+      # Home Manager configurations (for potential standalone use)
+      homeConfigurations = {
+        "tom@gti" = helper.mkHome {
+          hostname = "gti";
+          username = "tom";
+          desktop = "gnome";
+        };
+        "tom@transporter" = helper.mkHome {
+          hostname = "transporter";
+          username = "tom";
+          desktop = "gnome";
+        };
+      };
+      
+      # Development shells for working on the configuration
+      devShells = helper.forAllSystems (system: {
+        default = nixpkgs.legacyPackages.${system}.mkShell {
+          packages = with nixpkgs.legacyPackages.${system}; [
+            # Nix tools
+            nixd
+            nil
+            statix
+            deadnix
+            
+            # Future: SOPS tools for secrets management
+            sops
+            age
+          ];
+          
+          shellHook = ''
+            echo "NixOS Configuration Development Shell"
+            echo "Available tools: nixd, nil, statix, deadnix, sops, age"
+          '';
+        };
+      });
+    };
 }

@@ -1,21 +1,22 @@
+# Dell XPS 13 9370 - Main workstation configuration
+# Host-specific settings for the gti system
+
 {
   config,
   pkgs,
   inputs,
+  hostname,
+  username,
   ...
 }: {
   imports = [
+    # Hardware configuration (auto-generated)
     ./hardware-configuration.nix
-    ../../modules/common/base.nix
-    ../../modules/common/desktop.nix
-    ../../modules/common/gaming.nix
-    ../../modules/common/development.nix
-    ../../modules/common/users.nix
-    inputs.nixos-hardware.nixosModules.dell-xps-13-9370
   ];
 
   # Host-specific configuration
-  networking.hostName = "gti";
-
-  system.stateVersion = "25.05";
+  networking.hostName = hostname;
+  
+  # Host-specific overrides can go here
+  # Most configuration is now handled by the mixin system
 }

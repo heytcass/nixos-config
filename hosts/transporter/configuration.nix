@@ -1,22 +1,23 @@
+# Dell Latitude 7280 - Secondary laptop configuration  
+# Host-specific settings for the transporter system
+
 {
   config,
   pkgs,
   inputs,
+  hostname,
+  username,
   ...
 }: {
   imports = [
+    # Hardware configuration (auto-generated)
     ./hardware-configuration.nix
-    ../../modules/common/base.nix
-    ../../modules/common/desktop.nix
-    ../../modules/common/development.nix
-    ../../modules/common/users.nix
-    inputs.nixos-hardware.nixosModules.dell-latitude-7280
-    # Gaming module is optional - uncomment if needed
-    # ../../modules/common/gaming.nix
   ];
 
   # Host-specific configuration
-  networking.hostName = "transporter";
-
-  system.stateVersion = "25.05";
+  networking.hostName = hostname;
+  
+  # Host-specific overrides can go here
+  # Gaming module is automatically excluded for non-workstation systems
+  # Most configuration is now handled by the mixin system
 }
