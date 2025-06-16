@@ -104,6 +104,9 @@
   # Enable passwordless sudo for tom user in live environment
   security.sudo.wheelNeedsPassword = false;
 
+  # Override boot configuration for ISO compatibility
+  boot.loader.timeout = lib.mkForce null; # Let ISO use default timeout
+
   # System state version
   system.stateVersion = "24.11";
 }
