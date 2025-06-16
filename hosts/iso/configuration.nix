@@ -99,7 +99,7 @@
 
   # Set default user password for live environment
   users.users.tom.password = "nixos";
-  users.users.root.initialPassword = "nixos";
+  users.users.root.password = "nixos";
 
   # Enable passwordless sudo for tom user in live environment
   security.sudo.wheelNeedsPassword = false;
