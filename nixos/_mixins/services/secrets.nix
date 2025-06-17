@@ -21,41 +21,42 @@
         generateKey = false; # We already generated it manually
       };
       
-      # Example secrets (commented out to avoid build issues until secrets are properly encrypted)
+      # Example secrets - these will be available at /run/secrets/<name>
       secrets = {
-        # User password hash (uncomment to use)
-        # "user_password_hash" = {
-        #   neededForUsers = true;
-        # };
+        # WiFi password - accessible at /run/secrets/wifi_password
+        "wifi_password" = {
+          owner = "tom";
+          group = "users";
+          mode = "0400";
+        };
         
-        # SSH host keys (uncomment to use)
-        # "ssh_host_ed25519_key" = {
-        #   owner = "root";
-        #   group = "root";
-        #   mode = "0400";
-        #   path = "/etc/ssh/ssh_host_ed25519_key";
-        # };
+        # GitHub token - accessible at /run/secrets/github_token
+        "github_token" = {
+          owner = "tom";
+          group = "users";
+          mode = "0440";  # Allow group read access
+          path = "/run/secrets/github_token";
+        };
         
-        # API tokens and keys
-        # "api_token" = {
-        #   owner = "tom";
-        #   group = "users";
-        #   mode = "0400";
-        # };
+        # Database password - accessible at /run/secrets/database_password
+        "database_password" = {
+          owner = "tom";
+          group = "users";
+          mode = "0400";
+        };
         
-        # Database passwords
-        # "database_password" = {
-        #   owner = "postgres";
-        #   group = "postgres";
-        #   mode = "0400";
-        # };
+        # SSH private key - accessible at /run/secrets/ssh_private_key
+        "ssh_private_key" = {
+          owner = "tom";
+          group = "users";
+          mode = "0400";
+          path = "/run/secrets/ssh_private_key";
+        };
         
-        # Network credentials
-        # "wireguard_private_key" = {
-        #   owner = "systemd-network";
-        #   group = "systemd-network";
-        #   mode = "0400";
-        # };
+        # User password hash - for system authentication
+        "user_password_hash" = {
+          neededForUsers = true;
+        };
       };
     };
   };

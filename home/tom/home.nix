@@ -46,6 +46,9 @@
   # Services
   services.ssh-agent.enable = true;
 
+  # GitHub CLI is configured to use encrypted token
+  # Authentication can be done manually: gh auth login --with-token < /run/secrets/github_token
+
   # Environment variables
   home.sessionVariables = {
     STEAM_EXTRA_COMPAT_TOOLS_PATHS = "$HOME/.steam/root/compatibilitytools.d";
@@ -94,6 +97,7 @@
         du = "dua interactive";
         tree = "eza --tree";
         nano = "micro";
+        gh-auth = "gh auth login --with-token < /run/secrets/github_token";
       };
     };
     
@@ -112,6 +116,7 @@
         du = "dua interactive";
         tree = "eza --tree";
         nano = "micro";
+        gh-auth = "gh auth login --with-token < /run/secrets/github_token";
       };
     };
     
@@ -271,6 +276,11 @@
     ssh = {
       enable = true;
       addKeysToAgent = "yes";
+      extraConfig = ''
+        # Use encrypted SSH key from secrets
+        IdentityFile /run/secrets/ssh_private_key
+        IdentityFile ~/.ssh/id_ed25519
+      '';
     };
   };
 }

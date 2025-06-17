@@ -28,5 +28,8 @@
   } // lib.optionalAttrs isISO {
     # ISO-specific user configuration
     password = "nixos";
+  } // lib.optionalAttrs (!isISO) {
+    # Use encrypted password hash for real systems
+    hashedPasswordFile = config.sops.secrets.user_password_hash.path;
   };
 }
