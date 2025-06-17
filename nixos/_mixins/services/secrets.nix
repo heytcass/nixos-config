@@ -21,20 +21,20 @@
         generateKey = false; # We already generated it manually
       };
       
-      # Example secrets (uncomment and customize as needed)
+      # Example secrets (commented out to avoid build issues until secrets are properly encrypted)
       secrets = {
-        # User password hash (enabled as example)
-        "user_password_hash" = {
-          neededForUsers = true;
-        };
+        # User password hash (uncomment to use)
+        # "user_password_hash" = {
+        #   neededForUsers = true;
+        # };
         
-        # SSH host keys (enabled as example)
-        "ssh_host_ed25519_key" = {
-          owner = "root";
-          group = "root";
-          mode = "0400";
-          path = "/etc/ssh/ssh_host_ed25519_key";
-        };
+        # SSH host keys (uncomment to use)
+        # "ssh_host_ed25519_key" = {
+        #   owner = "root";
+        #   group = "root";
+        #   mode = "0400";
+        #   path = "/etc/ssh/ssh_host_ed25519_key";
+        # };
         
         # API tokens and keys
         # "api_token" = {

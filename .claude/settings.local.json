@@ -72,7 +72,9 @@
       "Bash(nix flake show:*)",
       "Bash(nix develop:*)",
       "Bash(git merge:*)",
-      "Bash(age-keygen:*)"
+      "Bash(age-keygen:*)",
+      "Bash(git fsck:*)",
+      "Bash(sudo chown:*)"
     ],
     "deny": []
   },
