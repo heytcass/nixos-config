@@ -225,8 +225,9 @@
   # Zram swap for better memory utilization
   zramSwap = lib.mkIf (!isISO) {
     enable = true;
-    algorithm = "lz4"; # Fast compression
+    algorithm = "zstd"; # Better compression ratio than lz4
     memoryPercent = 50; # Use 50% of RAM for compressed swap
+    priority = 100; # Higher priority than traditional swap
   };
   
   # Safe filesystem optimizations

@@ -16,6 +16,9 @@
     
     # Import secrets management
     ./_mixins/services/secrets.nix
+    
+    # Import Tailscale networking
+    ./_mixins/services/tailscale.nix
   ] ++ lib.optionals (!isISO) [
     # Import desktop configuration for non-ISO systems
     ./_mixins/desktop/gnome.nix
