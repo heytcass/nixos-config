@@ -69,9 +69,12 @@
       "Bash(echo $LIBVA_DRIVER_NAME)",
       "Bash(nix-env:*)",
       "Bash(nix search:*)",
-      "Bash(nix flake show:*)"
+      "Bash(nix flake show:*)",
+      "Bash(nix develop:*)",
+      "Bash(git merge:*)",
+      "Bash(age-keygen:*)"
     ],
     "deny": []
   },
-  "enableAllProjectMcpServers": false
+  "enableAllProjectMcpServers": true
 }

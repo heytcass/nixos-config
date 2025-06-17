@@ -4,13 +4,14 @@
 { config, lib, inputs, isISO, ... }:
 
 {
-  # Only enable secrets for non-ISO systems
+  # Import sops-nix module for non-ISO systems
+  imports = lib.optionals (!isISO) [ inputs.sops-nix.nixosModules.sops ];
+  
+  # Only enable secrets configuration for non-ISO systems
   config = lib.mkIf (!isISO) {
-    imports = [ inputs.sops-nix.nixosModules.sops ];
-    
     sops = {
-      # Default secrets file location
-      defaultSopsFile = ../../secrets/secrets.yaml;
+      # Default secrets file location  
+      defaultSopsFile = ../../../secrets/secrets.yaml;
       defaultSopsFormat = "yaml";
       
       # Age configuration
