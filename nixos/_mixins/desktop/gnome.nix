@@ -36,6 +36,8 @@
       gnome-maps
       gnome-music
       gnome-tour
+      gnome-terminal
+      gnome-console
       simple-scan
       totem
       yelp

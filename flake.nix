@@ -24,9 +24,14 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    
+    # Ghostty terminal emulator
+    ghostty = {
+      url = "github:ghostty-org/ghostty";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-hardware, claude-desktop, sops-nix, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nixos-hardware, claude-desktop, sops-nix, ghostty, ... }@inputs:
     let
       inherit (self) outputs;
       stateVersion = "25.05";

@@ -75,6 +75,17 @@
       name = "micro";
       noDisplay = true;
     };
+    ghostty = {
+      name = "Ghostty";
+      noDisplay = true;
+    };
+    
+  };
+  
+  # Set Ghostty as default terminal
+  xdg.mimeApps.defaultApplications = {
+    "application/x-terminal-emulator" = "ghostty.desktop";
+    "x-scheme-handler/terminal" = "ghostty.desktop";
   };
 
   # Program configurations
@@ -118,6 +129,13 @@
         nano = "micro";
         gh-auth = "gh auth login --with-token < /run/secrets/github_token";
       };
+      interactiveShellInit = ''
+        # Ghostty-specific optimizations
+        if test "$TERM_PROGRAM" = "ghostty"
+          alias clear='printf "\033[2J\033[3J\033[1;1H"'
+          alias reload='source ~/.config/fish/config.fish'
+        end
+      '';
     };
     
     starship = {
@@ -281,6 +299,45 @@
         IdentityFile /run/secrets/ssh_private_key
         IdentityFile ~/.ssh/id_ed25519
       '';
+    };
+    
+    # Ghostty terminal configuration
+    ghostty = {
+      enable = true;
+      enableFishIntegration = true;
+      package = inputs.ghostty.packages.${pkgs.system}.default;
+      settings = {
+        # Font configuration using existing Nerd Fonts
+        font-family = "Hack Nerd Font";
+        font-size = 12;
+        
+        # Keybindings
+        keybind = [
+          "ctrl+shift+c=copy_to_clipboard"
+          "ctrl+shift+v=paste_from_clipboard"
+          "ctrl+shift+t=new_tab"
+          "ctrl+shift+w=close_surface"
+          "ctrl+shift+n=new_window"
+          "shift+enter=text:\n"
+        ];
+        
+        # Window settings
+        window-padding-x = 8;
+        window-padding-y = 8;
+        
+        # Shell integration
+        shell-integration = "fish";
+        
+        # Performance
+        copy-on-select = true;
+        
+        # Mouse
+        mouse-hide-while-typing = true;
+        
+        # Clipboard
+        clipboard-read = "allow";
+        clipboard-write = "allow";
+      };
     };
   };
 }

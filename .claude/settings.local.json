@@ -75,7 +75,8 @@
       "Bash(age-keygen:*)",
       "Bash(git fsck:*)",
       "Bash(sudo chown:*)",
-      "Bash(true)"
+      "Bash(true)",
+      "Bash(nix profile list:*)"
     ],
     "deny": []
   },
