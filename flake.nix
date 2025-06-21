@@ -62,73 +62,16 @@
         };
         
         # Laptop without gaming (Dell Latitude 7280) - with disko
-        transporter = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+        transporter = helper.mkNixOS {
+          hostname = "transporter";
+          desktop = "gnome";
           modules = [
-            # Hardware support - essential for Dell Latitude 7280
-            nixos-hardware.nixosModules.common-pc-laptop
-            nixos-hardware.nixosModules.common-pc-laptop-ssd
-            nixos-hardware.nixosModules.common-cpu-intel
+            # Dell Latitude 7280 hardware support
             nixos-hardware.nixosModules.dell-latitude-7280
             
             # Disko module - must be imported before configuration
             disko.nixosModules.disko
-            
-            # System configurations
-            ./nixos
-            ./hosts/transporter/configuration.nix
             ./hosts/transporter/disko-config.nix
-            
-            # Home Manager integration
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.tom = import ./home/tom/home.nix;
-              home-manager.extraSpecialArgs = { 
-                inherit inputs outputs;
-                hostname = "transporter";
-                username = "tom";
-              };
-            }
-            
-            # Dell-specific optimizations
-            {
-              # Intel graphics and power management
-              hardware.enableAllFirmware = true;
-              hardware.cpu.intel.updateMicrocode = true;
-              services.thermald.enable = true;
-              services.power-profiles-daemon.enable = false; # Disabled for TLP
-              
-              # Kernel parameters for stability
-              boot.kernelParams = [ "intel_iommu=off" ];
-              
-              # Btrfs maintenance and snapshots
-              services.btrfs.autoScrub = {
-                enable = true;
-                interval = "monthly";
-                fileSystems = [ "/" ];
-              };
-
-              # Automatic TRIM for SSD longevity
-              services.fstrim.enable = true;
-
-              # Laptop power optimization
-              services.tlp = {
-                enable = true;
-                settings = {
-                  CPU_SCALING_GOVERNOR_ON_AC = "performance";
-                  CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
-                  RUNTIME_PM_ON_AC = "on";
-                  RUNTIME_PM_ON_BAT = "auto";
-                };
-              };
-
-              # Dell-specific hardware support
-              boot.initrd.kernelModules = [ "i915" ];  # Intel graphics
-              hardware.graphics.enable = true;
-              services.libinput.enable = true;  # Touchpad
-            }
           ];
         };
         
