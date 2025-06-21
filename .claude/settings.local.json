@@ -76,7 +76,9 @@
       "Bash(git fsck:*)",
       "Bash(sudo chown:*)",
       "Bash(true)",
-      "Bash(nix profile list:*)"
+      "Bash(nix profile list:*)",
+      "Bash(chmod:*)",
+      "Bash(rm:*)"
     ],
     "deny": []
   },

@@ -74,12 +74,7 @@
     micro = {
       name = "micro";
       noDisplay = true;
-    };
-    ghostty = {
-      name = "Ghostty";
-      noDisplay = true;
-    };
-    
+    };    
   };
   
   # Set Ghostty as default terminal
