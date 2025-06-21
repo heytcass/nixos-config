@@ -67,7 +67,7 @@ fi
 echo
 info "Starting deployment..."
 
-# Phase 1: Validate configuration
+# Phase 1: Validate configuration and check system readiness
 info "Phase 1: Validating disko configuration..."
 if ! nix --extra-experimental-features "nix-command flakes" eval .#nixosConfigurations.transporter.config.disko.devices >/dev/null 2>&1; then
     error "Disko configuration validation failed!"
@@ -76,9 +76,39 @@ if ! nix --extra-experimental-features "nix-command flakes" eval .#nixosConfigur
 fi
 success "Configuration validation passed"
 
+info "Checking system readiness for disko-install..."
+# Check network connectivity to binary caches
+if ! curl -s --connect-timeout 5 https://cache.nixos.org > /dev/null; then
+    warn "Cannot reach cache.nixos.org - this may cause build failures"
+    warn "Ensure network connectivity for best results"
+fi
+
+# Check available memory (disko-install needs sufficient RAM)
+available_mem=$(grep MemAvailable /proc/meminfo | awk '{print $2}')
+if [ "$available_mem" -lt 1048576 ]; then  # Less than 1GB
+    warn "Low available memory ($((available_mem/1024))MB) - builds may fail"
+    warn "Consider using manual fallback if disko-install fails"
+fi
+
+# Pre-download disko to avoid network issues during critical phase
+info "Pre-downloading disko components..."
+nix --extra-experimental-features "nix-command flakes" \
+    --option connect-timeout 10 \
+    build 'github:nix-community/disko/latest#disko-install' >/dev/null 2>&1 || {
+    warn "Could not pre-download disko - may fallback to manual process"
+}
+
 # Phase 2: Use disko-install (recommended approach)
 info "Phase 2: Attempting streamlined disko-install..."
-if nix --extra-experimental-features "nix-command flakes" run 'github:nix-community/disko/latest#disko-install' -- \
+# Add extra substituters and build settings for reliability
+if nix --extra-experimental-features "nix-command flakes" \
+    --option substituters "https://cache.nixos.org/ https://nix-community.cachix.org" \
+    --option trusted-public-keys "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" \
+    --option max-jobs "auto" \
+    --option cores "0" \
+    --option connect-timeout 10 \
+    --option stalled-download-timeout 30 \
+    run 'github:nix-community/disko/latest#disko-install' -- \
     --flake ".#transporter" \
     --disk main "$DEVICE"; then
     
