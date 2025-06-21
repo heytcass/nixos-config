@@ -15,18 +15,8 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
-  # PLACEHOLDER filesystems - YOU MUST UPDATE THESE WITH ACTUAL VALUES
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/PLACEHOLDER-ROOT-UUID";
-    fsType = "ext4";
-  };
-
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/PLACEHOLDER-BOOT-UUID";
-    fsType = "vfat";
-  };
-
-  swapDevices = [ ];
+  # Filesystem configuration handled by disko - do not define fileSystems here
+  # swapDevices handled by disko swapfile
 
   # Enables DHCP on each ethernet and wireless interface.
   networking.useDHCP = lib.mkDefault true;
