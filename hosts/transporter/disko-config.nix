@@ -8,7 +8,7 @@
     disk = {
       main = {
         type = "disk";
-        device = "/dev/nvme0n1";  # Dell Latitude 7280 typically uses NVMe
+        device = "/dev/sda";  # Dell Latitude 7280 SATA SSD
         content = {
           type = "gpt";
           partitions = {

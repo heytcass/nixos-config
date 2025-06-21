@@ -23,8 +23,8 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-# Dell Latitude 7280 typically uses NVMe
-DEVICE="/dev/nvme0n1"
+# Dell Latitude 7280 with SATA SSD
+DEVICE="/dev/sda"
 
 info "Dell Latitude 7280 (transporter) deployment using proven disko configuration"
 echo
@@ -35,7 +35,7 @@ if [[ ! -b "$DEVICE" ]]; then
     info "Available storage devices:"
     lsblk
     echo
-    warn "Dell Latitude 7280 typically uses /dev/nvme0n1"
+    warn "Dell Latitude 7280 typically uses /dev/sda"
     warn "If your device is different, edit this script to update DEVICE variable"
     exit 1
 fi
