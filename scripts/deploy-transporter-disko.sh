@@ -23,20 +23,36 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-# Dell Latitude 7280 with SATA SSD
-DEVICE="/dev/sda"
+# Get device from argument or default to /dev/sda
+DEVICE="${1:-/dev/sda}"
+
+# Show usage if help requested
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "Usage: $0 [DEVICE]"
+    echo "  DEVICE: Target storage device (default: /dev/sda)"
+    echo ""
+    echo "Examples:"
+    echo "  $0                    # Use default /dev/sda"
+    echo "  $0 /dev/nvme0n1       # Use NVMe device"
+    echo "  $0 /dev/sdb           # Use second SATA device"
+    echo ""
+    echo "Available storage devices:"
+    lsblk -d -o NAME,SIZE,MODEL
+    exit 0
+fi
 
 info "Dell Latitude 7280 (transporter) deployment using proven disko configuration"
+info "Target device: $DEVICE"
 echo
 
 # Verify device exists
 if [[ ! -b "$DEVICE" ]]; then
     error "Device $DEVICE not found!"
-    info "Available storage devices:"
-    lsblk
     echo
-    warn "Dell Latitude 7280 typically uses /dev/sda"
-    warn "If your device is different, edit this script to update DEVICE variable"
+    info "Available storage devices:"
+    lsblk -d -o NAME,SIZE,MODEL,TYPE
+    echo
+    warn "Run '$0 --help' to see usage examples"
     exit 1
 fi
 
@@ -67,11 +83,17 @@ fi
 echo
 info "Starting deployment..."
 
-# Phase 1: Validate configuration and check system readiness
-info "Phase 1: Validating disko configuration..."
+# Phase 1: Update disko config and validate
+info "Phase 1: Updating disko configuration for target device..."
+# Temporarily update the device in disko config
+sed -i.bak "s|device = \"/dev/[^\"]*\"|device = \"$DEVICE\"|g" hosts/transporter/disko-config.nix
+
+info "Validating disko configuration..."
 if ! nix --extra-experimental-features "nix-command flakes" eval .#nixosConfigurations.transporter.config.disko.devices >/dev/null 2>&1; then
     error "Disko configuration validation failed!"
     error "Check your flake.nix and hosts/transporter/disko-config.nix"
+    # Restore backup
+    mv hosts/transporter/disko-config.nix.bak hosts/transporter/disko-config.nix 2>/dev/null || true
     exit 1
 fi
 success "Configuration validation passed"
@@ -157,5 +179,10 @@ if [[ -d /mnt/etc/nixos ]]; then
     
 else
     error "Installation appears to have failed - /mnt/etc/nixos not found"
+    # Restore backup before exiting
+    mv hosts/transporter/disko-config.nix.bak hosts/transporter/disko-config.nix 2>/dev/null || true
     exit 1
 fi
+
+# Restore original disko config
+mv hosts/transporter/disko-config.nix.bak hosts/transporter/disko-config.nix 2>/dev/null || true
