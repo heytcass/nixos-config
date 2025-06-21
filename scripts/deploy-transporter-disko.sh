@@ -69,7 +69,7 @@ info "Starting deployment..."
 
 # Phase 1: Validate configuration
 info "Phase 1: Validating disko configuration..."
-if ! nix --experimental-features "nix-command flakes" eval .#nixosConfigurations.transporter.config.disko.devices >/dev/null 2>&1; then
+if ! nix --extra-experimental-features "nix-command flakes" eval .#nixosConfigurations.transporter.config.disko.devices >/dev/null 2>&1; then
     error "Disko configuration validation failed!"
     error "Check your flake.nix and hosts/transporter/disko-config.nix"
     exit 1
@@ -78,7 +78,7 @@ success "Configuration validation passed"
 
 # Phase 2: Use disko-install (recommended approach)
 info "Phase 2: Attempting streamlined disko-install..."
-if nix run 'github:nix-community/disko/latest#disko-install' -- \
+if nix --extra-experimental-features "nix-command flakes" run 'github:nix-community/disko/latest#disko-install' -- \
     --flake ".#transporter" \
     --disk main "$DEVICE"; then
     
@@ -89,7 +89,7 @@ else
     
     # Manual fallback process
     info "Step 1: Partition and format disk..."
-    nix --experimental-features "nix-command flakes" run \
+    nix --extra-experimental-features "nix-command flakes" run \
         github:nix-community/disko/latest -- \
         --mode destroy,format,mount \
         ./hosts/transporter/disko-config.nix
