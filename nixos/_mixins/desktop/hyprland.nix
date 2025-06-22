@@ -11,6 +11,148 @@
     xwayland.enable = true;
   };
 
+  # Hyprland configuration
+  environment.etc."hypr/hyprland.conf".text = ''
+    # Monitor configuration (will auto-detect)
+    monitor = ,preferred,auto,1
+    
+    # Input configuration - maintain Colemak layout
+    input {
+        kb_layout = us
+        kb_variant = colemak
+        follow_mouse = 1
+        touchpad {
+            natural_scroll = true
+            disable_while_typing = true
+        }
+        sensitivity = 0
+    }
+    
+    # General settings
+    general {
+        gaps_in = 5
+        gaps_out = 10
+        border_size = 2
+        col.active_border = rgba(33ccffee) rgba(00ff99ee) 45deg
+        col.inactive_border = rgba(595959aa)
+        layout = dwindle
+        allow_tearing = false
+    }
+    
+    # Decoration
+    decoration {
+        rounding = 8
+        blur {
+            enabled = true
+            size = 3
+            passes = 1
+        }
+        drop_shadow = true
+        shadow_range = 4
+        shadow_render_power = 3
+        col.shadow = rgba(1a1a1aee)
+    }
+    
+    # Animations
+    animations {
+        enabled = true
+        bezier = myBezier, 0.05, 0.9, 0.1, 1.05
+        animation = windows, 1, 7, myBezier
+        animation = windowsOut, 1, 7, default, popin 80%
+        animation = border, 1, 10, default
+        animation = borderangle, 1, 8, default
+        animation = fade, 1, 7, default
+        animation = workspaces, 1, 6, default
+    }
+    
+    # Layout
+    dwindle {
+        pseudotile = true
+        preserve_split = true
+    }
+    
+    # Window rules for common applications
+    windowrule = float, ^(pavucontrol)$
+    windowrule = float, ^(thunar)$
+    windowrule = size 800 600, ^(thunar)$
+    
+    # Keybindings - using Super (Windows/Cmd) key
+    $mod = SUPER
+    
+    # Application launchers
+    bind = $mod, Return, exec, ghostty
+    bind = $mod, D, exec, wofi --show drun
+    bind = $mod, E, exec, thunar
+    
+    # Window management
+    bind = $mod, Q, killactive
+    bind = $mod, M, exit
+    bind = $mod, V, togglefloating
+    bind = $mod, P, pseudo
+    bind = $mod, J, togglesplit
+    bind = $mod, F, fullscreen, 0
+    
+    # Move focus
+    bind = $mod, left, movefocus, l
+    bind = $mod, right, movefocus, r
+    bind = $mod, up, movefocus, u
+    bind = $mod, down, movefocus, d
+    
+    # Move windows
+    bind = $mod SHIFT, left, movewindow, l
+    bind = $mod SHIFT, right, movewindow, r
+    bind = $mod SHIFT, up, movewindow, u
+    bind = $mod SHIFT, down, movewindow, d
+    
+    # Workspaces
+    bind = $mod, 1, workspace, 1
+    bind = $mod, 2, workspace, 2
+    bind = $mod, 3, workspace, 3
+    bind = $mod, 4, workspace, 4
+    bind = $mod, 5, workspace, 5
+    bind = $mod, 6, workspace, 6
+    bind = $mod, 7, workspace, 7
+    bind = $mod, 8, workspace, 8
+    bind = $mod, 9, workspace, 9
+    bind = $mod, 0, workspace, 10
+    
+    # Move to workspace
+    bind = $mod SHIFT, 1, movetoworkspace, 1
+    bind = $mod SHIFT, 2, movetoworkspace, 2
+    bind = $mod SHIFT, 3, movetoworkspace, 3
+    bind = $mod SHIFT, 4, movetoworkspace, 4
+    bind = $mod SHIFT, 5, movetoworkspace, 5
+    bind = $mod SHIFT, 6, movetoworkspace, 6
+    bind = $mod SHIFT, 7, movetoworkspace, 7
+    bind = $mod SHIFT, 8, movetoworkspace, 8
+    bind = $mod SHIFT, 9, movetoworkspace, 9
+    bind = $mod SHIFT, 0, movetoworkspace, 10
+    
+    # Screenshot
+    bind = , Print, exec, grim -g "$(slurp)" - | wl-copy
+    bind = $mod, Print, exec, grim - | wl-copy
+    
+    # Media keys
+    bind = , XF86AudioRaiseVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ +5%
+    bind = , XF86AudioLowerVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ -5%
+    bind = , XF86AudioMute, exec, pactl set-sink-mute @DEFAULT_SINK@ toggle
+    bind = , XF86MonBrightnessUp, exec, brightnessctl set 5%+
+    bind = , XF86MonBrightnessDown, exec, brightnessctl set 5%-
+    bind = , XF86AudioPlay, exec, playerctl play-pause
+    bind = , XF86AudioNext, exec, playerctl next
+    bind = , XF86AudioPrev, exec, playerctl previous
+    
+    # Mouse bindings
+    bindm = $mod, mouse:272, movewindow
+    bindm = $mod, mouse:273, resizewindow
+    
+    # Startup applications
+    exec-once = waybar
+    exec-once = mako
+    exec-once = swayidle -w timeout 300 'swaylock-effects' timeout 600 'hyprctl dispatch dpms off' resume 'hyprctl dispatch dpms on' before-sleep 'swaylock-effects'
+    exec-once = swaybg -i ~/.config/wallpaper.jpg -m fill
+  '';
+
   # X11 server for XWayland compatibility
   services.xserver = {
     enable = true;
