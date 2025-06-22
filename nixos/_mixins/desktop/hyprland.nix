@@ -192,8 +192,8 @@
     kanshi            # Dynamic display configuration
     
     # File management and media
-    thunar            # Lightweight file manager (Hyprland-only)
-    thunar-volman     # Volume management for thunar
+    xfce.thunar       # Lightweight file manager (Hyprland-only)
+    xfce.thunar-volman # Volume management for thunar
     xfce.tumbler      # Thumbnail support for thunar
     imv               # Wayland-native image viewer
     mpv               # Video player with Wayland support
