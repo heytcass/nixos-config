@@ -8,11 +8,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1750211183,
-        "narHash": "sha256-X65IeoEiqXvK+PwT6ebQmtNRlPPVcokMCVepaTrFhbM=",
+        "lastModified": 1750457404,
+        "narHash": "sha256-1ujXDYMFSOMwzOWAYcHknyeE8K0JFMhuNnS3UPgwESQ=",
         "owner": "heytcass",
         "repo": "claude-desktop-linux-flake",
-        "rev": "035cc0b5b1477b2dbb19822f9a307a50d40e0819",
+        "rev": "1a35a0a6aef62e71b1ebb088fd822bddff4152b9",
         "type": "github"
       },
       "original": {
@@ -102,11 +102,11 @@
         "zon2nix": "zon2nix"
       },
       "locked": {
-        "lastModified": 1750261123,
-        "narHash": "sha256-DQXRonmHaOshX4WyWvdWSvrOQf7+syTo6W3WMd4lHdw=",
+        "lastModified": 1750564801,
+        "narHash": "sha256-A/zncbdhx0lBESpvVZEjVgosBpR76F3loYQKS8iCg9c=",
         "owner": "ghostty-org",
         "repo": "ghostty",
-        "rev": "d0e145292e35994bf86908ac27864ff267ce0e4c",
+        "rev": "5bfdb1b9cfc58eee9c0eca38a1e2ce8e3e38e0fc",
         "type": "github"
       },
       "original": {
