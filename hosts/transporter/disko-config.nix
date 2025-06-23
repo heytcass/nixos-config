@@ -2,13 +2,12 @@
 # Battle-tested configuration optimized for Dell Latitude 7280 hardware
 # Based on proven working examples from the community
 
-{ ... }:
-{
+_: {
   disko.devices = {
     disk = {
       main = {
         type = "disk";
-        device = "/dev/sda";  # Dell Latitude 7280 SATA SSD
+        device = "/dev/sda"; # Dell Latitude 7280 SATA SSD
         content = {
           type = "gpt";
           partitions = {
@@ -29,31 +28,60 @@
               size = "100%";
               content = {
                 type = "btrfs";
-                extraArgs = [ "-L" "nixos" "-f" ];
+                extraArgs = [
+                  "-L"
+                  "nixos"
+                  "-f"
+                ];
                 subvolumes = {
                   "/root" = {
                     mountpoint = "/";
-                    mountOptions = [ "subvol=root" "compress=zstd:3" "noatime" "space_cache=v2" ];
+                    mountOptions = [
+                      "subvol=root"
+                      "compress=zstd:3"
+                      "noatime"
+                      "space_cache=v2"
+                    ];
                   };
                   "/home" = {
                     mountpoint = "/home";
-                    mountOptions = [ "subvol=home" "compress=zstd:3" "noatime" "space_cache=v2" ];
+                    mountOptions = [
+                      "subvol=home"
+                      "compress=zstd:3"
+                      "noatime"
+                      "space_cache=v2"
+                    ];
                   };
                   "/nix" = {
                     mountpoint = "/nix";
-                    mountOptions = [ "subvol=nix" "compress=zstd:1" "noatime" "space_cache=v2" ];
+                    mountOptions = [
+                      "subvol=nix"
+                      "compress=zstd:1"
+                      "noatime"
+                      "space_cache=v2"
+                    ];
                   };
                   "/persist" = {
                     mountpoint = "/persist";
-                    mountOptions = [ "subvol=persist" "compress=zstd:3" "noatime" "space_cache=v2" ];
+                    mountOptions = [
+                      "subvol=persist"
+                      "compress=zstd:3"
+                      "noatime"
+                      "space_cache=v2"
+                    ];
                   };
                   "/var/log" = {
                     mountpoint = "/var/log";
-                    mountOptions = [ "subvol=log" "compress=zstd:3" "noatime" "space_cache=v2" ];
+                    mountOptions = [
+                      "subvol=log"
+                      "compress=zstd:3"
+                      "noatime"
+                      "space_cache=v2"
+                    ];
                   };
                   "/swap" = {
                     mountpoint = "/swap";
-                    swap.swapfile.size = "16G";  # Adjust based on your RAM (16GB for 16GB system)
+                    swap.swapfile.size = "16G"; # Adjust based on your RAM (16GB for 16GB system)
                   };
                 };
               };

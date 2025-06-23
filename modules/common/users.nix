@@ -1,13 +1,16 @@
 {
-  config,
   pkgs,
-  lib,
   ...
-}: {
+}:
+{
   # Base user configuration
   users.users.tom = {
     description = "Tom Cassady";
-    extraGroups = [ "networkmanager" "wheel" "dialout" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "dialout"
+    ];
     isNormalUser = true;
     shell = pkgs.fish;
     packages = with pkgs; [

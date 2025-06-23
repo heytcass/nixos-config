@@ -78,7 +78,20 @@
       "Bash(true)",
       "Bash(nix profile list:*)",
       "Bash(chmod:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(rbw login:*)",
+      "Bash(rbw add:*)",
+      "Bash(rbw unlock:*)",
+      "Bash(sudo journalctl:*)",
+      "Bash(journalctl:*)",
+      "Bash(rbw list:*)",
+      "Bash(rbw get:*)",
+      "Bash(/nix/store/jrd908gy7lv3rknma44lzaiyimwbdwgj-sopswarden-sync/bin/sopswarden-sync --help)",
+      "Bash(/nix/store/jrd908gy7lv3rknma44lzaiyimwbdwgj-sopswarden-sync/bin/sopswarden-sync)",
+      "Bash(sops:*)",
+      "Bash(echo:*)",
+      "Bash(./scripts/format.sh:*)",
+      "Bash(nixfmt-rfc-style:*)"
     ],
     "deny": []
   },

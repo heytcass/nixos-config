@@ -2,9 +2,9 @@
   config,
   pkgs,
   inputs,
-  lib,
   ...
-}: {
+}:
+{
   # Development programs
   programs.fish.enable = true;
 
@@ -12,7 +12,7 @@
   environment.systemPackages = with pkgs; [
     # Claude Desktop with FHS for MCP servers
     inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs
-    
+
     # Development tools
     git
     curl

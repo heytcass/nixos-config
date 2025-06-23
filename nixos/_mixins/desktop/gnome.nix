@@ -1,14 +1,17 @@
 # GNOME desktop environment mixin
 # Provides GNOME desktop with customizations and optimizations
 
-{ config, pkgs, lib, ... }:
+{
+  pkgs,
+  ...
+}:
 
 {
   # Desktop Environment
   services = {
     desktopManager.gnome.enable = true;
     displayManager.gdm.enable = true;
-    
+
     xserver = {
       enable = true;
       excludePackages = [ pkgs.xterm ];
@@ -17,7 +20,7 @@
         variant = "colemak";
       };
     };
-    
+
     # Printing (disabled by default for laptops)
     printing.enable = false;
   };
@@ -42,7 +45,7 @@
       totem
       yelp
     ];
-    
+
     systemPackages = with pkgs; [
       gnomeExtensions.user-themes
       gnomeExtensions.appindicator

@@ -1,0 +1,55 @@
+# Pre-commit hooks for NixOS configuration
+# Ensures consistent formatting and catches common issues
+
+repos:
+  - repo: local
+    hooks:
+      # Format Nix files with official RFC 166 formatter
+      - id: nixfmt-rfc-style
+        name: Format Nix files
+        entry: nix
+        args: ['run', 'nixpkgs#nixfmt-rfc-style', '--']
+        language: system
+        files: '\.nix$'
+        description: 'Format Nix files using nixfmt-rfc-style (RFC 166 compliant)'
+
+      # Remove dead/unused code
+      - id: deadnix
+        name: Remove dead Nix code
+        entry: nix
+        args: ['run', 'nixpkgs#deadnix', '--', '--edit']
+        language: system
+        files: '\.nix$'
+        description: 'Remove unused imports and bindings'
+
+      # Lint for best practices (check-only, don't auto-fix)
+      - id: statix-check
+        name: Lint Nix files
+        entry: nix
+        args: ['run', 'nixpkgs#statix', '--', 'check', '.']
+        language: system
+        pass_filenames: false
+        description: 'Check Nix files for best practices and suggestions'
+
+  # Standard pre-commit hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      # Remove trailing whitespace
+      - id: trailing-whitespace
+        exclude: '\.patch$'
+
+      # Ensure files end with newline
+      - id: end-of-file-fixer
+        exclude: '\.patch$'
+
+      # Check YAML syntax
+      - id: check-yaml
+        files: '\.ya?ml$'
+
+      # Check for large files
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+
+      # Check merge conflicts
+      - id: check-merge-conflict

@@ -1,7 +1,13 @@
 # Tailscale secure mesh networking
 # Provides zero-config VPN between devices
 
-{ config, lib, pkgs, isISO, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  isISO,
+  ...
+}:
 
 {
   # Only enable Tailscale for non-ISO systems
@@ -11,7 +17,7 @@
       enable = true;
       useRoutingFeatures = "client"; # Enable subnet routing as client
     };
-    
+
     # Firewall configuration for Tailscale
     networking.firewall = {
       # Allow Tailscale through firewall
@@ -21,18 +27,18 @@
       # Enable Tailscale's interface in trusted zones
       checkReversePath = "loose";
     };
-    
+
     # Enable IP forwarding for subnet routing capabilities
     boot.kernel.sysctl = {
       "net.ipv4.ip_forward" = 1;
       "net.ipv6.conf.all.forwarding" = 1;
     };
-    
+
     # Add Tailscale CLI to system packages
     environment.systemPackages = with pkgs; [
       tailscale
     ];
-    
+
     # Systemd service optimizations
     systemd.services.tailscaled = {
       wants = [ "network-online.target" ];

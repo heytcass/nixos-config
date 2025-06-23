@@ -1,34 +1,44 @@
 # Base NixOS configuration
 # This file is imported by all NixOS systems and provides the foundation
 
-{ config, lib, pkgs, inputs, outputs, desktop, hostname, username, isWorkstation, isLaptop, isISO, ... }:
+{
+  lib,
+  desktop,
+  isWorkstation,
+  isISO,
+  ...
+}:
 
 {
-  imports = [
-    # Import base system configuration (converted from modules/common/base.nix)
-    ./_mixins/services/base.nix
-    
-    # Import development tools for all systems
-    ./_mixins/features/development.nix
-    
-    # Import user configuration
-    ./_mixins/services/users.nix
-    
-    # Import secrets management
-    ./_mixins/services/secrets.nix
-    
-    # Import Tailscale networking
-    ./_mixins/services/tailscale.nix
-  ] ++ lib.optionals (!isISO && desktop == "gnome") [
-    # Import GNOME desktop configuration
-    ./_mixins/desktop/gnome.nix
-  ] ++ lib.optionals (!isISO && desktop == "hyprland") [
-    # Import Hyprland desktop configuration
-    ./_mixins/desktop/hyprland.nix
-  ] ++ lib.optionals isWorkstation [
-    # Import gaming features only for workstations
-    ./_mixins/features/gaming.nix
-  ];
+  imports =
+    [
+      # Import base system configuration (converted from modules/common/base.nix)
+      ./_mixins/services/base.nix
+
+      # Import development tools for all systems
+      ./_mixins/features/development.nix
+
+      # Import user configuration
+      ./_mixins/services/users.nix
+
+      # Import secrets management
+      ./_mixins/services/secrets.nix
+
+      # Import Tailscale networking
+      ./_mixins/services/tailscale.nix
+    ]
+    ++ lib.optionals (!isISO && desktop == "gnome") [
+      # Import GNOME desktop configuration
+      ./_mixins/desktop/gnome.nix
+    ]
+    ++ lib.optionals (!isISO && desktop == "hyprland") [
+      # Import Hyprland desktop configuration
+      ./_mixins/desktop/hyprland.nix
+    ]
+    ++ lib.optionals isWorkstation [
+      # Import gaming features only for workstations
+      ./_mixins/features/gaming.nix
+    ];
 
   # System state version - consistent across all hosts (but let ISO override)
   system.stateVersion = lib.mkIf (!isISO) "25.05";

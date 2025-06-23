@@ -1,7 +1,12 @@
 # Live ISO configuration
 # Minimal NixOS installation and recovery environment
 
-{ config, pkgs, lib, inputs, hostname, username, ... }:
+{
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 
 {
   imports = [
@@ -34,11 +39,11 @@
     gparted
     parted
     ntfs3g
-    
+
     # Archive tools
     unzip
     p7zip
-    
+
     # System info
     neofetch
     lshw

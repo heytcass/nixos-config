@@ -1,14 +1,13 @@
 {
-  config,
   pkgs,
-  lib,
   ...
-}: {
+}:
+{
   # Desktop Environment
   services = {
     desktopManager.gnome.enable = true;
     displayManager.gdm.enable = true;
-    
+
     xserver = {
       enable = true;
       excludePackages = [ pkgs.xterm ];
@@ -37,7 +36,7 @@
       totem
       yelp
     ];
-    
+
     systemPackages = with pkgs; [
       gnomeExtensions.user-themes
       gnomeExtensions.appindicator

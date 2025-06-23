@@ -2,7 +2,10 @@
 # Provides Steam, GameMode, and gaming-specific optimizations
 # Only imported for workstation systems
 
-{ config, pkgs, lib, ... }:
+{
+  pkgs,
+  ...
+}:
 
 {
   # Gaming programs and services

@@ -1,9 +1,8 @@
 {
-  config,
   pkgs,
-  lib,
   ...
-}: {
+}:
+{
   # Gaming programs and services
   programs = {
     steam = {
