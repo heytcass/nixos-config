@@ -60,19 +60,17 @@ let
         # Home Manager integration
         inputs.home-manager.nixosModules.home-manager
         {
-          home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            users.${username} = import ../home/tom/home.nix;
-            extraSpecialArgs = {
-              inherit
-                inputs
-                outputs
-                desktop
-                hostname
-                username
-                ;
-            };
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.${username} = import ../home/tom/home.nix;
+          home-manager.extraSpecialArgs = {
+            inherit
+              inputs
+              outputs
+              desktop
+              hostname
+              username
+              ;
           };
         }
       ] ++ modules;

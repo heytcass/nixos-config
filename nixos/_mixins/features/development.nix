@@ -23,6 +23,9 @@
     wget
     micro
     yubikey-manager
+
+    # Binary cache tools
+    cachix
   ];
 
   # Git configuration (system-wide)

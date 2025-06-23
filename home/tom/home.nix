@@ -5,51 +5,48 @@
 }:
 {
   # User configuration
-  home = {
-    username = "tom";
-    homeDirectory = "/home/tom";
-    stateVersion = "25.05";
+  home.username = "tom";
+  home.homeDirectory = "/home/tom";
+  home.stateVersion = "25.05";
 
-    # User packages
-    packages = with pkgs; [
-      git
-      gh
-      vscode
-      starship # Cross-shell prompt
+  # User packages
+  home.packages = with pkgs; [
+    git
+    gh
+    vscode
+    starship # Cross-shell prompt
 
-      # Modern command-line tools
-      bat # Better cat with syntax highlighting
-      eza # Modern ls with colors and icons
-      fd # Modern find replacement
-      procs # Modern ps with better formatting
-      bottom # Enhanced top alternative
-      dogdns # Modern dig replacement
-      gping # Ping with real-time graphs
-      bandwhich # Network usage by process
-      mtr # Better traceroute
-      dua # Visual disk usage analyzer
-      rclone # Cloud storage sync
-      yazi # Terminal file manager
-      hyperfine # Command-line benchmarking
-      tldr # Simplified man pages
-      entr # Run commands when files change
-      croc # Easy file transfer
-      magic-wormhole-rs # Secure file sharing
+    # Modern command-line tools
+    bat # Better cat with syntax highlighting
+    eza # Modern ls with colors and icons
+    fd # Modern find replacement
+    procs # Modern ps with better formatting
+    bottom # Enhanced top alternative
+    dogdns # Modern dig replacement
+    gping # Ping with real-time graphs
+    bandwhich # Network usage by process
+    mtr # Better traceroute
+    dua # Visual disk usage analyzer
+    rclone # Cloud storage sync
+    yazi # Terminal file manager
+    hyperfine # Command-line benchmarking
+    tldr # Simplified man pages
+    entr # Run commands when files change
+    croc # Easy file transfer
+    magic-wormhole-rs # Secure file sharing
 
-      # Gaming tools
-      protonup-qt # GUI tool for managing Proton versions
-    ];
+    # Gaming tools
+    protonup-qt # GUI tool for managing Proton versions
+  ];
 
-    # Dotfiles (currently managed through GUI/sync)
-    file = { };
-  };
+  # Dotfiles (currently managed through GUI/sync)
+  home.file = { };
 
   # Services
   services.ssh-agent.enable = true;
 
-  # GitHub CLI is configured to use encrypted token from SopsWarden
+  # GitHub CLI is configured to use encrypted token
   # Authentication can be done manually: gh auth login --with-token < /run/secrets/github_token
-  # Token is automatically synced from Bitwarden via SopsWarden
 
   # Environment variables
   home.sessionVariables = {
@@ -133,6 +130,25 @@
           alias reload='source ~/.config/fish/config.fish'
         end
       '';
+      
+      # Directory-specific cachix auto-start
+      functions = {
+        __cachix_nixos_check = {
+          body = ''
+            # Auto-start cachix watch-store when entering NixOS config directory
+            if test "$PWD" = "/home/tom/.nixos"
+              if not pgrep -f "cachix watch-store" > /dev/null 2>&1
+                if test -z "$SSH_CLIENT" -a "$TERM_PROGRAM" != "vscode"
+                  echo "🚀 Starting cachix watch-store for NixOS development..."
+                  nohup cachix watch-store tcass-nixos-config > /tmp/cachix-watch.log 2>&1 &
+                  disown
+                end
+              end
+            end
+          '';
+          onVariable = "PWD";
+        };
+      };
     };
 
     starship = {
@@ -291,7 +307,7 @@
       enable = true;
       addKeysToAgent = "yes";
       extraConfig = ''
-        # Use encrypted SSH key from SopsWarden secrets (synced from Bitwarden)
+        # Use encrypted SSH key from secrets
         IdentityFile /run/secrets/ssh_private_key
         IdentityFile ~/.ssh/id_ed25519
       '';

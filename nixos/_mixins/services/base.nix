@@ -95,127 +95,57 @@
         "flakes"
         "nix-command"
       ];
-      # Binary cache configuration for faster builds
       substituters = [
         "https://cache.nixos.org/"
         "https://nix-community.cachix.org"
         "https://hyprland.cachix.org"
-        # Add your personal cachix cache here once created:
-        # "https://your-cache-name.cachix.org"
+        "https://tcass-nixos-config.cachix.org"
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-        # Add your personal cachix public key here once created:
-        # "your-cache-name.cachix.org-1:your-public-key-here"
+        "tcass-nixos-config.cachix.org-1:WveC0/TW42UiS0yLvnYbSw+PKc7FXVP52HeLUwJIseo="
       ];
-
-      # Optimization settings for faster builds and downloads
       auto-optimise-store = true;
       builders-use-substitutes = true;
-      fallback = true; # Fall back to building if substitutes fail
-      keep-going = true; # Continue building other targets if one fails
 
-      # Parallel settings for faster operations
-      max-jobs = "auto"; # Use all available CPU cores
-      cores = 0; # Use all available CPU cores for single builds
-
-      # Cache optimization
-      connect-timeout = 5; # Timeout for cache connections
-      download-attempts = 3; # Retry failed downloads
-
-      # Keep build logs for debugging
-      keep-failed = lib.mkIf (!isISO) true; # Don't keep failed builds on ISO
-
-      # Advanced performance settings
-      system-features = [
-        "benchmark"
-        "big-parallel"
-        "kvm"
-        "nixos-test"
-      ];
-
-      # Build settings for better performance
-      require-sigs = true; # Require signatures for security
-
-      # Faster evaluation
-      eval-cache = true;
-
-      # Sandbox settings (enabled by default but explicit for clarity)
-      sandbox = true;
+      # Performance optimizations for faster builds
+      max-jobs = "auto";
+      cores = 0;
+      connect-timeout = 5;
+      download-attempts = 3;
+      fallback = true;
+      keep-going = true;
     };
-
-    # Automatic store optimization and garbage collection
-    optimise = {
-      automatic = true;
-      dates = [ "weekly" ]; # Run optimization weekly
-    };
-
+    optimise.automatic = true;
     gc = {
       automatic = true;
       dates = "weekly";
       options = "--delete-older-than 30d";
     };
-
-    # Additional binary cache optimizations
-    extraOptions = ''
-      # Increase concurrent downloads for faster fetching
-      http-connections = 25
-
-      # Compress narinfo for faster metadata transfer
-      compress-build-log = true
-
-      # Enable content-addressed derivations for better caching
-      experimental-features = ca-derivations
-
-      # Better error reporting
-      show-trace = true
-    '';
   };
   nixpkgs.config.allowUnfree = true;
 
-  # Environment configuration consolidated
-  environment = {
-    # Disable nano system-wide in favor of micro
-    defaultPackages =
-      with pkgs;
-      lib.mkForce [
-        # Default packages except nano
-        coreutils
-        curl
-        diffutils
-        findutils
-        gawk
-        gnutar
-        gzip
-        gnugrep
-        gnused
-        systemd
-        util-linux
-        which
-        xz
-      ];
-
-    # Environment variables for better laptop experience
-    sessionVariables = {
-      NIXOS_OZONE_WL = "1";
-      ELECTRON_OZONE_PLATFORM_HINT = "auto";
-    };
-
-    # Common system packages
-    systemPackages =
-      with pkgs;
-      lib.optionals (!isISO) [
-        fwupd-efi
-        gnome-firmware
-
-        # Logitech device support
-        gnomeExtensions.solaar-extension
-        logitech-udev-rules
-        solaar
-      ];
-  };
+  # Disable nano system-wide in favor of micro
+  environment.defaultPackages =
+    with pkgs;
+    lib.mkForce [
+      # Default packages except nano
+      coreutils
+      curl
+      diffutils
+      findutils
+      gawk
+      gnutar
+      gzip
+      gnugrep
+      gnused
+      systemd
+      util-linux
+      which
+      xz
+    ];
 
   # Time zone
   time.timeZone = "America/Detroit";
@@ -338,4 +268,26 @@
 
   # Real-time kit for audio
   security.rtkit.enable = true;
+
+  # Environment variables for better laptop experience
+  environment.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+    ELECTRON_OZONE_PLATFORM_HINT = "auto";
+  };
+
+  # Common system packages
+  environment.systemPackages =
+    with pkgs;
+    [
+      # Hardware utilities (only for non-ISO systems)
+    ]
+    ++ lib.optionals (!isISO) [
+      fwupd-efi
+      gnome-firmware
+
+      # Logitech device support
+      gnomeExtensions.solaar-extension
+      logitech-udev-rules
+      solaar
+    ];
 }
