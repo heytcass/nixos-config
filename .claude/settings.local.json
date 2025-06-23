@@ -91,7 +91,8 @@
       "Bash(sops:*)",
       "Bash(echo:*)",
       "Bash(./scripts/format.sh:*)",
-      "Bash(nixfmt-rfc-style:*)"
+      "Bash(nixfmt-rfc-style:*)",
+      "Bash(cachix:*)"
     ],
     "deny": []
   },

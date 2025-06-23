@@ -131,6 +131,9 @@
             # Secrets management tools
             sops
             age
+
+            # Binary cache tools
+            cachix
           ];
 
           shellHook = ''
@@ -138,6 +141,7 @@
             echo "📝 Formatting tools: nixfmt-rfc-style, statix, deadnix"
             echo "🔐 Secret tools: sops, age"
             echo "🚀 Language servers: nixd, nil"
+            echo "📦 Binary cache: cachix"
             echo ""
             echo "💡 Quick commands:"
             echo "  nixfmt-rfc-style **/*.nix  # Format all Nix files"

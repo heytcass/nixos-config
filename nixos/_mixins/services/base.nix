@@ -95,25 +95,83 @@
         "flakes"
         "nix-command"
       ];
+      # Binary cache configuration for faster builds
       substituters = [
         "https://cache.nixos.org/"
         "https://nix-community.cachix.org"
         "https://hyprland.cachix.org"
+        # Add your personal cachix cache here once created:
+        # "https://your-cache-name.cachix.org"
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+        # Add your personal cachix public key here once created:
+        # "your-cache-name.cachix.org-1:your-public-key-here"
       ];
+
+      # Optimization settings for faster builds and downloads
       auto-optimise-store = true;
       builders-use-substitutes = true;
+      fallback = true; # Fall back to building if substitutes fail
+      keep-going = true; # Continue building other targets if one fails
+
+      # Parallel settings for faster operations
+      max-jobs = "auto"; # Use all available CPU cores
+      cores = 0; # Use all available CPU cores for single builds
+
+      # Cache optimization
+      connect-timeout = 5; # Timeout for cache connections
+      download-attempts = 3; # Retry failed downloads
+
+      # Keep build logs for debugging
+      keep-failed = lib.mkIf (!isISO) true; # Don't keep failed builds on ISO
+
+      # Advanced performance settings
+      system-features = [
+        "benchmark"
+        "big-parallel"
+        "kvm"
+        "nixos-test"
+      ];
+
+      # Build settings for better performance
+      require-sigs = true; # Require signatures for security
+
+      # Faster evaluation
+      eval-cache = true;
+
+      # Sandbox settings (enabled by default but explicit for clarity)
+      sandbox = true;
     };
-    optimise.automatic = true;
+
+    # Automatic store optimization and garbage collection
+    optimise = {
+      automatic = true;
+      dates = [ "weekly" ]; # Run optimization weekly
+    };
+
     gc = {
       automatic = true;
       dates = "weekly";
       options = "--delete-older-than 30d";
     };
+
+    # Additional binary cache optimizations
+    extraOptions = ''
+      # Increase concurrent downloads for faster fetching
+      http-connections = 25
+
+      # Compress narinfo for faster metadata transfer
+      compress-build-log = true
+
+      # Enable content-addressed derivations for better caching
+      experimental-features = ca-derivations
+
+      # Better error reporting
+      show-trace = true
+    '';
   };
   nixpkgs.config.allowUnfree = true;
 
