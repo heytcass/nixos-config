@@ -35,9 +35,15 @@
     ghostty = {
       url = "github:ghostty-org/ghostty";
     };
+    
+    # Hyprland window manager
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, nixos-hardware, claude-desktop, sops-nix, disko, ghostty, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nixos-hardware, claude-desktop, sops-nix, disko, ghostty, hyprland, ... }@inputs:
     let
       inherit (self) outputs;
       stateVersion = "25.05";
@@ -64,7 +70,7 @@
         # Laptop without gaming (Dell Latitude 7280) - with disko
         transporter = helper.mkNixOS {
           hostname = "transporter";
-          desktop = "gnome";
+          desktop = "hyprland";
           modules = [
             # Dell Latitude 7280 hardware support
             nixos-hardware.nixosModules.dell-latitude-7280
@@ -97,7 +103,7 @@
         "tom@transporter" = helper.mkHome {
           hostname = "transporter";
           username = "tom";
-          desktop = "gnome";
+          desktop = "hyprland";
         };
       };
       

@@ -1,7 +1,7 @@
 # Base NixOS configuration
 # This file is imported by all NixOS systems and provides the foundation
 
-{ config, lib, pkgs, inputs, outputs, hostname, username, isWorkstation, isLaptop, isISO, ... }:
+{ config, lib, pkgs, inputs, outputs, desktop, hostname, username, isWorkstation, isLaptop, isISO, ... }:
 
 {
   imports = [
@@ -19,9 +19,12 @@
     
     # Import Tailscale networking
     ./_mixins/services/tailscale.nix
-  ] ++ lib.optionals (!isISO) [
-    # Import desktop configuration for non-ISO systems
+  ] ++ lib.optionals (!isISO && desktop == "gnome") [
+    # Import GNOME desktop configuration
     ./_mixins/desktop/gnome.nix
+  ] ++ lib.optionals (!isISO && desktop == "hyprland") [
+    # Import Hyprland desktop configuration
+    ./_mixins/desktop/hyprland.nix
   ] ++ lib.optionals isWorkstation [
     # Import gaming features only for workstations
     ./_mixins/features/gaming.nix
