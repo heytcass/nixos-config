@@ -109,7 +109,7 @@ jobs:
       - name: Build Home Manager configuration
         run: |
           echo "Building Home Manager configuration for ${{ matrix.system }}..."
-          nix build .#homeConfigurations."tom@${{ matrix.system }}" -L --show-trace
+          nix build .#homeConfigurations."tom@${{ matrix.system }}".activationPackage -L --show-trace
           echo "✅ Home Manager configuration built successfully"
       
       - name: Test development shell
