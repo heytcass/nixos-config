@@ -10,8 +10,8 @@
 }:
 
 {
-  # Import sops-nix module for non-ISO systems
-  imports = lib.optionals (!isISO) [ inputs.sops-nix.nixosModules.sops ];
+  # Import sops-nix module for non-ISO systems only
+  imports = if (!isISO) then [ inputs.sops-nix.nixosModules.sops ] else [ ];
 
   # Only enable secrets configuration for non-ISO systems
   config = lib.mkIf (!isISO) {
