@@ -1,12 +1,8 @@
-name: Build NixOS ISO
+name: Build NixOS ISO (Release)
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - 'flake.lock'
-      - '**.nix'
-      - '.github/workflows/build-iso.yml'
+  release:
+    types: [published]
   workflow_dispatch:
     inputs:
       release:
@@ -145,7 +141,7 @@ jobs:
         EOF
 
     - name: Create Release
-      if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.release)
+      if: github.event_name == 'workflow_dispatch' && inputs.release
       uses: softprops/action-gh-release@v2
       with:
         tag_name: "iso-${{ steps.version.outputs.version }}"
