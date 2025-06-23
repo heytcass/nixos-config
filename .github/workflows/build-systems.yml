@@ -37,6 +37,7 @@ jobs:
 
       - name: Run comprehensive flake validation
         uses: DeterminateSystems/flake-checker-action@v8
+        continue-on-error: true  # Don't fail on cache service issues
         with:
           check-outdated: true
           check-owner: true  
