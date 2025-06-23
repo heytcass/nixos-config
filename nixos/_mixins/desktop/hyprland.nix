@@ -154,7 +154,7 @@
 
       # Startup applications
       exec-once = waybar
-      exec-once = mako
+      exec-once = swaync
       exec-once = swayidle -w timeout 300 'swaylock-effects' timeout 600 'hyprctl dispatch dpms off' resume 'hyprctl dispatch dpms on' before-sleep 'swaylock-effects'
       exec-once = swaybg -i ~/.config/wallpaper.jpg -m fill
     '';
@@ -165,7 +165,7 @@
       wofi # Rust-based launcher (replaces rofi)
       waybar # Modern status bar
       swaylock-effects # Screen locker with effects
-      mako # Rust-based notification daemon
+      swaynotificationcenter # Modern notification center
       grim # Screenshot tool
       slurp # Area selection for screenshots
       wl-clipboard # Wayland clipboard utilities
