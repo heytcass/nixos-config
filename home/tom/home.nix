@@ -1,6 +1,8 @@
 {
   pkgs,
   inputs,
+  lib,
+  isISO ? false,
   ...
 }:
 {
@@ -102,6 +104,7 @@
         du = "dua interactive";
         tree = "eza --tree";
         nano = "micro";
+      } // lib.optionalAttrs (!isISO) {
         gh-auth = "gh auth login --with-token < /run/secrets/github_token";
       };
     };
@@ -121,6 +124,7 @@
         du = "dua interactive";
         tree = "eza --tree";
         nano = "micro";
+      } // lib.optionalAttrs (!isISO) {
         gh-auth = "gh auth login --with-token < /run/secrets/github_token";
       };
       interactiveShellInit = ''
@@ -130,7 +134,7 @@
           alias reload='source ~/.config/fish/config.fish'
         end
       '';
-      
+
       # Directory-specific cachix auto-start
       functions = {
         __cachix_nixos_check = {
@@ -307,8 +311,8 @@
       enable = true;
       addKeysToAgent = "yes";
       extraConfig = ''
-        # Use encrypted SSH key from secrets
-        IdentityFile /run/secrets/ssh_private_key
+        # Use encrypted SSH key from secrets (when available)
+        ${lib.optionalString (!isISO) "IdentityFile /run/secrets/ssh_private_key"}
         IdentityFile ~/.ssh/id_ed25519
       '';
     };

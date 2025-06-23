@@ -40,7 +40,7 @@ jobs:
         continue-on-error: true  # Don't fail on cache service issues
         with:
           check-outdated: true
-          check-owner: true  
+          check-owner: true
           check-supported: true
 
   build:
@@ -49,7 +49,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    
+
     strategy:
       fail-fast: true  # Fail fast for quick developer feedback
       matrix:
@@ -64,55 +64,68 @@ jobs:
           - system: transporter
             type: laptop
             description: "Dell Latitude 7280 - Portable laptop"
-    
+
     name: Build ${{ matrix.system }} (${{ matrix.type }})
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Maximize build space
         uses: wimpysworld/nothing-but-nix@main
         with:
           hatchet-protocol: cleave
-      
+
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
         with:
           logger: pretty
           log-directives: nix_installer=trace
           backtrace: full
-      
+
       - name: Setup FlakeHub Cache
         uses: DeterminateSystems/flakehub-cache-action@main
-      
+        continue-on-error: true  # Don't fail build on cache upload issues
+
       - name: Setup Cachix
         uses: cachix/cachix-action@v15
         with:
           name: nix-community
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           skipPush: true
-      
+
+      - name: Setup Hyprland Cache
+        uses: cachix/cachix-action@v15
+        with:
+          name: hyprland
+          skipPush: true
+
+      - name: Setup Wayland Cache
+        uses: cachix/cachix-action@v15
+        with:
+          name: nixpkgs-wayland
+          skipPush: true
+
       - name: Build ${{ matrix.system }}
-        timeout-minutes: 15  # Reduced timeout for faster feedback
+        timeout-minutes: 30  # Increased timeout for complex Wayland builds
         run: |
           echo "Building ${{ matrix.description }}..."
           echo "System: ${{ matrix.system }}"
           echo "Type: ${{ matrix.type }}"
-          
+
           # Build system configuration (ISO removed from matrix for development speed)
           echo "Building system configuration..."
           nix build .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel -L --show-trace
           echo "✅ System built successfully"
-      
+
       - name: Test development shell
         run: |
           echo "Testing development shell..."
           nix develop -c echo "Development shell works!"
           echo "✅ Development shell tested successfully"
-      
+
       - name: Generate build summary
         run: |
           echo "## Build Summary for ${{ matrix.system }}" >> $GITHUB_STEP_SUMMARY
@@ -128,15 +141,15 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: always()
-    
+
     steps:
       - name: Build Status Summary
         run: |
           echo "## 🚀 Build Matrix Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| System | Type | Status |" >> $GITHUB_STEP_SUMMARY  
+          echo "| System | Type | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|--------|------|--------|" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ "${{ needs.build.result }}" = "success" ]; then
             echo "| gti | workstation | ✅ Success |" >> $GITHUB_STEP_SUMMARY
             echo "| transporter | laptop | ✅ Success |" >> $GITHUB_STEP_SUMMARY

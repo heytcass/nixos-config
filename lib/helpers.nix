@@ -71,6 +71,9 @@ let
               hostname
               username
               ;
+            isWorkstation = isWorkstation hostname;
+            isLaptop = isLaptop hostname;
+            isISO = isISO hostname;
           };
         }
       ] ++ modules;
@@ -96,6 +99,7 @@ let
           ;
         isWorkstation = isWorkstation hostname;
         isLaptop = isLaptop hostname;
+        isISO = isISO hostname;
       };
       modules = [ ../home/tom/home.nix ];
     };
