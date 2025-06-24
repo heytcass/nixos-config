@@ -97,7 +97,9 @@
       "WebFetch(domain:discourse.nixos.org)",
       "Bash(timeout 30 nix flake check:*)",
       "Bash(git stash:*)",
-      "Bash(gh run watch:*)"
+      "Bash(gh run watch:*)",
+      "Bash(sudo:*)",
+      "Bash(systemctl:*)"
     ],
     "deny": []
   },

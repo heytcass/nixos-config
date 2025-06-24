@@ -26,65 +26,67 @@ in
 
 {
   # User configuration
-  home.username = "tom";
-  home.homeDirectory = "/home/tom";
-  home.stateVersion = "25.05";
+  home = {
+    username = "tom";
+    homeDirectory = "/home/tom";
+    stateVersion = "25.05";
 
-  # User packages
-  home.packages = with pkgs; [
-    # Development tools
-    gh
-    vscode
-    starship # Cross-shell prompt
+    # User packages
+    packages = with pkgs; [
+      # Development tools
+      gh
+      vscode
+      starship # Cross-shell prompt
 
-    # Modern command-line tools
-    bat # Better cat with syntax highlighting
-    eza # Modern ls with colors and icons
-    fd # Modern find replacement
-    procs # Modern ps with better formatting
-    bottom # Enhanced top alternative
-    dogdns # Modern dig replacement
-    gping # Ping with real-time graphs
-    bandwhich # Network usage by process
-    mtr # Better traceroute
-    dua # Visual disk usage analyzer
-    rclone # Cloud storage sync
-    yazi # Terminal file manager
-    hyperfine # Command-line benchmarking
-    tldr # Simplified man pages
-    entr # Run commands when files change
-    croc # Easy file transfer
-    magic-wormhole-rs # Secure file sharing
+      # Modern command-line tools
+      bat # Better cat with syntax highlighting
+      eza # Modern ls with colors and icons
+      fd # Modern find replacement
+      procs # Modern ps with better formatting
+      bottom # Enhanced top alternative
+      dogdns # Modern dig replacement
+      gping # Ping with real-time graphs
+      bandwhich # Network usage by process
+      mtr # Better traceroute
+      dua # Visual disk usage analyzer
+      rclone # Cloud storage sync
+      yazi # Terminal file manager
+      hyperfine # Command-line benchmarking
+      tldr # Simplified man pages
+      entr # Run commands when files change
+      croc # Easy file transfer
+      magic-wormhole-rs # Secure file sharing
 
-    # Desktop applications (moved from system config)
-    apostrophe
-    bitwarden-desktop
-    boatswain
-    claude-code
-    discord
-    google-chrome
-    slack
-    spotify
-    todoist-electron
-    zoom-us
+      # Desktop applications (moved from system config)
+      apostrophe
+      bitwarden-desktop
+      boatswain
+      claude-code
+      discord
+      google-chrome
+      slack
+      spotify
+      todoist-electron
+      zoom-us
 
-  ];
+    ];
 
-  # Dotfiles (currently managed through GUI/sync)
-  home.file = { };
+    # Dotfiles (currently managed through GUI/sync)
+    file = { };
 
-  # Services
-  services.ssh-agent.enable = true;
+    # Services
+    services.ssh-agent.enable = true;
 
-  # GitHub CLI is configured to use encrypted token
-  # Authentication can be done manually: gh auth login --with-token < /run/secrets/github_token
+    # GitHub CLI is configured to use encrypted token
+    # Authentication can be done manually: gh auth login --with-token < /run/secrets/github_token
 
-  # Environment variables
-  home.sessionVariables = {
-    STEAM_EXTRA_COMPAT_TOOLS_PATHS = "$HOME/.steam/root/compatibilitytools.d";
-    EDITOR = "micro";
-    SYSTEMD_EDITOR = "micro";
-    VISUAL = "micro";
+    # Environment variables
+    sessionVariables = {
+      STEAM_EXTRA_COMPAT_TOOLS_PATHS = "$HOME/.steam/root/compatibilitytools.d";
+      EDITOR = "micro";
+      SYSTEMD_EDITOR = "micro";
+      VISUAL = "micro";
+    };
   };
 
   # Hide terminal apps from launcher
