@@ -74,9 +74,6 @@ in
     # Dotfiles (currently managed through GUI/sync)
     file = { };
 
-    # Services
-    services.ssh-agent.enable = true;
-
     # GitHub CLI is configured to use encrypted token
     # Authentication can be done manually: gh auth login --with-token < /run/secrets/github_token
 
@@ -88,6 +85,9 @@ in
       VISUAL = "micro";
     };
   };
+
+  # Services
+  services.ssh-agent.enable = true;
 
   # Hide terminal apps from launcher
   xdg.desktopEntries = {

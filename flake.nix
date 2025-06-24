@@ -41,6 +41,12 @@
       url = "github:hyprwm/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Niri window manager
+    niri = {
+      url = "github:YaLTeR/niri";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -77,7 +83,7 @@
         # Laptop without gaming (Dell Latitude 7280) - with disko
         transporter = helper.mkNixOS {
           hostname = "transporter";
-          desktop = "hyprland";
+          desktop = "niri";
           modules = [
             # Dell Latitude 7280 hardware support
             nixos-hardware.nixosModules.dell-latitude-7280
@@ -110,7 +116,7 @@
         "tom@transporter" = helper.mkHome {
           hostname = "transporter";
           username = "tom";
-          desktop = "hyprland";
+          desktop = "niri";
         };
       };
 

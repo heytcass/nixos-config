@@ -36,6 +36,10 @@
       # Import Hyprland desktop configuration
       ./_mixins/desktop/hyprland.nix
     ]
+    ++ lib.optionals (!isISO && desktop == "niri") [
+      # Import Niri desktop configuration
+      ./_mixins/desktop/niri.nix
+    ]
     ++ lib.optionals isWorkstation [
       # Import gaming features only for workstations
       ./_mixins/features/gaming.nix
