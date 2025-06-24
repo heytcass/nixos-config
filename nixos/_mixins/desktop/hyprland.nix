@@ -223,13 +223,6 @@
     printing.enable = false;
   };
 
-  # Fonts (same as GNOME for consistency)
-  fonts.packages = with pkgs; [
-    nerd-fonts.fira-code
-    nerd-fonts.jetbrains-mono
-    nerd-fonts.hack
-  ];
-
   # Security and authentication
   security = {
     polkit.enable = true;
@@ -246,7 +239,5 @@
     ];
   };
 
-  # Enable hardware acceleration (already handled in base.nix)
-  # Ensure proper graphics drivers are loaded
-  hardware.graphics.enable = true;
+  # Hardware acceleration is handled in base.nix
 }

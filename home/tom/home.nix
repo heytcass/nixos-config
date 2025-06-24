@@ -5,6 +5,25 @@
   isISO ? false,
   ...
 }:
+
+let
+  # Common shell aliases for modern CLI tools
+  commonShellAliases = {
+    cat = "bat";
+    ls = "eza";
+    ll = "eza -l";
+    la = "eza -la";
+    find = "fd";
+    ps = "procs";
+    top = "btm";
+    dig = "dog";
+    ping = "gping";
+    du = "dua interactive";
+    tree = "eza --tree";
+    nano = "micro";
+  };
+in
+
 {
   # User configuration
   home.username = "tom";
@@ -13,7 +32,7 @@
 
   # User packages
   home.packages = with pkgs; [
-    git
+    # Development tools
     gh
     vscode
     starship # Cross-shell prompt
@@ -37,8 +56,18 @@
     croc # Easy file transfer
     magic-wormhole-rs # Secure file sharing
 
-    # Gaming tools
-    protonup-qt # GUI tool for managing Proton versions
+    # Desktop applications (moved from system config)
+    apostrophe
+    bitwarden-desktop
+    boatswain
+    claude-code
+    discord
+    google-chrome
+    slack
+    spotify
+    todoist-electron
+    zoom-us
+
   ];
 
   # Dotfiles (currently managed through GUI/sync)
@@ -91,42 +120,20 @@
     # Shell aliases for modern tools
     bash = {
       enable = true;
-      shellAliases = {
-        cat = "bat";
-        ls = "eza";
-        ll = "eza -l";
-        la = "eza -la";
-        find = "fd";
-        ps = "procs";
-        top = "btm";
-        dig = "dog";
-        ping = "gping";
-        du = "dua interactive";
-        tree = "eza --tree";
-        nano = "micro";
-      } // lib.optionalAttrs (!isISO) {
-        gh-auth = "gh auth login --with-token < /run/secrets/github_token";
-      };
+      shellAliases =
+        commonShellAliases
+        // lib.optionalAttrs (!isISO) {
+          gh-auth = "gh auth login --with-token < /run/secrets/github_token";
+        };
     };
 
     fish = {
       enable = true;
-      shellAliases = {
-        cat = "bat";
-        ls = "eza";
-        ll = "eza -l";
-        la = "eza -la";
-        find = "fd";
-        ps = "procs";
-        top = "btm";
-        dig = "dog";
-        ping = "gping";
-        du = "dua interactive";
-        tree = "eza --tree";
-        nano = "micro";
-      } // lib.optionalAttrs (!isISO) {
-        gh-auth = "gh auth login --with-token < /run/secrets/github_token";
-      };
+      shellAliases =
+        commonShellAliases
+        // lib.optionalAttrs (!isISO) {
+          gh-auth = "gh auth login --with-token < /run/secrets/github_token";
+        };
       interactiveShellInit = ''
         # Ghostty-specific optimizations
         if test "$TERM_PROGRAM" = "ghostty"
@@ -297,6 +304,9 @@
       enable = true;
       userName = "Tom Cassady";
       userEmail = "heytcass@gmail.com";
+      extraConfig = {
+        credential.helper = "store";
+      };
     };
 
     gh = {

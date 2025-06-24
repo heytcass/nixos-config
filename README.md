@@ -35,12 +35,18 @@ This is a modular NixOS configuration supporting multiple hosts with shared conf
 │   │   └── hardware-configuration.nix # Auto-generated hardware settings
 │   └── iso/                       # Live ISO configuration
 │       └── configuration.nix      # ISO-specific settings
-├── modules/common/                # Shared configuration modules
-│   ├── base.nix                   # Core system configuration
-│   ├── desktop.nix                # GNOME desktop environment
-│   ├── development.nix            # Development tools and environment
-│   ├── gaming.nix                 # Gaming-specific packages and settings
-│   └── users.nix                  # User account configuration
+├── nixos/_mixins/                 # Modular configuration system
+│   ├── services/                  # System services and core config
+│   │   ├── base.nix              # Core system configuration
+│   │   └── users.nix             # User account configuration
+│   ├── features/                  # Feature-based configurations
+│   │   ├── development.nix       # Development tools and environment
+│   │   └── gaming.nix            # Gaming-specific packages and settings
+│   └── desktop/                   # Desktop environment configurations
+│       ├── gnome.nix             # GNOME desktop environment
+│       └── hyprland.nix          # Hyprland window manager
+├── lib/                          # Helper functions and utilities
+│   └── helpers.nix               # System generation and type detection
 ├── home/tom/                      # User Home Manager configuration
 │   ├── home.nix                   # User environment and packages
 │   └── secrets/                   # User secrets (git-ignored)
@@ -95,7 +101,7 @@ nix flake show
 **Fish Shell** with automatic command aliases and **Starship Prompt** featuring:
 
 - 🔋 Battery status with charging indicators
-- 📁 Directory path with read-only lock icons  
+- 📁 Directory path with read-only lock icons
 - 🐙 Git branch with status symbols ( ,  ,  , etc.)
 - 🐧 Nix shell detection with snowflake icon
 - ⚡ Command duration tracking for long operations
@@ -197,7 +203,7 @@ This repository includes GitHub Actions workflows for hands-off maintenance:
 
 ### Adding Packages
 
-- **System packages**: Edit the appropriate module in `modules/common/` (e.g., `development.nix`, `gaming.nix`)
+- **System packages**: Edit the appropriate module in `nixos/_mixins/features/` (e.g., `development.nix`, `gaming.nix`)
 - **User packages**: Edit `home.packages` in `home/tom/home.nix`
 - **Host-specific packages**: Add to individual host configurations if needed
 - **Development tools**: Consider project-specific `shell.nix` or `flake.nix` files
@@ -210,7 +216,7 @@ This repository includes GitHub Actions workflows for hands-off maintenance:
 
 ### System Services
 
-- **Modify shared services**: Edit the appropriate module in `modules/common/`
+- **Modify shared services**: Edit the appropriate module in `nixos/_mixins/services/`
 - **Host-specific services**: Edit services in individual host configurations
 - **Enable new features**: Add hardware or service modules to configuration
 - **Apply changes**: Run `sudo nixos-rebuild switch --flake .#<hostname>`
@@ -228,7 +234,7 @@ This repository includes GitHub Actions workflows for hands-off maintenance:
 # Apply configuration changes (replace <hostname> with gti, transporter, etc.)
 sudo nixos-rebuild switch --flake .#<hostname>
 
-# Update all dependencies  
+# Update all dependencies
 nix flake update
 
 # Build ISO image

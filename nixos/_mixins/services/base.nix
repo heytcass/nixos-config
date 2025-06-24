@@ -269,6 +269,16 @@
   # Real-time kit for audio
   security.rtkit.enable = true;
 
+  # System fonts (shared across all desktop environments)
+  fonts.packages = with pkgs; [
+    nerd-fonts.fira-code
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.hack
+  ];
+
+  # Fish shell system enablement (required when user shell is fish)
+  programs.fish.enable = true;
+
   # Environment variables for better laptop experience
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";

@@ -2,15 +2,12 @@
 # Provides essential development tools and configurations
 
 {
-  config,
   pkgs,
   inputs,
   ...
 }:
 
 {
-  # Development programs
-  programs.fish.enable = true;
 
   # Development packages
   environment.systemPackages = with pkgs; [
@@ -28,11 +25,4 @@
     cachix
   ];
 
-  # Git configuration (system-wide)
-  programs.git = {
-    enable = true;
-    config = {
-      credential.helper = "store";
-    };
-  };
 }

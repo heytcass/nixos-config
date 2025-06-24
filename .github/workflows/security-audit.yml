@@ -19,7 +19,7 @@ jobs:
       - name: Maximize build space for security audit
         uses: wimpysworld/nothing-but-nix@main
         with:
-          hatchet-protocol: carve
+          hatchet-protocol: cleave
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -37,7 +37,7 @@ jobs:
           nix build .#nixosConfigurations.gti.config.system.build.toplevel \
             --no-link --print-out-paths > system-path.txt
 
-      - name: Build home-manager configuration  
+      - name: Build home-manager configuration
         run: |
           nix build .#nixosConfigurations.gti.config.home-manager.users.tom.home.activationPackage \
             --no-link --print-out-paths > home-path.txt
@@ -47,11 +47,11 @@ jobs:
           echo "🔍 Scanning system packages for security vulnerabilities..."
           SYSTEM_PATH=$(cat system-path.txt)
           vulnix --system "$SYSTEM_PATH" --json > system-vulns.json || true
-          
+
           # Check if vulnerabilities were found
           VULN_COUNT=$(jq length system-vulns.json)
           echo "Found $VULN_COUNT vulnerabilities in system packages"
-          
+
           if [ "$VULN_COUNT" -gt 0 ]; then
             echo "::warning::Found $VULN_COUNT security vulnerabilities in system packages"
             echo "## System Package Vulnerabilities" >> $GITHUB_STEP_SUMMARY
@@ -65,11 +65,11 @@ jobs:
           echo "🔍 Scanning home-manager packages for security vulnerabilities..."
           HOME_PATH=$(cat home-path.txt)
           vulnix --system "$HOME_PATH" --json > home-vulns.json || true
-          
+
           # Check if vulnerabilities were found
           VULN_COUNT=$(jq length home-vulns.json)
           echo "Found $VULN_COUNT vulnerabilities in home-manager packages"
-          
+
           if [ "$VULN_COUNT" -gt 0 ]; then
             echo "::warning::Found $VULN_COUNT security vulnerabilities in home-manager packages"
             echo "## Home Manager Package Vulnerabilities" >> $GITHUB_STEP_SUMMARY
@@ -81,10 +81,10 @@ jobs:
       - name: Check for insecure packages
         run: |
           echo "🔍 Checking for packages marked as insecure..."
-          
+
           # Build and check for insecure packages
           nix eval --json .#nixosConfigurations.gti.config.nixpkgs.config.permittedInsecurePackages > insecure.json || echo "[]" > insecure.json
-          
+
           INSECURE_COUNT=$(jq length insecure.json)
           if [ "$INSECURE_COUNT" -gt 0 ]; then
             echo "::warning::Found $INSECURE_COUNT permitted insecure packages"
@@ -97,14 +97,14 @@ jobs:
       - name: Check for unfree packages (license audit)
         run: |
           echo "🔍 Auditing unfree package licenses..."
-          
+
           # Extract unfree packages from the build
           nix build .#nixosConfigurations.gti.config.system.build.toplevel --dry-run 2>&1 | \
             grep -o "has an unfree license" | wc -l > unfree-count.txt || echo "0" > unfree-count.txt
-          
+
           UNFREE_COUNT=$(cat unfree-count.txt)
           echo "Found $UNFREE_COUNT unfree packages"
-          
+
           if [ "$UNFREE_COUNT" -gt 0 ]; then
             echo "::notice::Using $UNFREE_COUNT unfree packages (license compliance check)"
           fi
@@ -113,19 +113,19 @@ jobs:
         run: |
           echo "## 🛡️ Security Audit Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           SYSTEM_VULNS=$(jq length system-vulns.json)
           HOME_VULNS=$(jq length home-vulns.json)
           INSECURE_PKGS=$(jq length insecure.json)
           UNFREE_PKGS=$(cat unfree-count.txt)
-          
+
           echo "| Category | Count | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|----------|-------|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| System Vulnerabilities | $SYSTEM_VULNS | $([ $SYSTEM_VULNS -eq 0 ] && echo '✅' || echo '⚠️') |" >> $GITHUB_STEP_SUMMARY
           echo "| Home Vulnerabilities | $HOME_VULNS | $([ $HOME_VULNS -eq 0 ] && echo '✅' || echo '⚠️') |" >> $GITHUB_STEP_SUMMARY
           echo "| Insecure Packages | $INSECURE_PKGS | $([ $INSECURE_PKGS -eq 0 ] && echo '✅' || echo '⚠️') |" >> $GITHUB_STEP_SUMMARY
           echo "| Unfree Packages | $UNFREE_PKGS | ℹ️ |" >> $GITHUB_STEP_SUMMARY
-          
+
           TOTAL_ISSUES=$((SYSTEM_VULNS + HOME_VULNS + INSECURE_PKGS))
           if [ $TOTAL_ISSUES -gt 0 ]; then
             echo "" >> $GITHUB_STEP_SUMMARY

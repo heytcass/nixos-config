@@ -12,7 +12,7 @@
 {
   imports =
     [
-      # Import base system configuration (converted from modules/common/base.nix)
+      # Import base system configuration
       ./_mixins/services/base.nix
 
       # Import development tools for all systems

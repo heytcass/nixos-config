@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Development Commands
 
 ### System Management
-- **Build and switch configuration**: 
+- **Build and switch configuration**:
   - `sudo nixos-rebuild switch --flake .#gti` (Dell XPS 13 9370 main workstation)
   - `sudo nixos-rebuild switch --flake .#transporter` (Dell Latitude 7280 secondary laptop)
 - **Build without switching**: `sudo nixos-rebuild build --flake .#<hostname>`
@@ -99,17 +99,17 @@ This is a modular flake-based NixOS configuration with a **mixin system** suppor
 ## Common Tasks
 
 ### Package Management
-- **Add system packages**: Edit the appropriate module in `modules/common/`:
-  - `development.nix` for development tools
-  - `gaming.nix` for gaming-related packages
-  - `desktop.nix` for desktop applications
-  - `base.nix` for core system packages
+- **Add system packages**: Edit the appropriate mixin in `nixos/_mixins/`:
+  - `features/development.nix` for development tools
+  - `features/gaming.nix` for gaming-related packages
+  - `desktop/gnome.nix` or `desktop/hyprland.nix` for desktop applications
+  - `services/base.nix` for core system packages
 - **Add user packages**: Edit `home.packages` in `home/tom/home.nix`
 - **Host-specific packages**: Add directly to `hosts/<hostname>/configuration.nix` if needed
 - **Add development tools**: Consider using `shell.nix` or `flake.nix` for project-specific environments
 
 ### Configuration Changes
-- **Modify shared system services**: Edit services section in appropriate `modules/common/` file
+- **Modify shared system services**: Edit services section in appropriate `nixos/_mixins/services/` file
 - **Host-specific services**: Edit services section in `hosts/<hostname>/configuration.nix`
 - **Update shell aliases**: Edit `programs.fish.shellAliases` or `programs.bash.shellAliases` in `home/tom/home.nix`
 - **Customize starship prompt**: Edit `programs.starship.settings` in `home/tom/home.nix`
@@ -137,15 +137,27 @@ This is a modular flake-based NixOS configuration with a **mixin system** suppor
 │   │   └── hardware-configuration.nix  # Hardware-specific settings
 │   └── iso/                     # Live ISO configuration
 │       └── configuration.nix    # ISO-specific settings
-├── modules/common/              # Shared configuration modules
-│   ├── base.nix                 # Core system configuration
-│   ├── desktop.nix              # GNOME desktop environment
-│   ├── development.nix          # Development tools and environment
-│   ├── gaming.nix               # Gaming-specific packages and settings
-│   └── users.nix                # User account configuration
+├── nixos/_mixins/               # Modular configuration mixins
+│   ├── services/                # System services
+│   │   ├── base.nix             # Core system configuration
+│   │   ├── users.nix            # User account configuration
+│   │   ├── tailscale.nix        # Tailscale VPN service
+│   │   └── secrets.nix          # Secrets management
+│   ├── features/                # Optional features
+│   │   ├── development.nix      # Development tools and environment
+│   │   └── gaming.nix           # Gaming-specific packages and settings
+│   └── desktop/                 # Desktop environments
+│       ├── gnome.nix            # GNOME desktop environment
+│       └── hyprland.nix         # Hyprland wayland compositor
 ├── home/tom/                    # User Home Manager configuration
 │   ├── home.nix                 # User environment shared across hosts
 │   └── secrets/                 # User secrets (git-ignored)
+├── lib/                         # Helper functions
+│   ├── default.nix              # Library exports
+│   └── helpers.nix              # System creation helpers
+├── overlays/                    # Package customizations
+│   ├── default.nix              # Overlay exports
+│   └── iso-optimizations.nix    # ISO-specific optimizations
 ├── CLAUDE.md                    # This file
 └── README.md                    # Project documentation
 ```

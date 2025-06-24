@@ -25,13 +25,6 @@
     printing.enable = false;
   };
 
-  # Fonts
-  fonts.packages = with pkgs; [
-    nerd-fonts.fira-code
-    nerd-fonts.jetbrains-mono
-    nerd-fonts.hack
-  ];
-
   # GNOME customization
   environment = {
     gnome.excludePackages = with pkgs; [

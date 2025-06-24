@@ -23,9 +23,9 @@
     };
   };
 
-  # Additional gaming optimizations
+  # Additional gaming utilities
   environment.systemPackages = with pkgs; [
-    # Gaming utilities could be added here
+    protonup-qt # GUI tool for managing Proton versions
   ];
 
   # Gaming-specific system tweaks
