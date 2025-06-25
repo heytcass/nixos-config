@@ -262,6 +262,7 @@
       xdg-desktop-portal-gtk
       xdg-desktop-portal-wlr
     ];
+    config.common.default = "*";
   };
 
   # Hardware acceleration is handled in base.nix
