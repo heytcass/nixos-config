@@ -7,7 +7,7 @@ _: {
     disk = {
       main = {
         type = "disk";
-        device = "/dev/sda"; # Dell Latitude 7280 SATA SSD
+        device = "/dev/sda"; # Dell Latitude 7280 SATA SSD (238.5GB total)
         content = {
           type = "gpt";
           partitions = {

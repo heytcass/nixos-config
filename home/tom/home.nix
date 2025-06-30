@@ -21,6 +21,36 @@ let
     du = "dua interactive";
     tree = "eza --tree";
     nano = "micro";
+
+    # Rust utility aliases (with fallback to GNU versions)
+    # sudo = "sudo-rs";
+    # Core utilities (most common first)
+    cp = "ucp";
+    mv = "umv";
+    rm = "urm";
+    mkdir = "umkdir";
+    rmdir = "urmdir";
+    touch = "utouch";
+    chmod = "uchmod";
+    chown = "uchown";
+    # Text processing
+    sort = "usort";
+    uniq = "uuniq";
+    cut = "ucut";
+    head = "uhead";
+    tail = "utail";
+    wc = "uwc";
+    # File operations
+    stat = "ustat";
+    ln = "uln";
+    # System info
+    whoami = "uwhoami";
+    id = "uid";
+    groups = "ugroups";
+    # Path utilities
+    basename = "ubasename";
+    dirname = "udirname";
+    readlink = "ureadlink";
   };
 in
 
@@ -58,7 +88,6 @@ in
       magic-wormhole-rs # Secure file sharing
 
       # Desktop applications (moved from system config)
-      apostrophe
       bitwarden-desktop
       boatswain
       claude-code
@@ -88,6 +117,11 @@ in
 
   # Services
   services.ssh-agent.enable = true;
+
+  # Configure Papirus folder colors to match terracotta theme
+  home.activation.configurePapirusFolders = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    ${pkgs.papirus-folders}/bin/papirus-folders -C orange --theme Papirus || true
+  '';
 
   # Hide terminal apps from launcher
   xdg.desktopEntries = {
@@ -150,12 +184,28 @@ in
           body = ''
             # Auto-start cachix watch-store when entering NixOS config directory
             if test "$PWD" = "/home/tom/.nixos"
-              if not pgrep -f "cachix watch-store" > /dev/null 2>&1
+              if not pgrep -f "cachix watch-store tcass-nixos-config" > /dev/null 2>&1
+                # Only start if not in SSH session and not in vscode terminal
                 if test -z "$SSH_CLIENT" -a "$TERM_PROGRAM" != "vscode"
                   echo "🚀 Starting cachix watch-store for NixOS development..."
+                  echo "   Logs: /tmp/cachix-watch.log"
                   nohup cachix watch-store tcass-nixos-config > /tmp/cachix-watch.log 2>&1 &
                   disown
+                  sleep 1
+                  if pgrep -f "cachix watch-store tcass-nixos-config" > /dev/null 2>&1
+                    echo "✅ Cachix watch-store started successfully"
+                  else
+                    echo "❌ Failed to start cachix watch-store"
+                  end
+                else
+                  if test -n "$SSH_CLIENT"
+                    echo "📡 SSH session detected - skipping cachix auto-start"
+                  else if test "$TERM_PROGRAM" = "vscode"
+                    echo "💻 VSCode terminal detected - skipping cachix auto-start"
+                  end
                 end
+              else
+                echo "✅ Cachix watch-store already running"
               end
             end
           '';
@@ -339,6 +389,9 @@ in
         font-family = "Hack Nerd Font";
         font-size = 12;
 
+        # Theme
+        theme = "claude-terracotta";
+
         # Keybindings
         keybind = [
           "ctrl+shift+c=copy_to_clipboard"
@@ -365,6 +418,36 @@ in
         # Clipboard
         clipboard-read = "allow";
         clipboard-write = "allow";
+      };
+
+      # Custom theme based on Claude Theme VSCode color scheme
+      themes.claude-terracotta = {
+        background = "1a1915";
+        foreground = "c3c0b6";
+        cursor-color = "d97757";
+        cursor-text = "1a1915";
+        selection-background = "3e3e38";
+        selection-foreground = "faf9f5";
+
+        # ANSI colors (0-7)
+        palette = [
+          "0=1a1915" # black
+          "1=e77e7c" # red
+          "2=a3c778" # green
+          "3=e7c470" # yellow
+          "4=7aafca" # blue
+          "5=c278af" # magenta
+          "6=78c0af" # cyan
+          "7=c3c0b6" # white
+          "8=525152" # bright black
+          "9=f08a87" # bright red
+          "10=b1d383" # bright green
+          "11=f0d283" # bright yellow
+          "12=83bfd3" # bright blue
+          "13=d383bf" # bright magenta
+          "14=83d3bf" # bright cyan
+          "15=faf9f5" # bright white
+        ];
       };
     };
   };

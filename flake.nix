@@ -140,6 +140,11 @@
 
             # Binary cache tools
             cachix
+
+            # Rust utilities for testing
+            uutils-coreutils
+            uutils-findutils
+            sudo-rs
           ];
 
           shellHook = ''
@@ -148,12 +153,17 @@
             echo "🔐 Secret tools: sops, age"
             echo "🚀 Language servers: nixd, nil"
             echo "📦 Binary cache: cachix"
+            echo "🦀 Rust utilities: uutils-coreutils, uutils-findutils, sudo-rs"
             echo ""
             echo "💡 Quick commands:"
             echo "  nixfmt-rfc-style **/*.nix  # Format all Nix files"
             echo "  statix check .             # Check for issues"
             echo "  deadnix                    # Find dead code"
             echo "  pre-commit install         # Setup git hooks"
+            echo ""
+            echo "🧪 Testing Rust utilities:"
+            echo "  ucp, umv, urm, etc.        # Test uutils commands"
+            echo "  sudo-rs --version          # Test sudo-rs"
           '';
         };
       });

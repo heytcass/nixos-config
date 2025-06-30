@@ -99,9 +99,17 @@
       "Bash(git stash:*)",
       "Bash(gh run watch:*)",
       "Bash(sudo:*)",
-      "Bash(systemctl:*)"
+      "Bash(systemctl:*)",
+      "Bash(nix-instantiate:*)",
+      "mcp__nixos__nixos_search",
+      "mcp__nixos__nixos_info",
+      "Bash(pgrep:*)",
+      "Bash(nix store ping:*)",
+      "Bash(fish:*)",
+      "Bash(pkill:*)"
     ],
     "deny": []
   },
-  "enableAllProjectMcpServers": true
+  "enableAllProjectMcpServers": true,
+  "nodeOptions": "--max-listeners=20"
 }

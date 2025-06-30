@@ -40,6 +40,10 @@
       # Import Niri desktop configuration
       ./_mixins/desktop/niri.nix
     ]
+    ++ lib.optionals (!isISO) [
+      # Import Rust utilities for non-ISO systems
+      ./_mixins/features/rust-utils.nix
+    ]
     ++ lib.optionals isWorkstation [
       # Import gaming features only for workstations
       ./_mixins/features/gaming.nix

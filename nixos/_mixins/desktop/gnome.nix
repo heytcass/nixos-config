@@ -45,6 +45,15 @@
       gnomeExtensions.vitals
       gnomeExtensions.pop-shell
       gnomeExtensions.blur-my-shell
+
+      # Icon themes
+      papirus-icon-theme
+      papirus-folders
+      tela-icon-theme
+
+      # Customization tools
+      gnome-extension-manager
+      gnome-tweaks
     ];
   };
 }

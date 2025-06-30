@@ -285,6 +285,7 @@
     nerd-fonts.fira-code
     nerd-fonts.jetbrains-mono
     nerd-fonts.hack
+    inter-nerdfont
   ];
 
   # Fish shell system enablement (required when user shell is fish)
