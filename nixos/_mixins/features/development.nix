@@ -23,6 +23,25 @@
 
     # Binary cache tools
     cachix
+
+    # Container tools
+    podman
+    lazydocker
   ];
+
+  # Podman configuration
+  virtualisation.podman = {
+    enable = true;
+    dockerCompat = true;
+    defaultNetwork.settings.dns_enabled = true;
+  };
+
+  # Enable podman socket for lazydocker compatibility
+  systemd.user.services.podman.wantedBy = [ "default.target" ];
+
+  # Environment variables for lazydocker/podman compatibility
+  environment.sessionVariables = {
+    DOCKER_HOST = "unix:///run/user/1000/podman/podman.sock";
+  };
 
 }

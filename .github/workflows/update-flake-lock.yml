@@ -18,9 +18,15 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Nix
-        uses: cachix/install-nix-action@v27
+        uses: DeterminateSystems/nix-installer-action@main
         with:
-          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          logger: pretty
+          log-directives: nix_installer=trace
+          backtrace: full
+
+      - name: Setup FlakeHub Cache
+        uses: DeterminateSystems/flakehub-cache-action@main
+        continue-on-error: true
 
       - name: Update flake.lock
         uses: DeterminateSystems/update-flake-lock@v23
@@ -29,7 +35,7 @@ jobs:
           pr-title: "Update flake.lock"
           pr-body: |
             Automated update of flake.lock to keep dependencies current.
-            
+
             Please review the changes and ensure the system builds correctly before merging.
           commit-msg: "flake.lock: Update"
           pr-assignees: |

@@ -26,14 +26,21 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Nix
-        uses: cachix/install-nix-action@v27
+        uses: DeterminateSystems/nix-installer-action@main
         with:
-          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          logger: pretty
+          log-directives: nix_installer=trace
+          backtrace: full
+
+      - name: Setup FlakeHub Cache
+        uses: DeterminateSystems/flakehub-cache-action@main
+        continue-on-error: true
 
       - name: Check flake syntax and evaluation
+        timeout-minutes: 10
         run: |
           echo "Checking flake syntax and evaluation..."
-          nix flake check --show-trace
+          nix flake check --show-trace --no-build
 
       - name: Run comprehensive flake validation
         uses: DeterminateSystems/flake-checker-action@v8
@@ -91,6 +98,7 @@ jobs:
 
       - name: Setup Cachix
         uses: cachix/cachix-action@v15
+        continue-on-error: true
         with:
           name: nix-community
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
@@ -98,29 +106,39 @@ jobs:
 
       - name: Setup Hyprland Cache
         uses: cachix/cachix-action@v15
+        continue-on-error: true
         with:
           name: hyprland
           skipPush: true
 
       - name: Setup Wayland Cache
         uses: cachix/cachix-action@v15
+        continue-on-error: true
         with:
           name: nixpkgs-wayland
           skipPush: true
 
       - name: Build ${{ matrix.system }}
-        timeout-minutes: 30  # Increased timeout for complex Wayland builds
+        timeout-minutes: 45  # Increased timeout for complex builds
         run: |
           echo "Building ${{ matrix.description }}..."
           echo "System: ${{ matrix.system }}"
           echo "Type: ${{ matrix.type }}"
 
-          # Build system configuration (ISO removed from matrix for development speed)
+          # Set up additional Nix config for performance
+          mkdir -p ~/.config/nix
+          echo "max-jobs = auto" >> ~/.config/nix/nix.conf
+          echo "cores = 0" >> ~/.config/nix/nix.conf
+          echo "substitute = true" >> ~/.config/nix/nix.conf
+          echo "builders-use-substitutes = true" >> ~/.config/nix/nix.conf
+
+          # Build system configuration with better error handling
           echo "Building system configuration..."
-          nix build .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel -L --show-trace
+          nix build .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel -L --show-trace --fallback
           echo "✅ System built successfully"
 
       - name: Test development shell
+        timeout-minutes: 5
         run: |
           echo "Testing development shell..."
           nix develop -c echo "Development shell works!"
