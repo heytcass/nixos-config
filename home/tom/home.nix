@@ -23,34 +23,34 @@ let
     nano = "micro";
 
     # Rust utility aliases (with fallback to GNU versions)
-    # sudo = "sudo-rs";
+    sudo = "sudo-rs";
     # Core utilities (most common first)
-    cp = "ucp";
-    mv = "umv";
-    rm = "urm";
-    mkdir = "umkdir";
-    rmdir = "urmdir";
-    touch = "utouch";
-    chmod = "uchmod";
-    chown = "uchown";
+    cp = "uutils-cp";
+    mv = "uutils-mv";
+    rm = "uutils-rm";
+    mkdir = "uutils-mkdir";
+    rmdir = "uutils-rmdir";
+    touch = "uutils-touch";
+    chmod = "uutils-chmod";
+    chown = "uutils-chown";
     # Text processing
-    sort = "usort";
-    uniq = "uuniq";
-    cut = "ucut";
-    head = "uhead";
-    tail = "utail";
-    wc = "uwc";
+    sort = "uutils-sort";
+    uniq = "uutils-uniq";
+    cut = "uutils-cut";
+    head = "uutils-head";
+    tail = "uutils-tail";
+    wc = "uutils-wc";
     # File operations
-    stat = "ustat";
-    ln = "uln";
+    stat = "uutils-stat";
+    ln = "uutils-ln";
     # System info
-    whoami = "uwhoami";
-    id = "uid";
-    groups = "ugroups";
+    whoami = "uutils-whoami";
+    id = "uutils-id";
+    groups = "uutils-groups";
     # Path utilities
-    basename = "ubasename";
-    dirname = "udirname";
-    readlink = "ureadlink";
+    basename = "uutils-basename";
+    dirname = "uutils-dirname";
+    readlink = "uutils-readlink";
   };
 in
 

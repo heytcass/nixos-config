@@ -162,7 +162,7 @@
             echo "  pre-commit install         # Setup git hooks"
             echo ""
             echo "🧪 Testing Rust utilities:"
-            echo "  ucp, umv, urm, etc.        # Test uutils commands"
+            echo "  uutils-cp, uutils-mv, etc. # Test uutils commands"
             echo "  sudo-rs --version          # Test sudo-rs"
           '';
         };
