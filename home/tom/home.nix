@@ -23,7 +23,7 @@ let
     nano = "micro";
 
     # Rust utility aliases (with fallback to GNU versions)
-    sudo = "sudo-rs";
+    # sudo = "sudo-rs";  # Disabled until system rebuild completes
     # Core utilities (most common first)
     cp = "uutils-cp";
     mv = "uutils-mv";

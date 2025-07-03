@@ -30,45 +30,63 @@
           touchpad {
               natural_scroll = true
               disable_while_typing = true
+              clickfinger_behavior = true
           }
           sensitivity = 0
       }
 
-      # General settings
+      # General settings with Claude theme
       general {
-          gaps_in = 5
-          gaps_out = 10
+          # Claude's signature terracotta for borders and accents
+          col.active_border = rgb(d97757) rgb(c96442) 45deg
+          col.inactive_border = rgb(30302e)
+
+          # Dark theme with Claude's refined spacing
           border_size = 2
-          col.active_border = rgba(33ccffee) rgba(00ff99ee) 45deg
-          col.inactive_border = rgba(595959aa)
+          gaps_in = 8
+          gaps_out = 16
           layout = dwindle
           allow_tearing = false
+
+          # Use Claude's warm terracotta for resize borders
+          resize_on_border = true
       }
 
-      # Decoration
+      # Decoration with Claude aesthetics
       decoration {
+          # Subtle rounding matching Claude's modern design
           rounding = 8
+
+          # Claude's shadow system
+          drop_shadow = true
+          shadow_range = 12
+          shadow_render_power = 3
+          col.shadow = rgba(1f1e1d99)  # Claude's dark background with opacity
+
+          # Blur settings with Claude's refined aesthetic
           blur {
               enabled = true
-              size = 3
-              passes = 1
+              size = 6
+              passes = 2
+              new_optimizations = true
+              xray = false
+              ignore_opacity = false
           }
-          drop_shadow = true
-          shadow_range = 4
-          shadow_render_power = 3
-          col.shadow = rgba(1a1a1aee)
       }
 
-      # Animations
+      # Animations with Claude's polished UX
       animations {
           enabled = true
-          bezier = myBezier, 0.05, 0.9, 0.1, 1.05
-          animation = windows, 1, 7, myBezier
-          animation = windowsOut, 1, 7, default, popin 80%
-          animation = border, 1, 10, default
-          animation = borderangle, 1, 8, default
-          animation = fade, 1, 7, default
-          animation = workspaces, 1, 6, default
+
+          # Smooth animations reflecting Claude's polished UX
+          bezier = claudeEase, 0.25, 0.1, 0.25, 1.0
+
+          animation = windows, 1, 6, claudeEase
+          animation = windowsOut, 1, 6, claudeEase, popin 80%
+          animation = border, 1, 8, claudeEase
+          animation = borderangle, 1, 8, claudeEase
+          animation = fade, 1, 6, claudeEase
+          animation = workspaces, 1, 6, claudeEase
       }
 
       # Layout
@@ -77,15 +95,33 @@
           preserve_split = true
       }
 
-      # Window rules for common applications
+      # Workspace rules with Claude's semantic color system
+      workspace = 1, border_color = rgb(2c7a39)    # Success workspace (development/terminal)
+      workspace = 2, border_color = rgb(d97757)    # Claude brand workspace (main work)
+      workspace = 3, border_color = rgb(966c1e)    # Warning workspace (monitoring/logs)
+      workspace = 4, border_color = rgb(ab2b3f)    # Error workspace (debugging)
+      workspace = 5, border_color = rgb(5769f7)    # Permission workspace (admin tasks)
+      workspace = 6, border_color = rgb(006666)    # Plan mode workspace (planning/design)
+
+      # Window rules with Claude theme colors for installed packages
       windowrule = float, ^(pavucontrol)$
       windowrule = float, ^(thunar)$
       windowrule = size 800 600, ^(thunar)$
 
+      # Terminal applications use Claude CLI's color scheme
+      windowrule = bordercolor rgb(215 119 87), ^(ghostty)$
+
+      # System applications use Claude's secondary colors
+      windowrule = bordercolor rgb(194 192 182), ^(thunar)$
+
+      # Media applications
+      windowrule = bordercolor rgb(201 100 66), ^(mpv)$
+      windowrule = bordercolor rgb(201 100 66), ^(imv)$
+
       # Keybindings - using Super (Windows/Cmd) key
       $mod = SUPER
 
-      # Application launchers
+      # Application launchers with Claude theme awareness
       bind = $mod, Return, exec, ghostty
       bind = $mod, D, exec, wofi --show drun
       bind = $mod, E, exec, thunar
@@ -110,13 +146,13 @@
       bind = $mod SHIFT, up, movewindow, u
       bind = $mod SHIFT, down, movewindow, d
 
-      # Workspaces
-      bind = $mod, 1, workspace, 1
-      bind = $mod, 2, workspace, 2
-      bind = $mod, 3, workspace, 3
-      bind = $mod, 4, workspace, 4
-      bind = $mod, 5, workspace, 5
-      bind = $mod, 6, workspace, 6
+      # Workspaces with Claude's semantic meaning
+      bind = $mod, 1, workspace, 1  # Development/Terminal (Success Green)
+      bind = $mod, 2, workspace, 2  # Main Work (Claude Brand)
+      bind = $mod, 3, workspace, 3  # Monitoring (Warning Amber)
+      bind = $mod, 4, workspace, 4  # Debugging (Error Red)
+      bind = $mod, 5, workspace, 5  # Admin (Permission Blue)
+      bind = $mod, 6, workspace, 6  # Planning (Plan Mode Teal)
       bind = $mod, 7, workspace, 7
       bind = $mod, 8, workspace, 8
       bind = $mod, 9, workspace, 9
@@ -152,7 +188,7 @@
       bindm = $mod, mouse:272, movewindow
       bindm = $mod, mouse:273, resizewindow
 
-      # Startup applications
+      # Startup applications with Claude theme integration
       exec-once = waybar
       exec-once = swaync
       exec-once = swayidle -w timeout 300 'swaylock-effects' timeout 600 'hyprctl dispatch dpms off' resume 'hyprctl dispatch dpms on' before-sleep 'swaylock-effects'
