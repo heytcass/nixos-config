@@ -42,6 +42,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Hyprland plugins
+    hyprland-plugins = {
+      url = "github:hyprwm/hyprland-plugins";
+      inputs.hyprland.follows = "hyprland";
+    };
+
     # Niri window manager
     niri = {
       url = "github:YaLTeR/niri";

@@ -19,16 +19,20 @@
   environment = {
     # Essential Wayland packages for modern desktop experience
     systemPackages = with pkgs; [
+      # Official Hyprland ecosystem tools (from nixpkgs)
+      hyprpaper # Official wallpaper utility
+      hyprpicker # Official color picker
+      hyprlock # GPU-accelerated screen locker
+      hypridle # Official idle management
+      hyprsunset # Blue light filter
+
       # Modern Wayland-native tools
       wofi # Rust-based launcher (replaces rofi)
       waybar # Modern status bar
-      swaylock-effects # Screen locker with effects
       swaynotificationcenter # Modern notification center
       grim # Screenshot tool
       slurp # Area selection for screenshots
       wl-clipboard # Wayland clipboard utilities
-      swayidle # Idle management daemon
-      swaybg # Wallpaper daemon
       wlr-randr # Display configuration
       kanshi # Dynamic display configuration
 
