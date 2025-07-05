@@ -56,7 +56,6 @@
       gnome-tweaks
 
       # Desktop applications
-      notion-app-enhanced
       teams-for-linux
     ];
   };

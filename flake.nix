@@ -73,7 +73,7 @@
         # Workstation with gaming (Dell XPS 13 9370)
         gti = helper.mkNixOS {
           hostname = "gti";
-          desktop = "gnome";
+          desktop = "hyprland";
           modules = [
             # Dell XPS 13 9370 hardware support
             nixos-hardware.nixosModules.dell-xps-13-9370
@@ -111,7 +111,7 @@
         "tom@gti" = helper.mkHome {
           hostname = "gti";
           username = "tom";
-          desktop = "gnome";
+          desktop = "hyprland";
         };
         "tom@transporter" = helper.mkHome {
           hostname = "transporter";

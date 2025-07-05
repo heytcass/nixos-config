@@ -106,7 +106,13 @@
       "Bash(pgrep:*)",
       "Bash(nix store ping:*)",
       "Bash(fish:*)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(nixos-version)",
+      "Bash(sed:*)",
+      "Bash(readlink:*)",
+      "Bash(nix-store:*)",
+      "WebFetch(domain:wiki.hypr.land)",
+      "Bash(nix eval:*)"
     ],
     "deny": []
   },
