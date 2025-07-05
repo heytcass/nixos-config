@@ -76,10 +76,7 @@ let
               isLaptop = isLaptop hostname;
               isISO = isISO hostname;
             };
-            # Import Hyprland Home Manager module for wayland.windowManager.hyprland
-            sharedModules = lib.optionals (desktop == "hyprland") [
-              inputs.hyprland.homeManagerModules.default
-            ];
+            # Hyprland module is imported directly in home.nix
           };
         }
       ] ++ modules;
@@ -107,9 +104,7 @@ let
         isLaptop = isLaptop hostname;
         isISO = isISO hostname;
       };
-      modules = [
-        ../home/tom/home.nix
-      ] ++ lib.optionals (desktop == "hyprland") [ inputs.hyprland.homeManagerModules.default ];
+      modules = [ ../home/tom/home.nix ];
     };
 
   # Utility for multi-platform support

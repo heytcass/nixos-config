@@ -112,7 +112,9 @@
       "Bash(readlink:*)",
       "Bash(nix-store:*)",
       "WebFetch(domain:wiki.hypr.land)",
-      "Bash(nix eval:*)"
+      "Bash(nix eval:*)",
+      "Bash(waybar:*)",
+      "Bash(hyprctl:*)"
     ],
     "deny": []
   },
