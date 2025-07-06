@@ -527,7 +527,7 @@ in
             enabled = true;
             range = 12;
             render_power = 3;
-            color = "rgba(1f1e1d99)"; # Claude's dark background with opacity
+            color = "0x991f1e1d"; # Claude's dark background with opacity
           };
 
           # Blur settings with Claude's refined aesthetic
@@ -1004,17 +1004,17 @@ in
 
       #custom-git-status.git-clean {
         color: #2c7a39; /* Claude's success green */
-        background-color: rgba(44, 122, 57, 0.1);
+        border-color: rgba(44, 122, 57, 0.7);
       }
 
       #custom-git-status.git-dirty {
         color: #966c1e; /* Claude's warning amber */
-        background-color: rgba(150, 108, 30, 0.1);
+        border-color: rgba(150, 108, 30, 0.7);
       }
 
       #custom-git-status.git-error {
         color: #ab2b3f; /* Claude's error red */
-        background-color: rgba(171, 43, 63, 0.1);
+        border-color: rgba(171, 43, 63, 0.7);
       }
 
       #window {
@@ -1050,10 +1050,12 @@ in
 
       #battery.charging, #battery.plugged {
         color: #2c7a39; /* Claude's success green */
+        border-color: rgba(44, 122, 57, 0.7);
       }
 
       #battery.critical:not(.charging) {
         background-color: #ab2b3f; /* Claude's error red */
+        border-color: #ab2b3f;
         color: #faf9f5;
         animation-name: blink;
         animation-duration: 0.5s;
@@ -1064,16 +1066,20 @@ in
 
       #temperature.critical {
         background-color: #ab2b3f; /* Claude's error red */
+        border-color: #ab2b3f;
+        color: #faf9f5;
       }
 
       #cpu.warning {
         background-color: #966c1e; /* Claude's warning amber */
+        border-color: #966c1e;
         color: #faf9f5;
         animation: pulse 2s infinite;
       }
 
       #memory.warning {
         background-color: #966c1e; /* Claude's warning amber */
+        border-color: #966c1e;
         color: #faf9f5;
         animation: pulse 2s infinite;
       }
@@ -1104,8 +1110,26 @@ in
       #bluetooth:hover {
         background-color: rgba(215, 119, 87, 0.2); /* Claude terracotta on hover */
         border-color: #d77757;
-        transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba(215, 119, 87, 0.2);
+        box-shadow: 0 4px 12px rgba(215, 119, 87, 0.4), 0 2px 6px rgba(215, 119, 87, 0.2);
+      }
+
+      /* Apply Bluetooth-style rounded borders to all modules */
+      #pulseaudio, #network, #custom-nix-shell, #custom-git-status,
+      #cpu, #memory, #temperature, #battery, #clock, #tray {
+        background-color: rgba(26, 25, 21, 0.8) !important; /* Claude's darker background */
+        border-radius: 6px !important;
+        margin: 0 2px !important;
+        border: 1px solid rgba(215, 119, 87, 0.3) !important; /* Subtle Claude terracotta border */
+        transition: all 0.3s ease !important;
+      }
+
+      /* Apply consistent hover effects to all modules */
+      #pulseaudio:hover, #network:hover, #custom-nix-shell:hover,
+      #custom-git-status:hover, #cpu:hover, #memory:hover,
+      #temperature:hover, #battery:hover, #clock:hover, #tray:hover {
+        background-color: rgba(215, 119, 87, 0.2) !important; /* Claude terracotta on hover */
+        border-color: #d77757 !important;
+        box-shadow: 0 4px 12px rgba(215, 119, 87, 0.4), 0 2px 6px rgba(215, 119, 87, 0.2) !important;
       }
 
       @keyframes pulse-bluetooth {
