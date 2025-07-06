@@ -1116,20 +1116,20 @@ in
       /* Apply Bluetooth-style rounded borders to all modules */
       #pulseaudio, #network, #custom-nix-shell, #custom-git-status,
       #cpu, #memory, #temperature, #battery, #clock, #tray {
-        background-color: rgba(26, 25, 21, 0.8) !important; /* Claude's darker background */
-        border-radius: 6px !important;
-        margin: 0 2px !important;
-        border: 1px solid rgba(215, 119, 87, 0.3) !important; /* Subtle Claude terracotta border */
-        transition: all 0.3s ease !important;
+        background-color: rgba(26, 25, 21, 0.8); /* Claude's darker background */
+        border-radius: 6px;
+        margin: 0 2px;
+        border: 1px solid rgba(215, 119, 87, 0.3); /* Subtle Claude terracotta border */
+        transition: all 0.3s ease;
       }
 
       /* Apply consistent hover effects to all modules */
       #pulseaudio:hover, #network:hover, #custom-nix-shell:hover,
       #custom-git-status:hover, #cpu:hover, #memory:hover,
       #temperature:hover, #battery:hover, #clock:hover, #tray:hover {
-        background-color: rgba(215, 119, 87, 0.2) !important; /* Claude terracotta on hover */
-        border-color: #d77757 !important;
-        box-shadow: 0 4px 12px rgba(215, 119, 87, 0.4), 0 2px 6px rgba(215, 119, 87, 0.2) !important;
+        background-color: rgba(215, 119, 87, 0.2); /* Claude terracotta on hover */
+        border-color: #d77757;
+        box-shadow: 0 4px 12px rgba(215, 119, 87, 0.4), 0 2px 6px rgba(215, 119, 87, 0.2);
       }
 
       @keyframes pulse-bluetooth {
