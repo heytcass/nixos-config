@@ -599,6 +599,7 @@ in
           "bordercolor rgb(c2c0b6), class:^(thunar)$"
           "bordercolor rgb(c96442), class:^(mpv)$"
           "bordercolor rgb(c96442), class:^(imv)$"
+          "noshadow, class:^(waybar)$"
         ];
 
         # Keybindings - using Super (Windows/Cmd) key
