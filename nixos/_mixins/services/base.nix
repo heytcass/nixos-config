@@ -161,16 +161,38 @@
   # Time zone
   time.timeZone = "America/Detroit";
 
-  # Graphics and Hardware
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
+  # Hardware configuration
+  hardware = {
+    # Graphics and display
+    graphics = {
+      enable = true;
+      enable32Bit = true;
 
-    # Intel graphics hardware acceleration
-    extraPackages = with pkgs; [
-      intel-media-driver # VA-API support for Intel graphics
-      intel-vaapi-driver # Legacy VA-API support
-    ];
+      # Intel graphics hardware acceleration
+      extraPackages = with pkgs; [
+        intel-media-driver # VA-API support for Intel graphics
+        intel-vaapi-driver # Legacy VA-API support
+      ];
+    };
+
+    # Bluetooth configuration with modern features
+    bluetooth = lib.mkIf (!isISO) {
+      enable = true;
+      powerOnBoot = true;
+      settings = {
+        General = {
+          Enable = "Source,Sink,Media,Socket";
+          Experimental = true; # Enable experimental features like LE Audio
+          KernelExperimental = true;
+        };
+        Policy = {
+          AutoEnable = true;
+        };
+      };
+    };
+
+    # Intel microcode updates for security and performance
+    cpu.intel.updateMicrocode = lib.mkIf (!isISO) true;
   };
 
   # Power management for laptops
@@ -231,6 +253,7 @@
         support32Bit = true;
       };
       pulse.enable = true;
+      # Bluetooth audio is automatically enabled with PipeWire
     };
     pulseaudio.enable = false;
 
@@ -273,9 +296,6 @@
     DefaultTimeoutStopSec=15s
     DefaultDeviceTimeoutSec=15s
   '';
-
-  # Intel microcode updates for security and performance
-  hardware.cpu.intel.updateMicrocode = lib.mkIf (!isISO) true;
 
   # Real-time kit for audio
   security.rtkit.enable = true;

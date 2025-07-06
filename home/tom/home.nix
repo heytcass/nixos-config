@@ -100,6 +100,10 @@ in
       todoist-electron
       zoom-us
 
+      # Bluetooth management tools
+      overskride # Modern GTK4 Bluetooth manager
+      bluetui # TUI Bluetooth manager for terminal use
+
     ];
 
     # Dotfiles (currently managed through GUI/sync)
@@ -239,41 +243,43 @@ in
         format = ''$username$hostname$directory$git_branch$git_status$nix_shell$package$nodejs$python$rust$golang$docker_context$kubernetes$cmd_duration$line_break$character'';
         right_format = "$time$battery";
 
+        # Claude theme colors
         character = {
-          success_symbol = "[❯](bold green)";
-          error_symbol = "[❯](bold red)";
-          vimcmd_symbol = "[❮](bold green)";
+          success_symbol = "[❯](bold #d77757)"; # Claude terracotta
+          error_symbol = "[❯](bold #ab2b3f)"; # Claude error red
+          vimcmd_symbol = "[❮](bold #d77757)"; # Claude terracotta
         };
 
         username = {
           show_always = false;
-          style_user = "bold blue";
-          style_root = "bold red";
+          style_user = "bold #d77757"; # Claude terracotta
+          style_root = "bold #ab2b3f"; # Claude error red
           format = "[$user]($style) ";
         };
 
         hostname = {
           ssh_only = true;
           format = "[@$hostname]($style) ";
-          style = "bold cyan";
+          style = "bold #7fc8ff"; # Claude blue
         };
 
         directory = {
-          style = "bold cyan";
+          style = "bold #7fc8ff"; # Claude blue
           format = "[$path]($style)[$read_only]($read_only_style) ";
           truncation_length = 3;
           truncate_to_repo = false;
           read_only = " 󰌾";
+          read_only_style = "bold #966c1e"; # Claude warning amber
         };
 
         git_branch = {
           symbol = " ";
           format = "[$symbol$branch]($style) ";
-          style = "bold purple";
+          style = "bold #d77757"; # Claude terracotta
         };
 
         git_status = {
-          style = "bold yellow";
+          style = "bold #966c1e"; # Claude warning amber
           format = ''([\[$all_status$ahead_behind\]]($style) )'';
           ahead = "⇡$count";
           behind = "⇣$count";
@@ -290,13 +296,13 @@ in
         cmd_duration = {
           min_time = 2000;
           format = "[ $duration]($style) ";
-          style = "bold yellow";
+          style = "bold #966c1e"; # Claude warning amber
         };
 
         time = {
           disabled = false;
           format = "[ $time]($style)";
-          style = "bold white";
+          style = "bold #f4f1ec"; # Claude light text
           time_format = "%H:%M";
         };
 
@@ -309,11 +315,11 @@ in
           display = [
             {
               threshold = 10;
-              style = "bold red";
+              style = "bold #ab2b3f"; # Claude error red
             }
             {
               threshold = 30;
-              style = "bold yellow";
+              style = "bold #966c1e"; # Claude warning amber
             }
           ];
         };
@@ -321,49 +327,49 @@ in
         nix_shell = {
           symbol = " ";
           format = "[$symbol$name]($style) ";
-          style = "bold blue";
+          style = "bold #7fc8ff"; # Claude blue
         };
 
         package = {
           symbol = "󰏗 ";
           format = "[$symbol$version]($style) ";
-          style = "bold green";
+          style = "bold #2c7a39"; # Claude success green
         };
 
         nodejs = {
           symbol = " ";
           format = "[$symbol($version )]($style)";
-          style = "bold green";
+          style = "bold #2c7a39"; # Claude success green
         };
 
         python = {
           symbol = " ";
           format = "[\${symbol}\${pyenv_prefix}(\$version )(\$virtualenv )](\$style)";
-          style = "bold yellow";
+          style = "bold #966c1e"; # Claude warning amber
         };
 
         rust = {
           symbol = " ";
           format = "[$symbol($version )]($style)";
-          style = "bold orange";
+          style = "bold #d77757"; # Claude terracotta
         };
 
         golang = {
           symbol = " ";
           format = "[$symbol($version )]($style)";
-          style = "bold cyan";
+          style = "bold #7fc8ff"; # Claude blue
         };
 
         docker_context = {
           symbol = " ";
           format = "[$symbol$context]($style) ";
-          style = "bold blue";
+          style = "bold #7fc8ff"; # Claude blue
         };
 
         kubernetes = {
           symbol = "☸ ";
           format = "[$symbol$context( ($namespace))]($style) ";
-          style = "bold cyan";
+          style = "bold #7fc8ff"; # Claude blue
           disabled = false;
         };
       };
@@ -475,10 +481,8 @@ in
       enable = true;
       package = inputs.hyprland.packages.${pkgs.system}.hyprland;
 
-      # Enable hyprbars plugin for enhanced title bars
-      plugins = [
-        inputs.hyprland-plugins.packages.${pkgs.system}.hyprbars
-      ];
+      # Plugins configuration - no plugins loaded
+      plugins = [ ];
       settings = {
         # Monitor configuration (will auto-detect)
         monitor = [ ",preferred,auto,1" ];
@@ -691,33 +695,6 @@ in
           "hyprsunset -t 4500" # Warm color temperature matching Claude's terracotta theme
         ];
 
-        # Hyprbars plugin configuration
-        plugin = {
-          hyprbars = {
-            bar_height = 28;
-            bar_color = "rgb(1f1e1d)"; # Claude's dark background
-            bar_text_color = "rgb(faf9f5)"; # Claude's light text
-            bar_text_size = 11;
-            bar_text_font = "Work Sans, monospace";
-
-            # Buttons
-            bar_buttons_alignment = "right";
-            bar_precedence_over_border = true;
-            bar_part_of_window = true;
-            bar_button_padding = 5;
-            bar_padding = 10;
-
-            # Claude-themed buttons
-            "hyprbars-button" = [
-              # Close button
-              "rgb(ab2b3f), 12, , hyprctl dispatch killactive"
-              # Maximize button
-              "rgb(966c1e), 12, , hyprctl dispatch fullscreen 1"
-              # Minimize button
-              "rgb(2c7a39), 12, , hyprctl dispatch movetoworkspacesilent special"
-            ];
-          };
-        };
       };
     };
   };
@@ -734,15 +711,21 @@ in
 
         modules-left = [
           "hyprland/workspaces"
-          "hyprland/mode"
+          "custom/separator"
+          "hyprland/window"
         ];
-        modules-center = [ "hyprland/window" ];
+        modules-center = [ ];
         modules-right = [
           "pulseaudio"
           "network"
+          "bluetooth"
+          "custom/nix-shell"
+          "custom/git-status"
+          "custom/separator"
           "cpu"
           "memory"
           "temperature"
+          "custom/separator"
           "battery"
           "clock"
           "tray"
@@ -751,51 +734,100 @@ in
         "hyprland/workspaces" = {
           disable-scroll = true;
           all-outputs = true;
-          format = "{icon}";
+          format = "{name}: {icon}";
           format-icons = {
-            "1" = ""; # Development/Terminal (Success Green)
-            "2" = ""; # Main Work (Claude Brand)
-            "3" = ""; # Monitoring (Warning Amber)
-            "4" = ""; # Debugging (Error Red)
-            "5" = ""; # Admin (Permission Blue)
-            "6" = ""; # Planning (Plan Mode Teal)
-            "urgent" = "";
-            "focused" = "";
-            "default" = "";
+            "1" = "󰅨";
+            "2" = "󰖟";
+            "3" = "󰍉";
+            "4" = "󰃤";
+            "5" = "󰀻";
+            "6" = "󰸗";
+            "default" = "󰝤";
+            "urgent" = "󰀨";
+          };
+          persistent-workspaces = {
+            "*" = 6;
           };
         };
 
         "hyprland/window" = {
           format = "{}";
-          max-length = 50;
+          max-length = 30;
+          tooltip-format = "Active window: {}";
+          on-click = "hyprctl dispatch fullscreen";
+          separate-outputs = true;
         };
 
         tray = {
           spacing = 10;
+          icon-size = 16;
+        };
+
+        "custom/separator" = {
+          format = "|";
+          tooltip = false;
+        };
+
+        "custom/nix-shell" = {
+          format = "{}";
+          exec = "if [ -n \"$IN_NIX_SHELL\" ]; then echo '❄️'; else echo ''; fi";
+          tooltip-format = "Nix development shell active";
+          interval = 5;
+        };
+
+        "custom/git-status" = {
+          format = "{}";
+          return-type = "json";
+          exec = ''
+            if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+              branch=$(git branch --show-current 2>/dev/null || echo "unknown")
+              if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
+                changes=$(git status --porcelain 2>/dev/null | wc -l)
+                echo "{\"text\": \" $branch\", \"class\": \"git-dirty\", \"tooltip\": \"Git: $branch ($changes changes)\"}"
+              else
+                echo "{\"text\": \" $branch\", \"class\": \"git-clean\", \"tooltip\": \"Git: $branch (clean)\"}"
+              fi
+            else
+              echo "{\"text\": \"\", \"class\": \"git-none\", \"tooltip\": \"Not in git repository\"}"
+            fi
+          '';
+          on-click = "ghostty -e git status";
+          interval = 15;
         };
 
         clock = {
-          tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
+          format = "{:%H:%M}";
           format-alt = "{:%Y-%m-%d}";
+          tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
         };
 
         cpu = {
           format = "{usage}% ";
-          tooltip = false;
+          tooltip-format = "CPU Usage: {usage}%";
+          on-click = "top";
+          on-click-right = "procs";
+          interval = 5;
         };
 
         memory = {
-          format = "{}% ";
+          format = "{percentage}% ";
+          tooltip-format = "RAM: {used:0.1f}G / {total:0.1f}G ({percentage}%)\nSwap: {swapUsed:0.1f}G / {swapTotal:0.1f}G";
+          on-click = "top";
+          on-click-right = "procs";
+          interval = 5;
         };
 
         temperature = {
           critical-threshold = 80;
           format = "{temperatureC}°C {icon}";
+          format-critical = "{temperatureC}°C {icon}";
+          tooltip-format = "Temperature: {temperatureC}°C ({temperatureF}°F)";
           format-icons = [
             ""
             ""
             ""
           ];
+          interval = 10;
         };
 
         battery = {
@@ -806,7 +838,7 @@ in
           format = "{capacity}% {icon}";
           format-charging = "{capacity}% ";
           format-plugged = "{capacity}% ";
-          format-alt = "{time} {icon}";
+          tooltip-format = "Battery: {capacity}%";
           format-icons = [
             ""
             ""
@@ -814,24 +846,45 @@ in
             ""
             ""
           ];
+          interval = 30;
+          swap-icon-label = false;
         };
 
         network = {
-          format-wifi = "{essid} ({signalStrength}%) ";
-          format-ethernet = "{ipaddr}/{cidr} ";
-          tooltip-format = "{ifname} via {gwaddr} ";
-          format-linked = "{ifname} (No IP) ";
-          format-disconnected = "Disconnected ⚠";
-          format-alt = "{ifname}: {ipaddr}/{cidr}";
+          format-wifi = "{essid} ";
+          format-ethernet = "󰈀 Connected";
+          format-linked = "󰈀 No IP";
+          format-disconnected = "󰈂 Disconnected";
+          tooltip-format-wifi = "WiFi: {essid} ({signalStrength}%)\nIP: {ipaddr}/{cidr}\nGateway: {gwaddr}";
+          tooltip-format-ethernet = "Ethernet: {ifname}\nIP: {ipaddr}/{cidr}\nGateway: {gwaddr}";
+          interval = 10;
+          swap-icon-label = false;
+        };
+
+        bluetooth = {
+          format = " {status}";
+          format-disabled = "";
+          format-off = "";
+          format-connected = " {num_connections}";
+          format-connected-battery = " {device_alias} {device_battery_percentage}%";
+          tooltip-format = "Bluetooth: {status}";
+          tooltip-format-connected = "Bluetooth: {device_enumerate}";
+          tooltip-format-enumerate-connected = "{device_alias}\\t{device_address}";
+          tooltip-format-enumerate-connected-battery = "{device_alias}\\t{device_address}\\t{device_battery_percentage}%";
+          on-click = "overskride";
+          on-click-right = "bluetui";
+          interval = 30;
+          max-length = 25;
         };
 
         pulseaudio = {
-          format = "{volume}% {icon} {format_source}";
-          format-bluetooth = "{volume}% {icon} {format_source}";
-          format-bluetooth-muted = " {icon} {format_source}";
-          format-muted = " {format_source}";
+          format = "{volume}% {icon}";
+          format-bluetooth = "{volume}% {icon}";
+          format-bluetooth-muted = " {icon}";
+          format-muted = " ";
           format-source = "{volume}% ";
           format-source-muted = "";
+          tooltip-format = "Audio: {volume}% ({desc})\nSource: {source_volume}%";
           format-icons = {
             headphone = "";
             hands-free = "";
@@ -846,13 +899,14 @@ in
             ];
           };
           on-click = "pavucontrol";
+          swap-icon-label = false;
         };
       };
     };
 
     style = ''
       * {
-        font-family: 'Work Sans', monospace;
+        font-family: 'Inter', sans-serif;
         font-size: 13px;
       }
 
@@ -889,10 +943,6 @@ in
         background-color: #ab2b3f; /* Claude's error red */
       }
 
-      #mode {
-        background-color: #c96442; /* Claude's secondary terracotta */
-        border-bottom: 3px solid #faf9f5;
-      }
 
       #clock,
       #battery,
@@ -906,8 +956,96 @@ in
         color: #faf9f5;
       }
 
+      #pulseaudio:hover,
+      #network:hover,
+      #cpu:hover,
+      #memory:hover,
+      #temperature:hover,
+      #battery:hover,
+      #clock:hover {
+        background-color: rgba(217, 119, 87, 0.1);
+      }
+
+      .custom-separator1,
+      .custom-separator2 {
+        color: #c2c0b6;
+        padding: 0 8px;
+        opacity: 0.5;
+      }
+
+      #cpu,
+      #memory,
+      #temperature {
+        background-color: rgba(150, 108, 30, 0.1);
+        border-radius: 4px;
+        margin: 2px;
+      }
+
+      #battery {
+        background-color: rgba(44, 122, 57, 0.1);
+        border-radius: 4px;
+        margin: 2px;
+      }
+
+      .custom-nix-shell {
+        color: #5bc0de;
+        background-color: rgba(91, 192, 222, 0.1);
+        border-radius: 4px;
+        margin: 2px;
+        padding: 0 8px;
+        font-size: 14px;
+      }
+
+      #custom-git-status {
+        padding: 0 8px;
+        margin: 2px;
+        border-radius: 4px;
+      }
+
+      #custom-git-status.git-clean {
+        color: #2c7a39; /* Claude's success green */
+        background-color: rgba(44, 122, 57, 0.1);
+      }
+
+      #custom-git-status.git-dirty {
+        color: #966c1e; /* Claude's warning amber */
+        background-color: rgba(150, 108, 30, 0.1);
+      }
+
+      #custom-git-status.git-error {
+        color: #ab2b3f; /* Claude's error red */
+        background-color: rgba(171, 43, 63, 0.1);
+      }
+
       #window {
         color: #d77757; /* Claude brand for window title */
+      }
+
+      #custom-media {
+        color: #2c7a39; /* Claude's success green */
+        padding: 0 10px;
+      }
+
+      #custom-media.media-playing {
+        color: #2c7a39; /* Claude's success green */
+        animation: pulse 2s infinite;
+      }
+
+      #custom-media.media-paused {
+        color: #966c1e; /* Claude's warning amber */
+      }
+
+      #custom-media.media-stopped {
+        color: #525152; /* Claude's muted gray */
+      }
+
+      #custom-weather {
+        color: #7fc8ff; /* Claude's blue */
+        padding: 0 10px;
+      }
+
+      #custom-weather.weather-error {
+        color: #ab2b3f; /* Claude's error red */
       }
 
       #battery.charging, #battery.plugged {
@@ -930,10 +1068,65 @@ in
 
       #cpu.warning {
         background-color: #966c1e; /* Claude's warning amber */
+        color: #faf9f5;
+        animation: pulse 2s infinite;
       }
 
       #memory.warning {
         background-color: #966c1e; /* Claude's warning amber */
+        color: #faf9f5;
+        animation: pulse 2s infinite;
+      }
+
+      #bluetooth {
+        color: #c2c0b6; /* Claude's mid gray for default state */
+        background-color: rgba(26, 25, 21, 0.8); /* Claude's darker background */
+        padding: 0 10px;
+        border-radius: 6px;
+        margin: 0 2px;
+        border: 1px solid rgba(215, 119, 87, 0.3); /* Subtle Claude terracotta border */
+        transition: all 0.3s ease;
+      }
+
+      #bluetooth.connected {
+        color: #d77757; /* Claude's terracotta when connected */
+        background-color: rgba(215, 119, 87, 0.1); /* Light terracotta background */
+        border-color: #d77757;
+        animation: pulse-bluetooth 2s infinite;
+      }
+
+      #bluetooth.disabled, #bluetooth.off {
+        color: #525152; /* Claude's dark gray for disabled */
+        background-color: transparent;
+        border-color: rgba(82, 81, 82, 0.3);
+      }
+
+      #bluetooth:hover {
+        background-color: rgba(215, 119, 87, 0.2); /* Claude terracotta on hover */
+        border-color: #d77757;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(215, 119, 87, 0.2);
+      }
+
+      @keyframes pulse-bluetooth {
+        0% {
+          border-color: #d77757;
+          box-shadow: 0 0 0 0 rgba(215, 119, 87, 0.4);
+        }
+        50% {
+          border-color: #c96442;
+          box-shadow: 0 0 0 3px rgba(215, 119, 87, 0.2);
+        }
+        100% {
+          border-color: #d77757;
+          box-shadow: 0 0 0 0 rgba(215, 119, 87, 0.4);
+        }
+      }
+
+      @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.7; }
+        100% { opacity: 1; }
       }
 
       @keyframes blink {
@@ -1037,7 +1230,7 @@ in
     '';
   };
 
-  # GTK theme configuration for consistent dark theming
+  # GTK theme configuration with Claude dark theme customization
   gtk = lib.optionalAttrs (desktop == "hyprland") {
     enable = true;
     theme = {
@@ -1059,6 +1252,228 @@ in
     gtk4.extraConfig = {
       gtk-application-prefer-dark-theme = 1;
     };
+
+    # Custom Claude-themed CSS for GTK3
+    gtk3.extraCss = ''
+      /* Claude Dark Theme Colors */
+      @define-color claude_primary #c15f3c;        /* Claude's Crail terra cotta */
+      @define-color claude_secondary #b1ada1;      /* Claude's Cloudy gray */
+      @define-color claude_light_bg #f4f3ee;       /* Claude's Pampas light */
+      @define-color claude_dark_bg #2a2a2a;        /* Dark background */
+      @define-color claude_darker_bg #1e1e1e;      /* Darker background */
+      @define-color claude_text_light #f4f3ee;     /* Light text on dark */
+      @define-color claude_text_dark #1a1915;      /* Dark text on light */
+      @define-color claude_accent_hover #d77757;   /* Lighter terra cotta for hover */
+      @define-color claude_accent_active #a54d2c;  /* Darker terra cotta for active */
+      @define-color claude_border #3e3e38;         /* Border color */
+
+      /* Override accent colors with Claude theme */
+      @define-color accent_color @claude_primary;
+      @define-color accent_bg_color @claude_primary;
+      @define-color accent_fg_color @claude_text_light;
+
+      /* Button styling with Claude colors */
+      button {
+        border: 1px solid @claude_border;
+      }
+
+      button.suggested-action {
+        background-image: linear-gradient(@claude_primary, @claude_accent_active);
+        border-color: @claude_accent_active;
+        color: @claude_text_light;
+      }
+
+      button.suggested-action:hover {
+        background-image: linear-gradient(@claude_accent_hover, @claude_primary);
+        border-color: @claude_primary;
+      }
+
+      button.suggested-action:active {
+        background-image: linear-gradient(@claude_accent_active, shade(@claude_accent_active, 0.8));
+        border-color: @claude_accent_active;
+      }
+
+      /* Selection and highlighting */
+      selection,
+      *:selected {
+        background-color: @claude_primary;
+        color: @claude_text_light;
+      }
+
+      /* Text input focus styling */
+      entry:focus,
+      textview:focus {
+        border-color: @claude_primary;
+        box-shadow: 0 0 0 1px @claude_primary;
+      }
+
+      /* Scrollbars with Claude theme */
+      scrollbar slider {
+        background-color: @claude_secondary;
+      }
+
+      scrollbar slider:hover {
+        background-color: @claude_primary;
+      }
+
+      /* Menu item highlighting */
+      menuitem:hover {
+        background-color: @claude_primary;
+        color: @claude_text_light;
+      }
+
+      /* Headerbar with Claude accents */
+      headerbar {
+        border-bottom: 1px solid @claude_border;
+      }
+
+      headerbar button.suggested-action {
+        background-image: linear-gradient(@claude_primary, @claude_accent_active);
+        border-color: @claude_accent_active;
+        color: @claude_text_light;
+      }
+
+      /* Switch control with Claude colors */
+      switch:checked {
+        background-color: @claude_primary;
+        color: @claude_text_light;
+      }
+
+      /* Progress bars */
+      progressbar progress {
+        background-color: @claude_primary;
+      }
+
+      /* Links */
+      link,
+      link:link {
+        color: @claude_primary;
+      }
+
+      link:visited {
+        color: @claude_secondary;
+      }
+
+      link:hover {
+        color: @claude_accent_hover;
+      }
+    '';
+
+    # Custom Claude-themed CSS for GTK4
+    gtk4.extraCss = ''
+      /* Claude Dark Theme Colors for GTK4 */
+      @define-color claude_primary #c15f3c;        /* Claude's Crail terra cotta */
+      @define-color claude_secondary #b1ada1;      /* Claude's Cloudy gray */
+      @define-color claude_light_bg #f4f3ee;       /* Claude's Pampas light */
+      @define-color claude_dark_bg #2a2a2a;        /* Dark background */
+      @define-color claude_darker_bg #1e1e1e;      /* Darker background */
+      @define-color claude_text_light #f4f3ee;     /* Light text on dark */
+      @define-color claude_text_dark #1a1915;      /* Dark text on light */
+      @define-color claude_accent_hover #d77757;   /* Lighter terra cotta for hover */
+      @define-color claude_accent_active #a54d2c;  /* Darker terra cotta for active */
+      @define-color claude_border #3e3e38;         /* Border color */
+
+      /* Override accent colors with Claude theme */
+      @define-color accent_color @claude_primary;
+      @define-color accent_bg_color @claude_primary;
+      @define-color accent_fg_color @claude_text_light;
+
+      /* Button styling with Claude colors */
+      .suggested-action {
+        background: @claude_primary;
+        border-color: @claude_accent_active;
+        color: @claude_text_light;
+      }
+
+      .suggested-action:hover {
+        background: @claude_accent_hover;
+        border-color: @claude_primary;
+      }
+
+      .suggested-action:active {
+        background: @claude_accent_active;
+        border-color: @claude_accent_active;
+      }
+
+      /* Selection and highlighting */
+      selection {
+        background-color: @claude_primary;
+        color: @claude_text_light;
+      }
+
+      /* Text input focus styling */
+      entry:focus-within {
+        border-color: @claude_primary;
+        outline-color: @claude_primary;
+      }
+
+      /* Scrollbars with Claude theme */
+      scrollbar slider {
+        background-color: @claude_secondary;
+      }
+
+      scrollbar slider:hover {
+        background-color: @claude_primary;
+      }
+
+      /* Menu item highlighting */
+      popover.menu menuitem:hover {
+        background-color: @claude_primary;
+        color: @claude_text_light;
+      }
+
+      /* Headerbar with Claude accents */
+      headerbar {
+        border-bottom: 1px solid @claude_border;
+      }
+
+      headerbar .suggested-action {
+        background: @claude_primary;
+        border-color: @claude_accent_active;
+        color: @claude_text_light;
+      }
+
+      /* Switch control with Claude colors */
+      switch:checked {
+        background-color: @claude_primary;
+        color: @claude_text_light;
+      }
+
+      /* Progress bars */
+      progressbar > trough > progress {
+        background-color: @claude_primary;
+      }
+
+      /* Links */
+      link {
+        color: @claude_primary;
+      }
+
+      link:visited {
+        color: @claude_secondary;
+      }
+
+      link:hover {
+        color: @claude_accent_hover;
+      }
+
+      /* Tabs */
+      tabbox > tablist > tab:checked {
+        background-color: @claude_primary;
+        color: @claude_text_light;
+      }
+
+      /* Check and radio buttons */
+      checkbutton:checked,
+      radiobutton:checked {
+        color: @claude_primary;
+      }
+
+      /* Spinner and loading indicators */
+      spinner {
+        color: @claude_primary;
+      }
+    '';
   };
 
   # Qt theme configuration to match GTK
@@ -1066,17 +1481,6 @@ in
     enable = true;
     platformTheme.name = "adwaita";
     style.name = "adwaita-dark";
-  };
-
-  # Configure Chromium/Chrome for dark theme and Claude colors
-  programs.chromium = lib.optionalAttrs (desktop == "hyprland") {
-    enable = true;
-    commandLineArgs = [
-      "--enable-features=WebUIDarkMode"
-      "--force-dark-mode"
-      "--enable-features=VaapiVideoDecoder"
-    ];
-    # Extensions removed - user should choose their own extensions
   };
 
   # Hyprpaper configuration (Claude-themed wallpaper)
@@ -1174,7 +1578,7 @@ in
         text = Hi there, $USER
         color = rgb(faf9f5)  # Claude's light text
         font_size = 20
-        font_family = Work Sans
+        font_family = Inter
         rotate = 0
 
         position = 0, 80
@@ -1187,7 +1591,7 @@ in
         text = $TIME
         color = rgb(d77757)  # Claude's signature terracotta
         font_size = 55
-        font_family = Work Sans
+        font_family = Inter
         rotate = 0
 
         position = 0, 160
