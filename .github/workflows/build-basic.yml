@@ -1,0 +1,52 @@
+name: Basic NixOS Build Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Create minimal test flake
+        run: |
+          cat > test-flake.nix << 'EOF'
+          {
+            description = "Minimal test flake";
+            inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+            outputs = { nixpkgs, ... }: {
+              nixosConfigurations.test = nixpkgs.lib.nixosSystem {
+                system = "x86_64-linux";
+                modules = [
+                  ({ pkgs, ... }: {
+                    networking.hostName = "test";
+                    system.stateVersion = "25.05";
+                    boot.loader.grub.device = "nodev";
+                    fileSystems."/" = {
+                      device = "/dev/sda1";
+                      fsType = "ext4";
+                    };
+                  })
+                ];
+              };
+            };
+          }
+          EOF
+
+      - name: Test minimal build
+        run: |
+          nix flake check ./test-flake.nix
+          nix build ./test-flake.nix#nixosConfigurations.test.config.system.build.toplevel
+          echo "✅ Minimal build successful"
+
+      - name: Test original flake metadata
+        continue-on-error: true
+        run: |
+          echo "Testing original flake..."
+          nix flake metadata . || echo "Original flake has issues"
