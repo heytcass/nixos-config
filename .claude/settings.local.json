@@ -119,7 +119,8 @@
       "mcp__nixos__home_manager_search",
       "WebFetch(domain:danth.github.io)",
       "Bash(python3:*)",
-      "Bash(nix-shell:*)"
+      "Bash(nix-shell:*)",
+      "Bash(timeout 30 nix eval:*)"
     ],
     "deny": []
   },
