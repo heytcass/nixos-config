@@ -1622,4 +1622,23 @@ in
     '';
   };
 
+  # Stylix Home Manager targets (application-specific theming)
+  stylix.targets = lib.optionalAttrs (desktop == "hyprland") {
+    # Terminal and shell theming
+    ghostty.enable = true;
+    fish.enable = true;
+    starship.enable = true;
+    
+    # Desktop environment theming  
+    waybar.enable = true;
+    wofi.enable = true;
+    
+    # CLI tools
+    bat.enable = true;
+    
+    # System utilities
+    dunst.enable = true;
+    mako.enable = true;
+  };
+
 }

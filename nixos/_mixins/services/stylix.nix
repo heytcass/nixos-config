@@ -58,10 +58,10 @@
       # Enable system-level theming
       console.enable = true;
       plymouth.enable = true;  # Override base.nix theme
+      gtk.enable = true;       # Override existing GTK theme
+      gnome.enable = true;     # Theme GNOME components
       
-      # Explicitly disable targets that conflict with existing config
-      gtk.enable = false;
-      gnome.enable = false;
+      # Keep Qt disabled to avoid conflicts
       qt.enable = false;
     };
 
