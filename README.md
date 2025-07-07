@@ -9,17 +9,20 @@ Personal NixOS configuration using flakes for reproducible system management wit
 This is a modular NixOS configuration supporting multiple hosts with shared configuration modules:
 
 ### Supported Hosts
-- **gti**: Dell XPS 13 9370 (main workstation) with full desktop, gaming, and development setup
-- **transporter**: Dell Latitude 7280 (secondary laptop) with desktop and development setup
-- **iso**: Live ISO configuration for installation and recovery
+- **gti**: Dell XPS 13 9370 (main workstation) with Hyprland, gaming, and development setup
+- **transporter**: Dell Latitude 7280 (secondary laptop) with Niri, Disko/Btrfs, and development setup
+- **iso**: Live ISO configuration for installation and recovery (terminal-only)
 
 ### Common Features
-- **Desktop**: GNOME with GDM and Wayland optimization
+- **Desktop**: Host-specific environments (Hyprland/Niri) with Wayland optimization
+- **Theming**: Stylix unified theming with Claude-inspired color scheme
 - **Kernel**: Latest Linux kernel with firmware updates (fwupd)
 - **Boot**: systemd-boot with Plymouth splash screen
 - **Package Manager**: Nix with flakes enabled on unstable channel
 - **Keyboard**: Colemak layout for ergonomic typing
 - **Shell**: Fish with enhanced Starship prompt and Nerd Font icons
+- **Security**: SOPS-nix for encrypted secrets management
+- **Modern Tools**: Rust utility replacements (sudo-rs, uutils)
 
 ## 📁 Repository Structure
 
@@ -38,27 +41,34 @@ This is a modular NixOS configuration supporting multiple hosts with shared conf
 ├── nixos/_mixins/                 # Modular configuration system
 │   ├── services/                  # System services and core config
 │   │   ├── base.nix              # Core system configuration
-│   │   └── users.nix             # User account configuration
+│   │   ├── users.nix             # User account configuration
+│   │   ├── secrets.nix           # SOPS secrets management
+│   │   └── stylix.nix            # Unified theming system
 │   ├── features/                  # Feature-based configurations
 │   │   ├── development.nix       # Development tools and environment
-│   │   └── gaming.nix            # Gaming-specific packages and settings
+│   │   ├── gaming.nix            # Gaming-specific packages and settings
+│   │   └── rust-utils.nix        # Modern Rust utility replacements
 │   └── desktop/                   # Desktop environment configurations
 │       ├── gnome.nix             # GNOME desktop environment
-│       └── hyprland.nix          # Hyprland window manager
+│       ├── hyprland.nix          # Hyprland wayland compositor
+│       └── niri.nix              # Niri scrollable-tiling compositor
 ├── lib/                          # Helper functions and utilities
 │   └── helpers.nix               # System generation and type detection
 ├── home/tom/                      # User Home Manager configuration
 │   ├── home.nix                   # User environment and packages
+│   ├── desktop/                   # Desktop-specific user configs
 │   └── secrets/                   # User secrets (git-ignored)
+├── secrets/                       # System secrets (SOPS-encrypted)
+│   ├── secrets.yaml              # Encrypted secrets storage
+│   └── README.md                 # Secrets management documentation
+├── scripts/                       # Deployment and utility scripts
 ├── CLAUDE.md                      # AI assistant guidance for this repo
 ├── README.md                      # This documentation
 └── .github/workflows/             # Automated maintenance workflows
     ├── build.yml                  # Multi-host build validation
-    ├── build-iso.yml              # ISO image build testing
-    ├── claude.yml                 # Claude Desktop integration
-    ├── flake-checker.yml          # Dependency health checks
-    ├── gaming-validation.yml      # Gaming environment validation
-    ├── security-audit.yml         # Security scanning
+    ├── claude.yml                 # Claude AI integration for issues/PRs
+    ├── claude-code-review.yml     # Automated code review via Claude AI
+    ├── security-audit.yml         # Security scanning and vulnerability checks
     └── update-flake-lock.yml      # Weekly dependency updates
 ```
 
@@ -124,18 +134,21 @@ Includes modern CLI replacements with convenient aliases:
 - `bandwhich` (network usage by process)
 - `hyperfine` (command-line benchmarking)
 
-### Modular System Architecture
+### Advanced Modular Architecture
 
-- **Shared modules** for consistent configuration across hosts
-- **Host-specific customization** via individual configuration files
-- **Colemak keyboard layout** for ergonomic typing
+- **Intelligent Mixin System** with multi-level conditional loading based on system type and desktop choice
+- **Helper Functions** for DRY system generation and automatic type detection
+- **Desktop Environment Flexibility** with per-host assignments (Hyprland/Niri/GNOME)
+- **Unified Theming** via Stylix with Claude-inspired color scheme
+- **Declarative Storage** management with Disko and Btrfs (transporter host)
+- **Secure Secrets** management via SOPS-nix with age encryption
+- **Modern Rust Utilities** replacing traditional GNU tools with memory-safe alternatives
+- **Performance Optimizations** including kernel tuning, I/O schedulers, and power management
 - **Auto-optimization** enabled (weekly Nix store optimization)
 - **Latest kernel** with hardware-specific optimizations via nixos-hardware
 - **Wayland optimization** with NIXOS_OZONE_WL environment variables
-- **Curated GNOME** with unnecessary applications removed
-- **fwupd integration** for automatic firmware updates
-- **Gaming support** (optional per host via gaming.nix module)
-- **Live ISO** for installation and system recovery
+- **Gaming support** (conditional per host with automatic workstation detection)
+- **Live ISO** for installation and system recovery (minimal terminal-only)
 
 ### Development Environment
 
@@ -157,19 +170,19 @@ This repository includes GitHub Actions workflows for hands-off maintenance:
 
 ### Continuous Integration
 
-- **Multi-Host Build Validation**: Tests all host configurations on push/PR
-- **ISO Build Testing**: Validates live ISO generation
-- **Gaming Environment Validation**: Tests gaming-specific configurations
-- **Flake Health Checks**: Validates dependency sources and freshness
-- **Claude Desktop Integration**: Automated testing of AI development tools
+- **Multi-Host Build Validation**: Tests all host configurations on push/PR using Nothing But Nix for space optimization
+- **Claude AI Integration**: Interactive assistance via @claude mentions in issues/PRs
+- **Automated Code Review**: Claude AI-powered code review for pull requests
+- **Flake Health Checks**: Integrated into build validation workflow
 - Ensures all configurations always build successfully
 
 ### Security & Quality
 
-- **Security Auditing**: Regular vulnerability scanning of system packages
-- **Dependency Scanning**: Checks for outdated or unsupported inputs
+- **Security Auditing**: Weekly vulnerability scanning with vulnix and insecure package detection
+- **License Auditing**: Automated checking of package licenses for compliance
+- **Dependency Updates**: Weekly automated flake.lock updates via pull requests
 - **Multi-Host Build Verification**: Validates all host configurations and Home Manager configs
-- **Comprehensive Testing**: Gaming, desktop, development environments tested automatically
+- **AI-Powered Code Review**: Automated Claude AI review of pull requests for quality assurance
 
 ## 📋 System Components
 

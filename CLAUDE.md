@@ -11,7 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Build without switching**: `sudo nixos-rebuild build --flake .#<hostname>`
 - **Test configuration**: `sudo nixos-rebuild test --flake .#<hostname>`
 - **Build ISO**: `nix build .#nixosConfigurations.iso.config.system.build.isoImage`
-- **Development shell**: `nix develop` (includes nixd, nil, statix, deadnix, sops, age)
+- **Development shell**: `nix develop` (includes nixd, nil, statix, deadnix, sops, age, nixfmt-rfc-style)
 - **Build Home Manager standalone**: `nix build .#homeConfigurations."tom@gti"`
 - **Update flake inputs**: `nix flake update`
 - **Check flake**: `nix flake check`
@@ -19,39 +19,47 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **List generations**: `sudo nix-env -p /nix/var/nix/profiles/system --list-generations`
 
 ### Configuration Structure
-This is a modular flake-based NixOS configuration with a **mixin system** supporting multiple hosts with conditional feature loading.
+This is a sophisticated modular flake-based NixOS configuration with an **intelligent mixin system** supporting multiple hosts with advanced conditional feature loading.
 
 **Key Architecture:**
-- `flake.nix` - Main entry point with helper functions for DRY system generation
-- `lib/helpers.nix` - Helper functions for consistent system creation and type detection
-- `nixos/default.nix` - Base NixOS configuration with conditional mixin imports
+- `flake.nix` - Main entry point with helper functions for DRY system generation and desktop parameter assignment
+- `lib/helpers.nix` - Advanced helper functions for system creation, type detection, and conditional package loading
+- `nixos/default.nix` - Base NixOS configuration with sophisticated conditional mixin imports based on system type and desktop choice
 - `nixos/_mixins/` - Modular feature-based configuration components:
-  - `services/base.nix` - Core system configuration with conditional loading
-  - `desktop/gnome.nix` - GNOME desktop environment (skipped for ISO)
-  - `features/development.nix` - Development tools and environment
-  - `features/gaming.nix` - Gaming stack (workstation only)
+  - `services/base.nix` - Core system configuration with performance optimizations and conditional loading
+  - `services/stylix.nix` - Unified theming system with Claude-inspired color scheme
+  - `services/secrets.nix` - SOPS-nix integration for secure secrets management
+  - `desktop/` - Multiple desktop environments (GNOME, Hyprland, Niri) with conditional loading
+  - `features/development.nix` - Development tools including Claude Desktop integration
+  - `features/gaming.nix` - Gaming stack (workstation only with automatic detection)
+  - `features/rust-utils.nix` - Modern Rust utility replacements with fallback aliases
   - `services/users.nix` - User account configuration with conditional packages
-- `hosts/<hostname>/configuration.nix` - Minimal host-specific settings
-- `hosts/<hostname>/hardware-configuration.nix` - Auto-generated hardware settings
-- `home/tom/home.nix` - User-specific Home Manager configuration
-- `overlays/` - Package customizations and optimizations
+- `hosts/<hostname>/` - Host-specific configurations:
+  - `configuration.nix` - Minimal host-specific settings and desktop assignment
+  - `hardware-configuration.nix` - Auto-generated hardware settings
+  - `disko-config.nix` - Declarative disk management (transporter only)
+- `home/tom/home.nix` - Comprehensive Home Manager configuration with desktop-conditional features
+- `overlays/` - Package customizations and ISO optimizations
+- `secrets/` - SOPS-encrypted secrets with age-based encryption
 
-**Mixin System Benefits:**
-- **Conditional Loading**: Features automatically included/excluded based on system type
-- **DRY Architecture**: Helper functions eliminate configuration duplication
-- **Type Detection**: Automatic workstation/laptop/ISO detection for conditional features
+**Advanced Mixin System Benefits:**
+- **Multi-Level Conditional Loading**: Features load based on system type (workstation/laptop/ISO), desktop choice (Hyprland/Niri/GNOME), and host-specific needs
+- **DRY Architecture**: Helper functions eliminate configuration duplication across hosts
+- **Intelligent Type Detection**: Automatic workstation/laptop/ISO detection with hostname-based feature sets
+- **Desktop Environment Flexibility**: Per-host desktop assignment with conditional theming and optimization
 - **Modular Design**: Easy to add/remove features without touching core configuration
+- **Performance Optimization**: Conditional loading reduces build time and system resource usage
 
 **Important Details:**
 - Uses `home-manager.useGlobalPkgs = true` - do NOT set nixpkgs options in home.nix
 - **Supported hosts:**
-  - `gti`: Dell XPS 13 9370 (main workstation) - automatically includes gaming features
-  - `transporter`: Dell Latitude 7280 (secondary laptop) - gaming features auto-excluded
-  - `iso`: Live ISO configuration - desktop/laptop features conditionally loaded
+  - `gti`: Dell XPS 13 9370 (main workstation) - Hyprland desktop, gaming features included
+  - `transporter`: Dell Latitude 7280 (secondary laptop) - Niri desktop, gaming features auto-excluded
+  - `iso`: Live ISO configuration - no desktop environment, minimal terminal-only setup
 - **System Type Detection**: Hostnames determine feature sets automatically
 - Uses unstable nixpkgs channel for latest packages
 - Each host uses appropriate nixos-hardware module for optimal hardware support
-- System uses latest Linux kernel and GNOME desktop with GDM
+- System uses latest Linux kernel with desktop environment per host (Hyprland/Niri/none)
 - Keyboard layout set to Colemak variant for ergonomic typing
 - Plymouth boot splash enabled for smooth boot experience
 - Wayland support optimized with NIXOS_OZONE_WL environment variable
@@ -59,15 +67,20 @@ This is a modular flake-based NixOS configuration with a **mixin system** suppor
 - fwupd enabled for firmware updates
 - Modern shell environment with Fish and enhanced Starship prompt
 - Claude Desktop integration via custom flake input
+- Stylix unified theming system with Claude-inspired color scheme
+- SOPS-nix integration for secure secrets management
+- Rust utilities replacing traditional GNU tools (sudo-rs, uutils)
 
-**Service Configuration Updates:**
-- Use `services.displayManager.gdm.enable` (not `services.xserver.displayManager.gdm.enable`)
-- Use `services.desktopManager.gnome.enable` (not `services.xserver.desktopManager.gnome.enable`)
+**Desktop Environment Assignments:**
+- **gti**: Hyprland wayland compositor with gaming optimizations
+- **transporter**: Niri scrollable-tiling compositor for productivity
+- **iso**: No desktop environment - terminal-only minimal setup
 
 ## Shell and CLI Environment
 
 ### Enhanced Terminal Experience
 - **Primary shell**: Fish with Bash compatibility
+- **Terminal**: Ghostty with Claude-inspired theming
 - **Prompt**: Starship with Nerd Font glyphs including:
   - Git status with branch/status icons ( ,  ,  , etc.)
   - Language detection (Node.js , Python , Rust , Go )
@@ -90,11 +103,31 @@ This is a modular flake-based NixOS configuration with a **mixin system** suppor
   - `hyperfine` → command-line benchmarking
   - `tldr` → simplified man pages
 
+### Rust Utility Replacements
+- **sudo-rs**: Memory-safe sudo replacement with audit logging
+- **uutils-coreutils**: Rust implementations of core utilities (ls, cat, mkdir, etc.)
+- **uutils-findutils**: Rust implementations of find, xargs, locate
+- **Comprehensive aliases**: Seamless fallback from Rust tools to traditional versions
+
 ### Git Configuration
 - **User**: Tom Cassady (heytcass@gmail.com)
 - **GitHub CLI**: Configured with SSH protocol
 - **SSH agent**: Automatically started via Home Manager
 - **Credential helper**: System-wide configuration for seamless authentication
+
+## Unified Theming with Stylix
+
+### Claude-Inspired Color Scheme
+- **Base16 palette**: Custom colors matching Claude's visual identity
+- **Primary colors**: Warm terracotta and earth tones
+- **Typography**: JetBrains Mono, Inter, Source Serif Pro
+- **Consistent theming**: Console, Plymouth, GTK, Qt applications
+
+### Theming Targets
+- **Console colors**: Terminal and TTY theming
+- **Plymouth boot**: Coordinated splash screen colors
+- **Desktop environments**: GTK/Qt theme integration
+- **Selective enabling**: Avoids conflicts with custom application themes
 
 ## Common Tasks
 
@@ -102,7 +135,8 @@ This is a modular flake-based NixOS configuration with a **mixin system** suppor
 - **Add system packages**: Edit the appropriate mixin in `nixos/_mixins/`:
   - `features/development.nix` for development tools
   - `features/gaming.nix` for gaming-related packages
-  - `desktop/gnome.nix` or `desktop/hyprland.nix` for desktop applications
+  - `features/rust-utils.nix` for modern CLI tool replacements
+  - `desktop/gnome.nix`, `desktop/hyprland.nix`, or `desktop/niri.nix` for desktop applications
   - `services/base.nix` for core system packages
 - **Add user packages**: Edit `home.packages` in `home/tom/home.nix`
 - **Host-specific packages**: Add directly to `hosts/<hostname>/configuration.nix` if needed
@@ -115,6 +149,30 @@ This is a modular flake-based NixOS configuration with a **mixin system** suppor
 - **Customize starship prompt**: Edit `programs.starship.settings` in `home/tom/home.nix`
 - **Change hardware**: Regenerate `hardware-configuration.nix` with `nixos-generate-config` for specific host
 - **Add new host**: Create new directory in `hosts/` and add configuration to `flake.nix`
+
+### Storage Management (Disko + Btrfs)
+- **Transporter host**: Uses declarative disk partitioning via Disko
+- **Btrfs features**: Compression (zstd), subvolumes, auto-scrubbing
+- **Subvolume layout**: Separate subvolumes for root, home, nix, snapshots
+- **Snapshot management**: Automatic cleanup and retention policies
+- **Commands**:
+  - `sudo btrfs subvolume snapshot /home /home/.snapshots/$(date +%Y%m%d-%H%M%S)`
+  - `sudo btrfs scrub start /`
+  - `sudo btrfs filesystem show`
+
+## SOPS Secrets Management
+
+### Infrastructure
+- **Encryption**: Age-based encryption with SOPS
+- **Storage**: Encrypted secrets in `secrets/secrets.yaml`
+- **Access control**: Host-specific decryption keys
+- **Integration**: Automatic secret deployment during rebuild
+
+### Workflow
+- **Edit secrets**: `sops secrets/secrets.yaml`
+- **Add new secrets**: Update `secrets.yaml` with proper structure
+- **Deploy secrets**: Automatically handled during `nixos-rebuild switch`
+- **Key management**: Age keys stored in `/etc/sops/age/keys.txt`
 
 ### Maintenance
 - **Apply changes**: Run `sudo nixos-rebuild switch --flake .#<hostname>` after any configuration edits
@@ -142,15 +200,19 @@ This is a modular flake-based NixOS configuration with a **mixin system** suppor
 │   │   ├── base.nix             # Core system configuration
 │   │   ├── users.nix            # User account configuration
 │   │   ├── tailscale.nix        # Tailscale VPN service
-│   │   └── secrets.nix          # Secrets management
+│   │   ├── secrets.nix          # SOPS secrets management
+│   │   └── stylix.nix           # Unified theming system
 │   ├── features/                # Optional features
 │   │   ├── development.nix      # Development tools and environment
-│   │   └── gaming.nix           # Gaming-specific packages and settings
+│   │   ├── gaming.nix           # Gaming-specific packages and settings
+│   │   └── rust-utils.nix       # Modern Rust utility replacements
 │   └── desktop/                 # Desktop environments
 │       ├── gnome.nix            # GNOME desktop environment
-│       └── hyprland.nix         # Hyprland wayland compositor
+│       ├── hyprland.nix         # Hyprland wayland compositor
+│       └── niri.nix             # Niri scrollable-tiling compositor
 ├── home/tom/                    # User Home Manager configuration
 │   ├── home.nix                 # User environment shared across hosts
+│   ├── desktop/                 # Desktop-specific user configs
 │   └── secrets/                 # User secrets (git-ignored)
 ├── lib/                         # Helper functions
 │   ├── default.nix              # Library exports
@@ -158,6 +220,10 @@ This is a modular flake-based NixOS configuration with a **mixin system** suppor
 ├── overlays/                    # Package customizations
 │   ├── default.nix              # Overlay exports
 │   └── iso-optimizations.nix    # ISO-specific optimizations
+├── secrets/                     # System secrets (SOPS-encrypted)
+│   ├── secrets.yaml            # Encrypted secrets storage
+│   └── README.md               # Secrets management documentation
+├── scripts/                     # Deployment and utility scripts
 ├── CLAUDE.md                    # This file
 └── README.md                    # Project documentation
 ```
