@@ -51,54 +51,18 @@
       size = 24;
     };
 
-    # Configure targets (enable for applications we actually use)
+    # Disable auto-enable to avoid conflicts with existing theming
+    autoEnable = false;
+    
     targets = {
-      # Core desktop environment
-      gtk.enable = true;
-      hyprland.enable = true;
-      waybar.enable = true;
-      wofi.enable = true;
-      hyprlock.enable = true;
-      hyprpaper.enable = true;
-      
-      # Terminals
-      ghostty.enable = true;
-      alacritty.enable = true;
-      kitty.enable = true;
-      foot.enable = true;
-      
-      # Browsers
-      firefox.enable = true;
-      chromium.enable = true;
-      
-      # Editors
-      vim.enable = true;
-      neovim.enable = true;
-      
-      # Shell tools
-      fish.enable = true;
-      starship.enable = true;
-      tmux.enable = true;
-      
-      # CLI tools
-      btop.enable = true;
-      bat.enable = true;
-      yazi.enable = true;
-      lazygit.enable = true;
-      delta.enable = true;
-      fzf.enable = true;
-      
-      # System
-      plymouth.enable = true;
-      gdm.enable = true;
+      # Enable system-level theming
       console.enable = true;
+      plymouth.enable = true;  # Override base.nix theme
       
-      # Notifications
-      dunst.enable = true;
-      mako.enable = true;
-      
-      # Icons
-      papirus-icon-theme.enable = true;
+      # Explicitly disable targets that conflict with existing config
+      gtk.enable = false;
+      gnome.enable = false;
+      qt.enable = false;
     };
 
     # Opacity settings
@@ -112,7 +76,7 @@
     # Polarity (dark/light)
     polarity = "dark";
 
-    # Image settings (wallpaper)
+    # Image settings (wallpaper) - using Claude brand colors
     image = pkgs.runCommand "claude-wallpaper" {} ''
       ${pkgs.imagemagick}/bin/convert -size 1920x1080 gradient:"#1a1915"-"#3a3529" $out
     '';

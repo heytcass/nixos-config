@@ -22,7 +22,7 @@
     # Enhanced Plymouth configuration for cleaner boot
     plymouth = {
       enable = true;
-      theme = "breeze"; # Clean theme that matches well with GNOME
+      theme = lib.mkDefault "breeze"; # Clean theme that matches well with GNOME, can be overridden by Stylix
     };
 
     # Kernel parameters for performance and clean boot

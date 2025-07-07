@@ -1251,12 +1251,12 @@ in
     '';
   };
 
-  # GTK theme configuration with Claude dark theme customization
+  # GTK theme configuration with Claude dark theme customization (override Stylix)
   gtk = lib.optionalAttrs (desktop == "hyprland") {
     enable = true;
     theme = {
-      name = "Adwaita-dark";
-      package = pkgs.gnome-themes-extra;
+      name = lib.mkForce "Adwaita-dark";
+      package = lib.mkForce pkgs.gnome-themes-extra;
     };
     iconTheme = {
       name = "Papirus-Dark";
@@ -1497,11 +1497,11 @@ in
     '';
   };
 
-  # Qt theme configuration to match GTK
+  # Qt theme configuration to match GTK (override Stylix)
   qt = lib.optionalAttrs (desktop == "hyprland") {
     enable = true;
-    platformTheme.name = "adwaita";
-    style.name = "adwaita-dark";
+    platformTheme.name = lib.mkForce "adwaita";
+    style.name = lib.mkForce "adwaita-dark";
   };
 
   # Hyprpaper configuration (Claude-themed wallpaper)

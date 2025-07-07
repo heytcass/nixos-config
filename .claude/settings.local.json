@@ -116,7 +116,10 @@
       "Bash(waybar:*)",
       "Bash(hyprctl:*)",
       "WebFetch(domain:wiki.hyprland.org)",
-      "mcp__nixos__home_manager_search"
+      "mcp__nixos__home_manager_search",
+      "WebFetch(domain:danth.github.io)",
+      "Bash(python3:*)",
+      "Bash(nix-shell:*)"
     ],
     "deny": []
   },
