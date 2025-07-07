@@ -1,21 +1,8 @@
-name: Build & Validate NixOS Systems
+name: Build & Validate NixOS Systems (Legacy)
 
 on:
-  push:
-    branches: [ main, refactor/* ]
-    paths:
-      - 'flake.nix'
-      - 'flake.lock'
-      - '**.nix'
-      - '.github/workflows/build-systems.yml'
-  pull_request:
-    branches: [ main ]
-    paths:
-      - 'flake.nix'
-      - 'flake.lock'
-      - '**.nix'
-      - '.github/workflows/build-systems.yml'
   workflow_dispatch:
+  # Disabled automatic triggers - use build-final.yml instead
 
 jobs:
   # Fast flake validation first

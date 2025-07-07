@@ -1,15 +1,8 @@
 name: Build NixOS Systems (Working)
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - 'flake.nix'
-      - 'flake.lock'
-      - '**.nix'
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
+  # Disabled - replaced by build-final.yml
 
 jobs:
   build:
