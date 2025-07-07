@@ -488,7 +488,7 @@ in
         monitor = [
           # Laptop screen (eDP-1) - right side, workspace 2
           "eDP-1,1920x1080@60,1920x0,1"
-          # Left Dell monitor (DP-3) - main screen, workspace 1  
+          # Left Dell monitor (DP-3) - main screen, workspace 1
           "DP-3,1920x1080@60,0x0,1"
           # Right Dell monitor (DP-4) - rotated 90° right, workspace 3
           "DP-4,1920x1080@60,3840x0,1,transform,3"
@@ -584,7 +584,7 @@ in
         # Workspace rules with Claude's semantic color system and monitor assignments
         workspace = [
           "1, border_color:rgb(2c7a39), monitor:DP-3" # Success workspace (development/terminal) - Left Dell monitor
-          "2, border_color:rgb(d97757), monitor:eDP-1" # Claude brand workspace (main work) - Laptop screen  
+          "2, border_color:rgb(d97757), monitor:eDP-1" # Claude brand workspace (main work) - Laptop screen
           "3, border_color:rgb(966c1e), monitor:DP-4" # Warning workspace (monitoring/logs) - Right Dell monitor (rotated)
           "4, border_color:rgb(ab2b3f)" # Error workspace (debugging)
           "5, border_color:rgb(5769f7)" # Permission workspace (admin tasks)
@@ -765,7 +765,6 @@ in
           spacing = 10;
           icon-size = 16;
         };
-
 
         "custom/nix-shell" = {
           format = "{}";
@@ -1514,8 +1513,8 @@ in
     '';
   };
 
-  # Hypridle configuration (idle management)
-  home.file.".config/hypr/hypridle.conf" = lib.optionalAttrs (desktop == "hyprland") {
+  # Hypridle configuration (idle management) - only for Hyprland
+  home.file.".config/hypr/hypridle.conf" = lib.mkIf (desktop == "hyprland") {
     text = ''
       general {
         lock_cmd = pidof hyprlock || hyprlock
@@ -1628,14 +1627,14 @@ in
     ghostty.enable = true;
     fish.enable = true;
     starship.enable = true;
-    
-    # Desktop environment theming  
+
+    # Desktop environment theming
     waybar.enable = true;
     wofi.enable = true;
-    
+
     # CLI tools
     bat.enable = true;
-    
+
     # System utilities
     dunst.enable = true;
     mako.enable = true;
