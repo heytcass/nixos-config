@@ -57,6 +57,8 @@ let
         ../nixos
         # Host-specific configuration
         ../hosts/${hostname}/configuration.nix
+        # Stylix for unified theming
+        inputs.stylix.nixosModules.stylix
         # Home Manager integration
         inputs.home-manager.nixosModules.home-manager
         {

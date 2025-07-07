@@ -322,10 +322,9 @@
     with pkgs;
     lib.optionals (!isISO) [
       fwupd-efi
-      gnome-firmware
+      firmware-manager # Pop!_OS firmware manager - DE-agnostic fwupd frontend
 
       # Logitech device support
-      gnomeExtensions.solaar-extension
       logitech-udev-rules
       solaar
     ];

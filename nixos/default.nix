@@ -15,6 +15,9 @@
       # Import base system configuration
       ./_mixins/services/base.nix
 
+      # Import Stylix theming
+      ./_mixins/services/stylix.nix
+
       # Import development tools for all systems
       ./_mixins/features/development.nix
 

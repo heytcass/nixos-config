@@ -484,8 +484,15 @@ in
       # Plugins configuration - no plugins loaded
       plugins = [ ];
       settings = {
-        # Monitor configuration (will auto-detect)
-        monitor = [ ",preferred,auto,1" ];
+        # Monitor configuration for USB dock setup
+        monitor = [
+          # Laptop screen (eDP-1) - right side, workspace 2
+          "eDP-1,1920x1080@60,1920x0,1"
+          # Left Dell monitor (DP-3) - main screen, workspace 1  
+          "DP-3,1920x1080@60,0x0,1"
+          # Right Dell monitor (DP-4) - rotated 90° right, workspace 3
+          "DP-4,1920x1080@60,3840x0,1,transform,3"
+        ];
 
         # Input configuration - maintain Colemak layout
         input = {
@@ -522,9 +529,9 @@ in
           # Subtle rounding matching Claude's modern design
           rounding = 8;
 
-          # Claude's shadow system (updated for 0.49.0)
+          # Claude's shadow system (updated for 0.49.0) - disabled to prevent waybar interference
           shadow = {
-            enabled = true;
+            enabled = false;
             range = 12;
             render_power = 3;
             color = "0x991f1e1d"; # Claude's dark background with opacity
@@ -574,11 +581,11 @@ in
           workspace_swipe_create_new = true;
         };
 
-        # Workspace rules with Claude's semantic color system
+        # Workspace rules with Claude's semantic color system and monitor assignments
         workspace = [
-          "1, border_color:rgb(2c7a39)" # Success workspace (development/terminal)
-          "2, border_color:rgb(d97757)" # Claude brand workspace (main work)
-          "3, border_color:rgb(966c1e)" # Warning workspace (monitoring/logs)
+          "1, border_color:rgb(2c7a39), monitor:DP-3" # Success workspace (development/terminal) - Left Dell monitor
+          "2, border_color:rgb(d97757), monitor:eDP-1" # Claude brand workspace (main work) - Laptop screen  
+          "3, border_color:rgb(966c1e), monitor:DP-4" # Warning workspace (monitoring/logs) - Right Dell monitor (rotated)
           "4, border_color:rgb(ab2b3f)" # Error workspace (debugging)
           "5, border_color:rgb(5769f7)" # Permission workspace (admin tasks)
           "6, border_color:rgb(006666)" # Plan mode workspace (planning/design)
@@ -599,7 +606,6 @@ in
           "bordercolor rgb(c2c0b6), class:^(thunar)$"
           "bordercolor rgb(c96442), class:^(mpv)$"
           "bordercolor rgb(c96442), class:^(imv)$"
-          "noshadow, class:^(waybar)$"
         ];
 
         # Keybindings - using Super (Windows/Cmd) key
@@ -712,21 +718,16 @@ in
 
         modules-left = [
           "hyprland/workspaces"
-          "custom/separator"
-          "hyprland/window"
         ];
-        modules-center = [ ];
+        modules-center = [ "hyprland/window" ];
         modules-right = [
           "pulseaudio"
           "network"
           "bluetooth"
           "custom/nix-shell"
-          "custom/git-status"
-          "custom/separator"
           "cpu"
           "memory"
           "temperature"
-          "custom/separator"
           "battery"
           "clock"
           "tray"
@@ -735,25 +736,26 @@ in
         "hyprland/workspaces" = {
           disable-scroll = true;
           all-outputs = true;
-          format = "{name}: {icon}";
+          format = "{icon}";
           format-icons = {
-            "1" = "󰅨";
-            "2" = "󰖟";
-            "3" = "󰍉";
-            "4" = "󰃤";
-            "5" = "󰀻";
-            "6" = "󰸗";
-            "default" = "󰝤";
-            "urgent" = "󰀨";
-          };
-          persistent-workspaces = {
-            "*" = 6;
+            "1" = "🏠"; # Home/Main
+            "2" = "🌐"; # Web/Browser
+            "3" = "📝"; # Editor/Code
+            "4" = "📁"; # Files
+            "5" = "💬"; # Communication
+            "6" = "🎵"; # Media
+            "7" = "⚙️"; # Settings/Admin
+            "8" = "🎮"; # Games
+            "9" = "🖥️"; # VMs/Systems
+            "10" = "📋"; # Misc
+            "default" = "💼";
+            "urgent" = "⚠️";
           };
         };
 
         "hyprland/window" = {
           format = "{}";
-          max-length = 30;
+          max-length = 50;
           tooltip-format = "Active window: {}";
           on-click = "hyprctl dispatch fullscreen";
           separate-outputs = true;
@@ -764,10 +766,6 @@ in
           icon-size = 16;
         };
 
-        "custom/separator" = {
-          format = "|";
-          tooltip = false;
-        };
 
         "custom/nix-shell" = {
           format = "{}";
@@ -926,13 +924,18 @@ in
       }
 
       #workspaces button {
-        padding: 0 5px;
-        background-color: transparent;
+        padding: 0 8px;
+        margin: 0 2px;
+        background-color: rgba(194, 192, 182, 0.1);
         color: #c2c0b6; /* Claude's mid gray */
+        border-radius: 6px;
+        font-size: 16px;
+        min-width: 28px;
       }
 
       #workspaces button:hover {
-        background: rgba(217, 119, 87, 0.2); /* Claude brand with opacity */
+        background: rgba(217, 119, 87, 0.3); /* Claude brand with opacity */
+        transition: all 0.2s ease;
       }
 
       #workspaces button.active {
@@ -951,6 +954,7 @@ in
       #memory,
       #temperature,
       #network,
+      #bluetooth,
       #pulseaudio,
       #tray {
         padding: 0 10px;
@@ -959,6 +963,7 @@ in
 
       #pulseaudio:hover,
       #network:hover,
+      #bluetooth:hover,
       #cpu:hover,
       #memory:hover,
       #temperature:hover,
@@ -967,34 +972,33 @@ in
         background-color: rgba(217, 119, 87, 0.1);
       }
 
-      .custom-separator1,
-      .custom-separator2 {
-        color: #c2c0b6;
-        padding: 0 8px;
-        opacity: 0.5;
-      }
 
+      /* System monitoring group */
       #cpu,
       #memory,
       #temperature {
-        background-color: rgba(150, 108, 30, 0.1);
-        border-radius: 4px;
-        margin: 2px;
+        background-color: rgba(150, 108, 30, 0.08);
+        border-radius: 6px;
+        margin: 0 1px;
+        padding: 0 8px;
+        font-size: 12px;
       }
 
       #battery {
-        background-color: rgba(44, 122, 57, 0.1);
-        border-radius: 4px;
-        margin: 2px;
+        background-color: rgba(44, 122, 57, 0.08);
+        border-radius: 6px;
+        margin: 0 2px;
+        padding: 0 8px;
+        font-size: 12px;
       }
 
       .custom-nix-shell {
         color: #5bc0de;
-        background-color: rgba(91, 192, 222, 0.1);
-        border-radius: 4px;
-        margin: 2px;
-        padding: 0 8px;
-        font-size: 14px;
+        background-color: rgba(91, 192, 222, 0.08);
+        border-radius: 6px;
+        margin: 0 2px;
+        padding: 0 6px;
+        font-size: 12px;
       }
 
       #custom-git-status {
@@ -1020,6 +1024,8 @@ in
 
       #window {
         color: #d77757; /* Claude brand for window title */
+        font-weight: 500;
+        padding: 0 20px;
       }
 
       #custom-media {
@@ -1087,31 +1093,21 @@ in
 
       #bluetooth {
         color: #c2c0b6; /* Claude's mid gray for default state */
-        background-color: rgba(26, 25, 21, 0.8); /* Claude's darker background */
-        padding: 0 10px;
+        background-color: rgba(150, 108, 30, 0.08);
+        padding: 0 8px;
         border-radius: 6px;
-        margin: 0 2px;
-        border: 1px solid rgba(215, 119, 87, 0.3); /* Subtle Claude terracotta border */
-        transition: all 0.3s ease;
+        margin: 0 1px;
+        font-size: 12px;
       }
 
       #bluetooth.connected {
         color: #d77757; /* Claude's terracotta when connected */
-        background-color: rgba(215, 119, 87, 0.1); /* Light terracotta background */
-        border-color: #d77757;
-        animation: pulse-bluetooth 2s infinite;
+        background-color: rgba(215, 119, 87, 0.08);
       }
 
       #bluetooth.disabled, #bluetooth.off {
         color: #525152; /* Claude's dark gray for disabled */
-        background-color: transparent;
-        border-color: rgba(82, 81, 82, 0.3);
-      }
-
-      #bluetooth:hover {
-        background-color: rgba(215, 119, 87, 0.2); /* Claude terracotta on hover */
-        border-color: #d77757;
-        box-shadow: 0 4px 12px rgba(215, 119, 87, 0.4), 0 2px 6px rgba(215, 119, 87, 0.2);
+        background-color: rgba(82, 81, 82, 0.08);
       }
 
       /* Apply Bluetooth-style rounded borders to all modules */
@@ -1120,7 +1116,7 @@ in
         background-color: rgba(26, 25, 21, 0.8); /* Claude's darker background */
         border-radius: 6px;
         margin: 0 2px;
-        border: 1px solid rgba(215, 119, 87, 0.3); /* Subtle Claude terracotta border */
+        border: 1px solid rgba(215, 119, 87, 0.6); /* More visible Claude terracotta border */
         transition: all 0.3s ease;
       }
 
@@ -1625,4 +1621,5 @@ in
       }
     '';
   };
+
 }
