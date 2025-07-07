@@ -300,6 +300,19 @@
   # Real-time kit for audio
   security.rtkit.enable = true;
 
+  # Modern Rust-based secret service daemon
+  systemd.user.services.oo7-daemon = lib.mkIf (!isISO) {
+    enable = true;
+    description = "Secret service (oo7 implementation)";
+    wantedBy = [ "default.target" ];
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${pkgs.oo7-server}/libexec/oo7-daemon";
+      Restart = "on-failure";
+      StandardError = "journal";
+    };
+  };
+
   # System fonts (shared across all desktop environments)
   fonts.packages = with pkgs; [
     nerd-fonts.fira-code
@@ -327,5 +340,11 @@
       # Logitech device support
       logitech-udev-rules
       solaar
+
+      # Desktop applications
+      notion-app-enhanced
+
+      # Modern Rust-based secret service
+      oo7-server
     ];
 }

@@ -120,7 +120,9 @@
       "WebFetch(domain:danth.github.io)",
       "Bash(python3:*)",
       "Bash(nix-shell:*)",
-      "Bash(timeout 30 nix eval:*)"
+      "Bash(timeout 30 nix eval:*)",
+      "Bash(env)",
+      "Bash(dmesg:*)"
     ],
     "deny": []
   },
