@@ -1,0 +1,50 @@
+name: Simple NixOS Build Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths: [ '**.nix', 'flake.lock' ]
+
+jobs:
+  build-gti:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          logger: compact
+
+      - name: Setup cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+        continue-on-error: true
+
+      - name: Build gti system (minimal config)
+        timeout-minutes: 25
+        run: |
+          echo "Building gti system with optimized settings..."
+
+          # Use minimal build options to reduce resource usage
+          nix build \
+            .#nixosConfigurations.gti.config.system.build.toplevel \
+            --max-jobs 1 \
+            --cores 1 \
+            --no-eval-cache \
+            --show-trace \
+            --fallback
+
+          echo "✅ Build completed successfully"
+
+      - name: Verify build
+        run: |
+          if [ -L result ]; then
+            echo "✅ Build artifact created"
+            ls -la result/
+          else
+            echo "❌ No build result found"
+            exit 1
+          fi
