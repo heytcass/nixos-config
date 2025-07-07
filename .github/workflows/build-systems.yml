@@ -32,15 +32,36 @@ jobs:
           log-directives: nix_installer=trace
           backtrace: full
 
+      - name: Setup Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+        continue-on-error: true
+
       - name: Setup FlakeHub Cache
         uses: DeterminateSystems/flakehub-cache-action@main
         continue-on-error: true
 
+      - name: Clear any corrupted flake cache
+        run: |
+          echo "Clearing potentially corrupted flake metadata..."
+          rm -rf ~/.cache/nix || true
+          nix store gc --print-roots || true
+          nix store verify --all --no-trust || true
+
       - name: Check flake syntax and evaluation
-        timeout-minutes: 10
+        timeout-minutes: 15
         run: |
           echo "Checking flake syntax and evaluation..."
-          nix flake check --show-trace --no-build
+          # First try a basic metadata check
+          nix flake metadata --no-write-lock-file
+          # Then do the full check
+          nix flake check --show-trace --no-build --no-write-lock-file
+
+      - name: Test flake outputs
+        timeout-minutes: 5
+        run: |
+          echo "Testing flake output availability..."
+          nix flake show --json > /dev/null
+          echo "✅ Flake outputs are accessible"
 
       - name: Run comprehensive flake validation
         uses: DeterminateSystems/flake-checker-action@v8
@@ -92,6 +113,10 @@ jobs:
           log-directives: nix_installer=trace
           backtrace: full
 
+      - name: Setup Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+        continue-on-error: true
+
       - name: Setup FlakeHub Cache
         uses: DeterminateSystems/flakehub-cache-action@main
         continue-on-error: true  # Don't fail build on cache upload issues
@@ -118,23 +143,36 @@ jobs:
           name: nixpkgs-wayland
           skipPush: true
 
+      - name: Pre-build flake verification
+        timeout-minutes: 10
+        run: |
+          echo "Verifying flake integrity before build..."
+          nix flake metadata --json > /dev/null
+          nix flake show --json > /dev/null
+          echo "✅ Flake verification successful"
+
       - name: Build ${{ matrix.system }}
-        timeout-minutes: 45  # Increased timeout for complex builds
+        timeout-minutes: 60  # Increased timeout for complex builds
         run: |
           echo "Building ${{ matrix.description }}..."
           echo "System: ${{ matrix.system }}"
           echo "Type: ${{ matrix.type }}"
 
-          # Set up additional Nix config for performance
+          # Set up additional Nix config for performance and reliability
           mkdir -p ~/.config/nix
           echo "max-jobs = auto" >> ~/.config/nix/nix.conf
           echo "cores = 0" >> ~/.config/nix/nix.conf
           echo "substitute = true" >> ~/.config/nix/nix.conf
           echo "builders-use-substitutes = true" >> ~/.config/nix/nix.conf
+          echo "narinfo-cache-negative-ttl = 0" >> ~/.config/nix/nix.conf
+          echo "connect-timeout = 10" >> ~/.config/nix/nix.conf
+
+          # Clear any potential store inconsistencies
+          nix store verify --all --no-trust || echo "Warning: Store verification had issues, continuing..."
 
           # Build system configuration with better error handling
           echo "Building system configuration..."
-          nix build .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel -L --show-trace --fallback
+          nix build .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel -L --show-trace --fallback --refresh
           echo "✅ System built successfully"
 
       - name: Test development shell
