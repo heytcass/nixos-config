@@ -1,0 +1,67 @@
+name: "NixOS Build with Nothing But Nix"
+
+on:
+  push:
+    branches: [main]
+    paths: ['**.nix', 'flake.lock', '.github/workflows/**']
+  pull_request:
+    branches: [main]
+    paths: ['**.nix', 'flake.lock', '.github/workflows/**']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        system: [gti, transporter]
+
+    name: Build ${{ matrix.system }}
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Nothing but Nix
+        uses: wimpysworld/nothing-but-nix@main
+        with:
+          hatchet-protocol: 'rampage'
+          witness-carnage: true
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: nix-community
+          skipPush: true
+
+      - name: Build NixOS configuration
+        run: |
+          echo "Building NixOS configuration for ${{ matrix.system }}..."
+          nix build '.#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel' \
+            --print-build-logs \
+            --show-trace \
+            --fallback
+          echo "✅ ${{ matrix.system }} built successfully"
+
+      - name: Verify build output
+        run: |
+          if [ -L result ]; then
+            echo "✅ Build result exists"
+            ls -la result/
+          else
+            echo "❌ No build result found"
+            exit 1
+          fi
+
+      - name: Run flake check
+        run: |
+          echo "Running flake check..."
+          nix flake check --show-trace
+          echo "✅ Flake check passed"
