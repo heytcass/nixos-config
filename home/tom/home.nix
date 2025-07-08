@@ -1542,7 +1542,7 @@ in
     '';
   };
 
-  # Stylix Home Manager targets (application-specific theming)
+  # Stylix Home Manager targets (comprehensive theming for all compatible apps)
   stylix.targets = lib.optionalAttrs (desktop == "hyprland") {
     # Terminal and shell theming
     ghostty.enable = true;
@@ -1553,12 +1553,31 @@ in
     waybar.enable = true;
     wofi.enable = true;
 
+    # Text editors (you have these installed)
+    vscode.enable = true; # VSCode
+    micro.enable = true; # Micro editor
+    neovim.enable = true; # Neovim (even if not directly used)
+    vim.enable = true; # Vim (even if not directly used)
+
+    # Media applications
+    mpv.enable = true; # MPV video player
+
+    # PDF viewer
+    zathura.enable = true; # PDF viewer (if you have it)
+
     # CLI tools
-    bat.enable = true;
+    bat.enable = true; # Enhanced cat
 
     # System utilities
-    dunst.enable = true;
-    mako.enable = true;
+    dunst.enable = true; # Notifications
+    mako.enable = true; # Alternative notifications
+
+    # Browsers (not available as Home Manager targets)
+    # chromium.enable = true;   # Would theme Google Chrome
+    # firefox.enable = true;    # Would theme Firefox
+
+    # Communication apps (not yet available)
+    # discord.enable = true;    # Discord target not available
   };
 
 }

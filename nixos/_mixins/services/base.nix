@@ -335,7 +335,7 @@
       solaar
 
       # Desktop applications
-      tangram # Web app wrapper for Notion and other web apps
+      obsidian
 
       # Keyring management (GNOME keyring is enabled as service)
       seahorse # GUI keyring manager

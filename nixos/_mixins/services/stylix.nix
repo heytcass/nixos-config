@@ -64,6 +64,10 @@
       gtk.enable = true; # Override existing GTK theme
       gnome.enable = true; # Theme GNOME components
 
+      # Browser theming not available at NixOS level
+      # chromium.enable = true; # Not available as NixOS target
+      # firefox.enable = true; # Not available as NixOS target
+
       # Keep Qt disabled to avoid conflicts
       qt.enable = false;
     };
