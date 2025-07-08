@@ -1,5 +1,8 @@
 # Stylix unified theming configuration
-{ config, lib, pkgs, ... }:
+{
+  pkgs,
+  ...
+}:
 
 {
   stylix = {
@@ -32,12 +35,12 @@
         package = pkgs.nerd-fonts.jetbrains-mono;
         name = "JetBrainsMono Nerd Font";
       };
-      
+
       sansSerif = {
-        package = pkgs.inter;
-        name = "Inter";
+        package = pkgs.nerd-fonts.inter;
+        name = "Inter Nerd Font";
       };
-      
+
       serif = {
         package = pkgs.source-serif;
         name = "Source Serif 4";
@@ -53,14 +56,14 @@
 
     # Disable auto-enable to avoid conflicts with existing theming
     autoEnable = false;
-    
+
     targets = {
       # Enable system-level theming
       console.enable = true;
-      plymouth.enable = true;  # Override base.nix theme
-      gtk.enable = true;       # Override existing GTK theme
-      gnome.enable = true;     # Theme GNOME components
-      
+      plymouth.enable = true; # Override base.nix theme
+      gtk.enable = true; # Override existing GTK theme
+      gnome.enable = true; # Theme GNOME components
+
       # Keep Qt disabled to avoid conflicts
       qt.enable = false;
     };
@@ -77,7 +80,7 @@
     polarity = "dark";
 
     # Image settings (wallpaper) - using Claude brand colors
-    image = pkgs.runCommand "claude-wallpaper" {} ''
+    image = pkgs.runCommand "claude-wallpaper" { } ''
       ${pkgs.imagemagick}/bin/convert -size 1920x1080 gradient:"#1a1915"-"#3a3529" $out
     '';
   };

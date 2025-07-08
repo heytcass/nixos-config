@@ -104,6 +104,9 @@ in
       overskride # Modern GTK4 Bluetooth manager
       bluetui # TUI Bluetooth manager for terminal use
 
+      # System logout/shutdown menu
+      wlogout # Wayland logout menu
+
     ];
 
     # Dotfiles (currently managed through GUI/sync)
@@ -481,8 +484,10 @@ in
       enable = true;
       package = inputs.hyprland.packages.${pkgs.system}.hyprland;
 
-      # Plugins configuration - no plugins loaded
-      plugins = [ ];
+      # Plugins configuration
+      plugins = [
+        inputs.hyprland-plugins.packages.${pkgs.system}.hyprexpo
+      ];
       settings = {
         # Monitor configuration for USB dock setup
         monitor = [
@@ -581,6 +586,18 @@ in
           workspace_swipe_create_new = true;
         };
 
+        # Hyprexpo plugin configuration
+        plugin.hyprexpo = {
+          columns = 3;
+          gap_size = 5;
+          bg_col = "rgb(1f1e1d)";
+          workspace_method = "center current";
+          enable_gesture = true;
+          gesture_fingers = 3;
+          gesture_distance = 300;
+          gesture_positive = true;
+        };
+
         # Workspace rules with Claude's semantic color system and monitor assignments
         workspace = [
           "1, border_color:rgb(2c7a39), monitor:DP-3" # Success workspace (development/terminal) - Left Dell monitor
@@ -616,6 +633,9 @@ in
           "$mod, Return, exec, ghostty"
           "$mod, space, exec, wofi --show drun"
           "$mod, E, exec, thunar"
+
+          # Hyprexpo plugin binding - tap SUPER key alone
+          "SUPER, SUPER_L, hyprexpo:expo, toggle"
 
           # Window management
           "$mod, Q, killactive"
@@ -714,13 +734,17 @@ in
         layer = "top";
         position = "top";
         height = 30;
-        spacing = 4;
+        spacing = 2;
 
         modules-left = [
           "hyprland/workspaces"
         ];
-        modules-center = [ "hyprland/window" ];
+        modules-center = [
+          "hyprland/window"
+          "custom/nix-shell"
+        ];
         modules-right = [
+          "tray"
           "pulseaudio"
           "network"
           "bluetooth"
@@ -730,7 +754,7 @@ in
           "temperature"
           "battery"
           "clock"
-          "tray"
+          "custom/power"
         ];
 
         "hyprland/workspaces" = {
@@ -762,8 +786,9 @@ in
         };
 
         tray = {
-          spacing = 10;
+          spacing = 5;
           icon-size = 16;
+          show-passive-items = false;
         };
 
         "custom/nix-shell" = {
@@ -771,6 +796,13 @@ in
           exec = "if [ -n \"$IN_NIX_SHELL\" ]; then echo '❄️'; else echo ''; fi";
           tooltip-format = "Nix development shell active";
           interval = 5;
+        };
+
+        "custom/power" = {
+          format = "  ⏻  ";
+          tooltip-format = "Power Menu";
+          on-click = "wlogout";
+          on-click-right = "hyprlock";
         };
 
         "custom/git-status" = {
@@ -800,7 +832,7 @@ in
         };
 
         cpu = {
-          format = "{usage}% ";
+          format = "{usage}%";
           tooltip-format = "CPU Usage: {usage}%";
           on-click = "top";
           on-click-right = "procs";
@@ -808,7 +840,7 @@ in
         };
 
         memory = {
-          format = "{percentage}% ";
+          format = "{percentage}%";
           tooltip-format = "RAM: {used:0.1f}G / {total:0.1f}G ({percentage}%)\nSwap: {swapUsed:0.1f}G / {swapTotal:0.1f}G";
           on-click = "top";
           on-click-right = "procs";
@@ -817,8 +849,8 @@ in
 
         temperature = {
           critical-threshold = 80;
-          format = "{temperatureC}°C {icon}";
-          format-critical = "{temperatureC}°C {icon}";
+          format = "{temperatureC}°";
+          format-critical = "{temperatureC}°";
           tooltip-format = "Temperature: {temperatureC}°C ({temperatureF}°F)";
           format-icons = [
             ""
@@ -833,9 +865,9 @@ in
             warning = 30;
             critical = 15;
           };
-          format = "{capacity}% {icon}";
-          format-charging = "{capacity}% ";
-          format-plugged = "{capacity}% ";
+          format = "{capacity}%";
+          format-charging = "{capacity}%";
+          format-plugged = "{capacity}%";
           tooltip-format = "Battery: {capacity}%";
           format-icons = [
             ""
@@ -845,7 +877,6 @@ in
             ""
           ];
           interval = 30;
-          swap-icon-label = false;
         };
 
         network = {
@@ -856,7 +887,6 @@ in
           tooltip-format-wifi = "WiFi: {essid} ({signalStrength}%)\nIP: {ipaddr}/{cidr}\nGateway: {gwaddr}";
           tooltip-format-ethernet = "Ethernet: {ifname}\nIP: {ipaddr}/{cidr}\nGateway: {gwaddr}";
           interval = 10;
-          swap-icon-label = false;
         };
 
         bluetooth = {
@@ -897,263 +927,88 @@ in
             ];
           };
           on-click = "pavucontrol";
-          swap-icon-label = false;
         };
       };
     };
 
+    # Stylix base + selective Claude terracotta accents
     style = ''
-      * {
-        font-family: 'Inter', sans-serif;
-        font-size: 13px;
-      }
-
+      /* Claude signature terracotta border */
       window#waybar {
-        background-color: rgba(31, 30, 29, 0.9); /* Claude's dark background */
-        border-bottom: 2px solid #d77757; /* Claude's signature terracotta */
-        color: #faf9f5; /* Claude's light text */
-        transition-property: background-color;
-        transition-duration: .5s;
+        border-bottom: 2px solid #d77757;
       }
 
-      button {
-        box-shadow: inset 0 -3px transparent;
-        border: none;
-        border-radius: 0;
-      }
-
+      /* Enhanced workspace styling with Claude accents */
       #workspaces button {
         padding: 0 8px;
         margin: 0 2px;
-        background-color: rgba(194, 192, 182, 0.1);
-        color: #c2c0b6; /* Claude's mid gray */
         border-radius: 6px;
         font-size: 16px;
         min-width: 28px;
-      }
-
-      #workspaces button:hover {
-        background: rgba(217, 119, 87, 0.3); /* Claude brand with opacity */
         transition: all 0.2s ease;
       }
 
       #workspaces button.active {
-        background-color: #d77757; /* Claude's signature terracotta */
+        background-color: #d77757;
         color: #faf9f5;
+      }
+
+      #workspaces button:hover {
+        background-color: rgba(215, 119, 87, 0.3);
       }
 
       #workspaces button.urgent {
-        background-color: #ab2b3f; /* Claude's error red */
-      }
-
-
-      #clock,
-      #battery,
-      #cpu,
-      #memory,
-      #temperature,
-      #network,
-      #bluetooth,
-      #pulseaudio,
-      #tray {
-        padding: 0 10px;
+        background-color: #ab2b3f;
         color: #faf9f5;
       }
 
-      #pulseaudio:hover,
-      #network:hover,
-      #bluetooth:hover,
-      #cpu:hover,
-      #memory:hover,
-      #temperature:hover,
-      #battery:hover,
-      #clock:hover {
-        background-color: rgba(217, 119, 87, 0.1);
-      }
-
-
-      /* System monitoring group */
-      #cpu,
-      #memory,
-      #temperature {
-        background-color: rgba(150, 108, 30, 0.08);
-        border-radius: 6px;
-        margin: 0 1px;
-        padding: 0 8px;
-        font-size: 12px;
-      }
-
-      #battery {
-        background-color: rgba(44, 122, 57, 0.08);
-        border-radius: 6px;
-        margin: 0 2px;
-        padding: 0 8px;
-        font-size: 12px;
-      }
-
-      .custom-nix-shell {
-        color: #5bc0de;
-        background-color: rgba(91, 192, 222, 0.08);
-        border-radius: 6px;
-        margin: 0 2px;
-        padding: 0 6px;
-        font-size: 12px;
-      }
-
-      #custom-git-status {
-        padding: 0 8px;
-        margin: 2px;
-        border-radius: 4px;
-      }
-
-      #custom-git-status.git-clean {
-        color: #2c7a39; /* Claude's success green */
-        border-color: rgba(44, 122, 57, 0.7);
-      }
-
-      #custom-git-status.git-dirty {
-        color: #966c1e; /* Claude's warning amber */
-        border-color: rgba(150, 108, 30, 0.7);
-      }
-
-      #custom-git-status.git-error {
-        color: #ab2b3f; /* Claude's error red */
-        border-color: rgba(171, 43, 63, 0.7);
-      }
-
+      /* Window title with Claude accent */
       #window {
-        color: #d77757; /* Claude brand for window title */
+        color: #d77757;
         font-weight: 500;
-        padding: 0 20px;
       }
 
-      #custom-media {
-        color: #2c7a39; /* Claude's success green */
-        padding: 0 10px;
+      /* Enhanced power button with Claude accent */
+      .custom-power {
+        border-radius: 6px;
+        margin: 0 8px 0 4px;
+        padding: 0 8px;
+        font-size: 12px;
+        transition: all 0.2s ease;
+        color: #d77757;
+        min-width: 24px;
       }
 
-      #custom-media.media-playing {
-        color: #2c7a39; /* Claude's success green */
-        animation: pulse 2s infinite;
-      }
-
-      #custom-media.media-paused {
-        color: #966c1e; /* Claude's warning amber */
-      }
-
-      #custom-media.media-stopped {
-        color: #525152; /* Claude's muted gray */
-      }
-
-      #custom-weather {
-        color: #7fc8ff; /* Claude's blue */
-        padding: 0 10px;
-      }
-
-      #custom-weather.weather-error {
-        color: #ab2b3f; /* Claude's error red */
-      }
-
-      #battery.charging, #battery.plugged {
-        color: #2c7a39; /* Claude's success green */
-        border-color: rgba(44, 122, 57, 0.7);
-      }
-
-      #battery.critical:not(.charging) {
-        background-color: #ab2b3f; /* Claude's error red */
-        border-color: #ab2b3f;
+      .custom-power:hover {
+        background-color: rgba(215, 119, 87, 0.2);
         color: #faf9f5;
-        animation-name: blink;
-        animation-duration: 0.5s;
-        animation-timing-function: linear;
-        animation-iteration-count: infinite;
-        animation-direction: alternate;
+      }
+
+      /* Subtle hover effects with Claude accent */
+      #pulseaudio:hover, #network:hover, #bluetooth:hover,
+      #cpu:hover, #memory:hover, #temperature:hover,
+      #battery:hover, #clock:hover, #tray:hover {
+        background-color: rgba(215, 119, 87, 0.1);
+      }
+
+      /* Critical state indicators with Claude colors */
+      #battery.critical:not(.charging) {
+        background-color: #ab2b3f;
+        color: #faf9f5;
       }
 
       #temperature.critical {
-        background-color: #ab2b3f; /* Claude's error red */
-        border-color: #ab2b3f;
+        background-color: #ab2b3f;
         color: #faf9f5;
       }
 
-      #cpu.warning {
-        background-color: #966c1e; /* Claude's warning amber */
-        border-color: #966c1e;
+      #cpu.warning, #memory.warning {
+        background-color: #966c1e;
         color: #faf9f5;
-        animation: pulse 2s infinite;
       }
 
-      #memory.warning {
-        background-color: #966c1e; /* Claude's warning amber */
-        border-color: #966c1e;
-        color: #faf9f5;
-        animation: pulse 2s infinite;
-      }
-
-      #bluetooth {
-        color: #c2c0b6; /* Claude's mid gray for default state */
-        background-color: rgba(150, 108, 30, 0.08);
-        padding: 0 8px;
-        border-radius: 6px;
-        margin: 0 1px;
-        font-size: 12px;
-      }
-
-      #bluetooth.connected {
-        color: #d77757; /* Claude's terracotta when connected */
-        background-color: rgba(215, 119, 87, 0.08);
-      }
-
-      #bluetooth.disabled, #bluetooth.off {
-        color: #525152; /* Claude's dark gray for disabled */
-        background-color: rgba(82, 81, 82, 0.08);
-      }
-
-      /* Apply Bluetooth-style rounded borders to all modules */
-      #pulseaudio, #network, #custom-nix-shell, #custom-git-status,
-      #cpu, #memory, #temperature, #battery, #clock, #tray {
-        background-color: rgba(26, 25, 21, 0.8); /* Claude's darker background */
-        border-radius: 6px;
-        margin: 0 2px;
-        border: 1px solid rgba(215, 119, 87, 0.6); /* More visible Claude terracotta border */
-        transition: all 0.3s ease;
-      }
-
-      /* Apply consistent hover effects to all modules */
-      #pulseaudio:hover, #network:hover, #custom-nix-shell:hover,
-      #custom-git-status:hover, #cpu:hover, #memory:hover,
-      #temperature:hover, #battery:hover, #clock:hover, #tray:hover {
-        background-color: rgba(215, 119, 87, 0.2); /* Claude terracotta on hover */
-        border-color: #d77757;
-        box-shadow: 0 4px 12px rgba(215, 119, 87, 0.4), 0 2px 6px rgba(215, 119, 87, 0.2);
-      }
-
-      @keyframes pulse-bluetooth {
-        0% {
-          border-color: #d77757;
-          box-shadow: 0 0 0 0 rgba(215, 119, 87, 0.4);
-        }
-        50% {
-          border-color: #c96442;
-          box-shadow: 0 0 0 3px rgba(215, 119, 87, 0.2);
-        }
-        100% {
-          border-color: #d77757;
-          box-shadow: 0 0 0 0 rgba(215, 119, 87, 0.4);
-        }
-      }
-
-      @keyframes pulse {
-        0% { opacity: 1; }
-        50% { opacity: 0.7; }
-        100% { opacity: 1; }
-      }
-
-      @keyframes blink {
-        to {
-          background-color: #faf9f5;
-          color: #1f1e1d;
-        }
+      #battery.charging, #battery.plugged {
+        color: #2c7a39;
       }
     '';
   };
@@ -1503,8 +1358,8 @@ in
     style.name = lib.mkForce "adwaita-dark";
   };
 
-  # Hyprpaper configuration (Claude-themed wallpaper)
-  home.file.".config/hypr/hyprpaper.conf" = lib.optionalAttrs (desktop == "hyprland") {
+  # Hyprpaper configuration (Claude-themed wallpaper) - only for Hyprland
+  home.file.".config/hypr/hyprpaper.conf" = lib.mkIf (desktop == "hyprland") {
     text = ''
       preload = /home/tom/Pictures/Wallpapers/astro.png
       wallpaper = ,/home/tom/Pictures/Wallpapers/astro.png
@@ -1540,14 +1395,12 @@ in
     '';
   };
 
-  # Hyprlock configuration (Claude-themed screen lock)
-  home.file.".config/hypr/hyprlock.conf" = lib.optionalAttrs (desktop == "hyprland") {
+  # Hyprlock configuration (Claude-themed screen lock) - only for Hyprland
+  home.file.".config/hypr/hyprlock.conf" = lib.mkIf (desktop == "hyprland") {
     text = ''
       general {
-        disable_loading_bar = true
         grace = 300
         hide_cursor = true
-        no_fade_in = false
       }
 
       background {
@@ -1581,7 +1434,6 @@ in
         check_color = rgb(2c7a39)  # Claude's success green
         fail_color = rgb(ab2b3f)   # Claude's error red
         fail_text = <i>$FAIL <b>($ATTEMPTS)</b></i>
-        fail_transition = 300
         capslock_color = rgb(966c1e)  # Claude's warning amber
         numlock_color = -1
         bothlock_color = -1
@@ -1617,6 +1469,75 @@ in
         position = 0, 160
         halign = center
         valign = center
+      }
+    '';
+  };
+
+  # Manual wlogout configuration with Claude theming
+  programs.wlogout = lib.optionalAttrs (desktop == "hyprland") {
+    enable = true;
+    style = ''
+      * {
+        background-image: none;
+        font-family: "Inter Nerd Font";
+        font-size: 20px;
+      }
+
+      window {
+        background-color: rgba(26, 25, 21, 0.95);
+      }
+
+      button {
+        color: #faf9f5;
+        background-color: rgba(31, 30, 29, 0.9);
+        border: 2px solid rgba(215, 119, 87, 0.6);
+        border-radius: 20px;
+        margin: 20px;
+        padding: 20px;
+        transition: all 0.3s ease;
+        outline-style: none;
+        min-width: 200px;
+        min-height: 200px;
+      }
+
+      button:hover {
+        background-color: rgba(215, 119, 87, 0.15);
+        border-color: #d77757;
+      }
+
+      button:focus {
+        background-color: rgba(215, 119, 87, 0.25);
+        border-color: #d77757;
+        box-shadow: 0 0 20px rgba(215, 119, 87, 0.4);
+      }
+
+      label {
+        margin-top: 10px;
+        font-weight: bold;
+      }
+
+      #lock {
+        color: #7fc8ff;
+      }
+
+      #logout {
+        color: #966c1e;
+      }
+
+      #suspend {
+        color: #c96442;
+      }
+
+      #hibernate {
+        color: #5a9fd4;
+      }
+
+      #shutdown {
+        color: #ab2b3f;
+      }
+
+      #reboot {
+        color: #2c7a39;
       }
     '';
   };

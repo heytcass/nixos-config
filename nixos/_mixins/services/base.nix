@@ -300,18 +300,11 @@
   # Real-time kit for audio
   security.rtkit.enable = true;
 
-  # Modern Rust-based secret service daemon
-  systemd.user.services.oo7-daemon = lib.mkIf (!isISO) {
-    enable = true;
-    description = "Secret service (oo7 implementation)";
-    wantedBy = [ "default.target" ];
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = "${pkgs.oo7-server}/libexec/oo7-daemon";
-      Restart = "on-failure";
-      StandardError = "journal";
-    };
-  };
+  # GNOME keyring for secure credential storage
+  services.gnome.gnome-keyring.enable = lib.mkIf (!isISO) true;
+
+  # PAM integration for automatic keyring unlock
+  security.pam.services.login.enableGnomeKeyring = lib.mkIf (!isISO) true;
 
   # System fonts (shared across all desktop environments)
   fonts.packages = with pkgs; [
@@ -342,9 +335,9 @@
       solaar
 
       # Desktop applications
-      notion-app-enhanced
+      tangram # Web app wrapper for Notion and other web apps
 
-      # Modern Rust-based secret service
-      oo7-server
+      # Keyring management (GNOME keyring is enabled as service)
+      seahorse # GUI keyring manager
     ];
 }

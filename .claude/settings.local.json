@@ -122,7 +122,9 @@
       "Bash(nix-shell:*)",
       "Bash(timeout 30 nix eval:*)",
       "Bash(env)",
-      "Bash(dmesg:*)"
+      "Bash(dmesg:*)",
+      "Bash(dbus-send:*)",
+      "Bash(awk:*)"
     ],
     "deny": []
   },
