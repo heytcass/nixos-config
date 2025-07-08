@@ -124,7 +124,8 @@
       "Bash(env)",
       "Bash(dmesg:*)",
       "Bash(dbus-send:*)",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "Bash(gh run download:*)"
     ],
     "deny": []
   },

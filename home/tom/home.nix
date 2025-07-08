@@ -727,7 +727,7 @@ in
   };
 
   # Waybar configuration with Claude theme
-  programs.waybar = lib.optionalAttrs (desktop == "hyprland") {
+  programs.waybar = lib.mkIf (desktop == "hyprland") {
     enable = true;
     settings = {
       mainBar = {
@@ -1014,7 +1014,7 @@ in
   };
 
   # Wofi launcher configuration with Claude theme
-  programs.wofi = lib.optionalAttrs (desktop == "hyprland") {
+  programs.wofi = lib.mkIf (desktop == "hyprland") {
     enable = true;
     settings = {
       width = 600;
@@ -1473,8 +1473,8 @@ in
     '';
   };
 
-  # Manual wlogout configuration with Claude theming
-  programs.wlogout = lib.optionalAttrs (desktop == "hyprland") {
+  # Manual wlogout configuration with Claude theming - only for Hyprland
+  programs.wlogout = lib.mkIf (desktop == "hyprland") {
     enable = true;
     style = ''
       * {
