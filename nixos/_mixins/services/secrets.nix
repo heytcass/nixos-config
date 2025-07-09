@@ -56,6 +56,22 @@
         "user_password_hash" = {
           neededForUsers = true;
         };
+
+        # Home Assistant token - for MCP server integration
+        "home_assistant_token" = {
+          owner = "tom";
+          group = "users";
+          mode = "0400";
+          path = "/run/secrets/home_assistant_token";
+        };
+
+        # Obsidian API key - for MCP server integration
+        "obsidian_api_key" = {
+          owner = "tom";
+          group = "users";
+          mode = "0400";
+          path = "/run/secrets/obsidian_api_key";
+        };
       };
     };
   };

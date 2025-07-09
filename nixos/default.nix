@@ -26,6 +26,9 @@
 
       # Import Tailscale networking
       ./_mixins/services/tailscale.nix
+
+      # Import Claude MCP server configuration
+      ./_mixins/services/claude-mcp.nix
     ]
     ++ lib.optionals (!isISO) [
       # Import secrets management (only for non-ISO systems)

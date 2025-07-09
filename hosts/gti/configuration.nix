@@ -16,4 +16,11 @@
 
   # Host-specific overrides can go here
   # Most configuration is now handled by the mixin system
+
+  # Claude MCP server configuration
+  services.claude-mcp = {
+    enable = true;
+    user = "tom";
+    vaultPath = "/home/tom/Documents/Personal Vault";
+  };
 }
