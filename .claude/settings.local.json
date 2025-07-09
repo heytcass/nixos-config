@@ -125,7 +125,16 @@
       "Bash(dmesg:*)",
       "Bash(dbus-send:*)",
       "Bash(awk:*)",
-      "Bash(gh run download:*)"
+      "Bash(gh run download:*)",
+      "Bash(/tmp/fix_claude_config.sh:*)",
+      "Bash(npx -y @smithery/cli@latest run mcp-obsidian --config '{\"\"vaultPath\"\":\"\"/home/tom/Documents/Personal Vault\"\"}')",
+      "Bash(npx -y @smithery/cli@latest run mcp-obsidian --help)",
+      "Bash(npx -y obsidian-mcp-server@latest:*)",
+      "Bash(npx:*)",
+      "Bash(timeout 10 npx -y mcp-obsidian@latest \"/home/tom/Documents/Personal Vault\")",
+      "Bash(timeout 10 npx:*)",
+      "WebFetch(domain:git.eisfunke.com)",
+      "Bash(timeout:*)"
     ],
     "deny": []
   },

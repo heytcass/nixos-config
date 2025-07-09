@@ -70,6 +70,9 @@ in
       vscode
       starship # Cross-shell prompt
 
+      # Icon theming
+      papirus-folders # Tool to change Papirus folder colors
+
       # Modern command-line tools
       bat # Better cat with syntax highlighting
       eza # Modern ls with colors and icons
@@ -1115,11 +1118,6 @@ in
     iconTheme = {
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;
-    };
-    cursorTheme = {
-      name = "Bibata-Modern-Classic";
-      package = pkgs.bibata-cursors;
-      size = 24;
     };
     gtk3.extraConfig = {
       gtk-application-prefer-dark-theme = 1;

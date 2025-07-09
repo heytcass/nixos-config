@@ -337,6 +337,11 @@
       # Desktop applications
       obsidian
 
+      # Development tools
+      nodejs
+      nodePackages.npm
+      tmux
+
       # Keyring management (GNOME keyring is enabled as service)
       seahorse # GUI keyring manager
     ];
