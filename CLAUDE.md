@@ -18,6 +18,36 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Garbage collect**: `sudo nix-collect-garbage -d` (remove old generations)
 - **List generations**: `sudo nix-env -p /nix/var/nix/profiles/system --list-generations`
 
+### Git Workflow and Committing Changes
+
+**IMPORTANT**: When asked to commit and push changes, use one of these workflows to avoid duplicate commits from pre-commit hooks:
+
+#### Option 1: Recommended for Most Cases
+```bash
+git add .
+git commit -m "Commit message"
+git push
+```
+
+#### Option 2: For Only Modified Files (no new files)
+```bash
+git commit -am "Commit message"
+git push
+```
+
+#### Option 3: Using the Helper Script
+```bash
+./scripts/git-commit-clean.sh "Commit message"
+git push
+```
+
+**Key Points**:
+- Pre-commit hooks automatically format and lint files, which can create unstaged changes
+- `git commit -am` only stages **tracked** files, not new files
+- `git add .` stages everything (new and modified files)
+- Always check `git status` to verify clean state after commit
+- The helper script handles formatting before commit to avoid hook conflicts
+
 ### Configuration Structure
 This is a sophisticated modular flake-based NixOS configuration with an **intelligent mixin system** supporting multiple hosts with advanced conditional feature loading.
 
@@ -29,6 +59,7 @@ This is a sophisticated modular flake-based NixOS configuration with an **intell
   - `services/base.nix` - Core system configuration with performance optimizations and conditional loading
   - `services/stylix.nix` - Unified theming system with Claude-inspired color scheme
   - `services/secrets.nix` - SOPS-nix integration for secure secrets management
+  - `services/claude-mcp.nix` - Declarative Claude MCP server configuration with SOPS integration
   - `desktop/` - Multiple desktop environments (GNOME, Hyprland, Niri) with conditional loading
   - `features/development.nix` - Development tools including Claude Desktop integration
   - `features/gaming.nix` - Gaming stack (workstation only with automatic detection)
@@ -41,6 +72,7 @@ This is a sophisticated modular flake-based NixOS configuration with an **intell
 - `home/tom/home.nix` - Comprehensive Home Manager configuration with desktop-conditional features
 - `overlays/` - Package customizations and ISO optimizations
 - `secrets/` - SOPS-encrypted secrets with age-based encryption
+- `scripts/` - Helper scripts for deployment and maintenance
 
 **Advanced Mixin System Benefits:**
 - **Multi-Level Conditional Loading**: Features load based on system type (workstation/laptop/ISO), desktop choice (Hyprland/Niri/GNOME), and host-specific needs
@@ -75,6 +107,22 @@ This is a sophisticated modular flake-based NixOS configuration with an **intell
 - **gti**: Hyprland wayland compositor with gaming optimizations
 - **transporter**: Niri scrollable-tiling compositor for productivity
 - **iso**: No desktop environment - terminal-only minimal setup
+
+## Claude MCP Server Integration
+
+### Configuration
+- **Declarative management**: `nixos/_mixins/services/claude-mcp.nix`
+- **SOPS integration**: Secrets encrypted and automatically injected
+- **Single source of truth**: NixOS module generates Claude Desktop config
+- **Current servers**: Home Assistant MCP and NixOS MCP only
+- **File system access**: Uses Claude's built-in filesystem extension (no separate MCP server needed)
+
+### Workflow
+1. **Modify**: Edit `nixos/_mixins/services/claude-mcp.nix` for server changes
+2. **Rebuild**: Run `sudo nixos-rebuild switch --flake .#<hostname>`
+3. **Auto-generation**: Config file created with secrets from SOPS
+
+**Security**: All MCP server secrets (Home Assistant token, etc.) are SOPS-encrypted and never stored in plaintext in the repository.
 
 ## Shell and CLI Environment
 
@@ -201,7 +249,8 @@ This is a sophisticated modular flake-based NixOS configuration with an **intell
 │   │   ├── users.nix            # User account configuration
 │   │   ├── tailscale.nix        # Tailscale VPN service
 │   │   ├── secrets.nix          # SOPS secrets management
-│   │   └── stylix.nix           # Unified theming system
+│   │   ├── stylix.nix           # Unified theming system
+│   │   └── claude-mcp.nix       # Claude MCP server configuration
 │   ├── features/                # Optional features
 │   │   ├── development.nix      # Development tools and environment
 │   │   ├── gaming.nix           # Gaming-specific packages and settings
@@ -224,6 +273,13 @@ This is a sophisticated modular flake-based NixOS configuration with an **intell
 │   ├── secrets.yaml            # Encrypted secrets storage
 │   └── README.md               # Secrets management documentation
 ├── scripts/                     # Deployment and utility scripts
+│   └── git-commit-clean.sh      # Automated formatting and commit script
 ├── CLAUDE.md                    # This file
 └── README.md                    # Project documentation
 ```
+
+# important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
