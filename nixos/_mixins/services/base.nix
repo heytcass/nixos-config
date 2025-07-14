@@ -336,11 +336,15 @@
 
       # Desktop applications
       obsidian
+      gnome-calculator # Simple calculator app
+      gedit # GNOME text editor
 
       # Development tools
-      nodejs
-      nodePackages.npm
       tmux
+      
+      # Archive tools
+      ouch # Modern Rust-based archive tool (zip, tar, gzip, etc.)
+      file-roller # GUI archive manager for file managers
 
       # Keyring management (GNOME keyring is enabled as service)
       seahorse # GUI keyring manager

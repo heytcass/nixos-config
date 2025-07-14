@@ -8,6 +8,9 @@
 }:
 
 {
+  imports = [
+    ./wayland-common.nix
+  ];
   # Hyprland window manager
   programs.hyprland = {
     enable = true;
@@ -17,7 +20,7 @@
 
   # Environment configuration consolidated
   environment = {
-    # Essential Wayland packages for modern desktop experience
+    # Hyprland-specific packages (common Wayland tools provided by wayland-common.nix)
     systemPackages = with pkgs; [
       # Official Hyprland ecosystem tools (from nixpkgs)
       hyprpaper # Official wallpaper utility
@@ -25,31 +28,6 @@
       hyprlock # GPU-accelerated screen locker
       hypridle # Official idle management
       hyprsunset # Blue light filter
-
-      # Modern Wayland-native tools
-      wofi # Rust-based launcher (replaces rofi)
-      waybar # Modern status bar
-      swaynotificationcenter # Modern notification center
-      grim # Screenshot tool
-      slurp # Area selection for screenshots
-      wl-clipboard # Wayland clipboard utilities
-      wlr-randr # Display configuration
-      kanshi # Dynamic display configuration
-
-      # File management and media
-      xfce.thunar # Lightweight file manager (Hyprland-only)
-      xfce.thunar-volman # Volume management for thunar
-      xfce.tumbler # Thumbnail support for thunar
-      imv # Wayland-native image viewer
-      mpv # Video player with Wayland support
-
-      # System utilities
-      brightnessctl # Brightness control
-      playerctl # Media player control
-      pavucontrol # PulseAudio/PipeWire volume control
-
-      # Development and terminal tools
-      wev # Wayland event viewer (for debugging)
     ];
 
     # Environment variables for Wayland

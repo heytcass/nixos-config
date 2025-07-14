@@ -18,6 +18,9 @@
       # Import Stylix theming
       ./_mixins/services/stylix.nix
 
+      # Import Matugen Material You color generation
+      ./_mixins/services/matugen.nix
+
       # Import development tools for all systems
       ./_mixins/features/development.nix
 

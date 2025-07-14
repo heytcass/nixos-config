@@ -134,7 +134,11 @@
       "Bash(timeout 10 npx -y mcp-obsidian@latest \"/home/tom/Documents/Personal Vault\")",
       "Bash(timeout 10 npx:*)",
       "WebFetch(domain:git.eisfunke.com)",
-      "Bash(timeout:*)"
+      "Bash(timeout:*)",
+      "Bash(nix store:*)",
+      "Bash(mv:*)",
+      "Bash(cp:*)",
+      "WebFetch(domain:claude.ai)"
     ],
     "deny": []
   },

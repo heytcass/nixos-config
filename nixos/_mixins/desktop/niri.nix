@@ -8,42 +8,22 @@
 }:
 
 {
+  imports = [
+    ./wayland-common.nix
+  ];
   # Environment configuration
   environment = {
-    # Install Niri package from flake plus supporting packages
-    systemPackages =
-      [
-        inputs.niri.packages.${pkgs.system}.niri
-      ]
-      ++ (with pkgs; [
-        # Modern Wayland-native tools (same as Hyprland)
-        wofi # Rust-based launcher (replaces rofi)
-        waybar # Modern status bar
-        swaylock-effects # Screen locker with effects
-        swaynotificationcenter # Modern notification center
-        grim # Screenshot tool
-        slurp # Area selection for screenshots
-        wl-clipboard # Wayland clipboard utilities
-        swayidle # Idle management daemon
-        swaybg # Wallpaper daemon
-        wlr-randr # Display configuration
-        kanshi # Dynamic display configuration
-
-        # File management and media
-        xfce.thunar # Lightweight file manager
-        xfce.thunar-volman # Volume management for thunar
-        xfce.tumbler # Thumbnail support for thunar
-        imv # Wayland-native image viewer
-        mpv # Video player with Wayland support
-
-        # System utilities
-        brightnessctl # Brightness control
-        playerctl # Media player control
-        pavucontrol # PulseAudio/PipeWire volume control
-
-        # Development and terminal tools
-        wev # Wayland event viewer (for debugging)
-      ]);
+    # Niri-specific packages (common Wayland tools provided by wayland-common.nix)
+    systemPackages = with pkgs; [
+      # Niri compositor from flake
+      inputs.niri.packages.${pkgs.system}.niri
+      
+      # Sway-specific tools for Niri
+      swaylock-effects # Screen locker with effects
+      swayidle # Idle management daemon
+      swaybg # Wallpaper daemon
+      wlsunset # Manual blue light filter control
+    ];
 
     # Niri configuration
     etc."niri/config.kdl".text = ''

@@ -59,6 +59,12 @@
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Matugen for Material You color generation
+    matugen = {
+      url = "github:InioX/matugen";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -81,56 +87,59 @@
       overlays = import ./overlays { inherit inputs; };
 
       # NixOS configurations using helper functions
-      nixosConfigurations = {
-        # Workstation with gaming (Dell XPS 13 9370)
-        gti = helper.mkNixOS {
-          hostname = "gti";
-          desktop = "hyprland";
-          modules = [
-            # Dell XPS 13 9370 hardware support
-            nixos-hardware.nixosModules.dell-xps-13-9370
-          ];
-        };
+      nixosConfigurations = 
+        let
+          hostConfigs = {
+            # Workstation with gaming (Dell XPS 13 9370)
+            gti = {
+              desktop = "hyprland";
+              modules = [
+                nixos-hardware.nixosModules.dell-xps-13-9370
+              ];
+            };
 
-        # Laptop without gaming (Dell Latitude 7280) - with disko
-        transporter = helper.mkNixOS {
-          hostname = "transporter";
-          desktop = "niri";
-          modules = [
-            # Dell Latitude 7280 hardware support
-            nixos-hardware.nixosModules.dell-latitude-7280
+            # Laptop without gaming (Dell Latitude 7280) - with disko
+            transporter = {
+              desktop = "niri";
+              modules = [
+                nixos-hardware.nixosModules.dell-latitude-7280
+                disko.nixosModules.disko
+                ./hosts/transporter/disko-config.nix
+              ];
+            };
 
-            # Disko module - must be imported before configuration
-            disko.nixosModules.disko
-            ./hosts/transporter/disko-config.nix
-          ];
-        };
-
-        # Live ISO configuration
-        iso = helper.mkNixOS {
-          hostname = "iso";
-          modules = [
-            # Apply ISO-specific overlays
-            (_: {
-              nixpkgs.overlays = [ outputs.overlays.iso-optimizations ];
-            })
-          ];
-        };
-      };
+            # Live ISO configuration
+            iso = {
+              desktop = null;
+              modules = [
+                (_: {
+                  nixpkgs.overlays = [ outputs.overlays.iso-optimizations ];
+                })
+              ];
+            };
+          };
+        in
+        builtins.mapAttrs (hostname: config: 
+          helper.mkNixOS ({
+            inherit hostname;
+            inherit (config) desktop modules;
+          })
+        ) hostConfigs;
 
       # Home Manager configurations (for potential standalone use)
-      homeConfigurations = {
-        "tom@gti" = helper.mkHome {
-          hostname = "gti";
-          username = "tom";
-          desktop = "hyprland";
-        };
-        "tom@transporter" = helper.mkHome {
-          hostname = "transporter";
-          username = "tom";
-          desktop = "niri";
-        };
-      };
+      homeConfigurations = 
+        let
+          homeConfigs = {
+            "tom@gti" = { hostname = "gti"; desktop = "hyprland"; };
+            "tom@transporter" = { hostname = "transporter"; desktop = "niri"; };
+          };
+        in
+        builtins.mapAttrs (userHost: config:
+          helper.mkHome ({
+            username = "tom";
+            inherit (config) hostname desktop;
+          })
+        ) homeConfigs;
 
       # Development shells for working on the configuration
       devShells = helper.forAllSystems (system: {

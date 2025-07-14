@@ -21,6 +21,10 @@
     micro
     yubikey-manager
 
+    # Node.js development environment
+    nodejs
+    nodePackages.npm
+
     # Binary cache tools
     cachix
 

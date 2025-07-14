@@ -69,6 +69,9 @@ in
       gh
       vscode
       starship # Cross-shell prompt
+      
+      # Material You color generation
+      inputs.matugen.packages.${pkgs.system}.default
 
       # Icon theming
       papirus-folders # Tool to change Papirus folder colors
@@ -129,11 +132,9 @@ in
       // lib.optionalAttrs (desktop == "hyprland") {
         # Force dark theme for applications
         GTK_THEME = "Adwaita:dark";
-        QT_STYLE_OVERRIDE = "adwaita-dark";
+        QT_STYLE_OVERRIDE = lib.mkForce "adwaita-dark";
 
-        # Cursor theme
-        XCURSOR_THEME = "Bibata-Modern-Classic";
-        XCURSOR_SIZE = "24";
+        # Cursor theme managed by Stylix
 
         # Claude-themed terminal colors for applications that support it
         CLAUDE_BRAND_COLOR = "#d77757";
@@ -144,6 +145,24 @@ in
 
   # Services
   services.ssh-agent.enable = true;
+  
+  # Automatic circadian rhythm screen temperature control
+  services.gammastep = {
+    enable = true;
+    provider = "manual";
+    latitude = 42.69121049601569;
+    longitude = -83.15813907911111;
+    temperature = {
+      day = 6500;    # Cool daylight temperature
+      night = 3000;  # Warm evening temperature
+    };
+    settings = {
+      general = {
+        adjustment-method = "wayland";
+        gamma = 0.8;
+      };
+    };
+  };
 
   # Configure Papirus folder colors to match terracotta theme
   home.activation.configurePapirusFolders = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -175,6 +194,7 @@ in
     "application/x-terminal-emulator" = "ghostty.desktop";
     "x-scheme-handler/terminal" = "ghostty.desktop";
   };
+
 
   # Program configurations
   programs = {
@@ -492,13 +512,15 @@ in
         inputs.hyprland-plugins.packages.${pkgs.system}.hyprexpo
       ];
       settings = {
-        # Monitor configuration for USB dock setup
+        # Monitor configuration for multiple dock setups
         monitor = [
-          # Laptop screen (eDP-1) - right side, workspace 2
-          "eDP-1,1920x1080@60,1920x0,1"
-          # Left Dell monitor (DP-3) - main screen, workspace 1
+          # Laptop screen (eDP-1) - left side, workspace 2
+          "eDP-1,1920x1080@60,0x0,1"
+          # Primary desk Dell monitor (DP-2) - right side, 325px higher, workspace 1
+          "DP-2,1920x1080@60,1920x-325,1"
+          # Secondary desk - Left Dell monitor (DP-3) - main screen, workspace 1
           "DP-3,1920x1080@60,0x0,1"
-          # Right Dell monitor (DP-4) - rotated 90° right, workspace 3
+          # Secondary desk - Right Dell monitor (DP-4) - rotated 90° right, workspace 3
           "DP-4,1920x1080@60,3840x0,1,transform,3"
         ];
 
@@ -518,8 +540,8 @@ in
         # General settings with Claude theme
         general = {
           # Claude's signature terracotta for borders and accents
-          "col.active_border" = "rgb(d97757) rgb(c96442) 45deg";
-          "col.inactive_border" = "rgb(30302e)";
+          "col.active_border" = lib.mkForce "rgb(d97757) rgb(c96442) 45deg";
+          "col.inactive_border" = lib.mkForce "rgb(30302e)";
 
           # Dark theme with Claude's refined spacing
           border_size = 2;
@@ -537,12 +559,9 @@ in
           # Subtle rounding matching Claude's modern design
           rounding = 8;
 
-          # Claude's shadow system (updated for 0.49.0) - disabled to prevent waybar interference
+          # Shadows disabled to prevent waybar interference
           shadow = {
             enabled = false;
-            range = 12;
-            render_power = 3;
-            color = "0x991f1e1d"; # Claude's dark background with opacity
           };
 
           # Blur settings with Claude's refined aesthetic
@@ -589,11 +608,17 @@ in
           workspace_swipe_create_new = true;
         };
 
+        # Misc settings
+        misc = {
+          disable_hyprland_logo = true; # Disable default wallpaper flash
+          disable_splash_rendering = true; # Disable splash screen
+        };
+
         # Hyprexpo plugin configuration
         plugin.hyprexpo = {
           columns = 3;
           gap_size = 5;
-          bg_col = "rgb(1f1e1d)";
+          bg_col = "rgb(262624)"; # Match Claude's dark mode background
           workspace_method = "center current";
           enable_gesture = true;
           gesture_fingers = 3;
@@ -611,11 +636,7 @@ in
           "6, border_color:rgb(006666)" # Plan mode workspace (planning/design)
         ];
 
-        # Cursor configuration for Hyprland
-        env = [
-          "XCURSOR_THEME,Bibata-Modern-Classic"
-          "XCURSOR_SIZE,24"
-        ];
+        # Cursor configuration managed by Stylix
 
         # Window rules with Claude theme colors for installed packages
         windowrulev2 = [
@@ -718,11 +739,10 @@ in
 
         # Startup applications with Claude theme integration
         "exec-once" = [
+          "hyprpaper" # Start wallpaper first to prevent flash
           "waybar"
           "swaync"
           "hypridle"
-          "hyprpaper"
-          "hyprsunset -t 4500" # Warm color temperature matching Claude's terracotta theme
         ];
 
       };
@@ -936,6 +956,12 @@ in
 
     # Stylix base + selective Claude terracotta accents
     style = ''
+      /* Waybar Inter font override */
+      * {
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+      }
+
       /* Claude signature terracotta border */
       window#waybar {
         border-bottom: 2px solid #d77757;
@@ -1108,263 +1134,22 @@ in
     '';
   };
 
-  # GTK theme configuration with Claude dark theme customization (override Stylix)
+  # GTK theme configuration - let Stylix handle base theme
   gtk = lib.optionalAttrs (desktop == "hyprland") {
     enable = true;
-    theme = {
-      name = lib.mkForce "Adwaita-dark";
-      package = lib.mkForce pkgs.gnome-themes-extra;
-    };
     iconTheme = {
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;
     };
-    gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = 1;
-    };
-    gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = 1;
-    };
-
-    # Custom Claude-themed CSS for GTK3
-    gtk3.extraCss = ''
-      /* Claude Dark Theme Colors */
-      @define-color claude_primary #c15f3c;        /* Claude's Crail terra cotta */
-      @define-color claude_secondary #b1ada1;      /* Claude's Cloudy gray */
-      @define-color claude_light_bg #f4f3ee;       /* Claude's Pampas light */
-      @define-color claude_dark_bg #2a2a2a;        /* Dark background */
-      @define-color claude_darker_bg #1e1e1e;      /* Darker background */
-      @define-color claude_text_light #f4f3ee;     /* Light text on dark */
-      @define-color claude_text_dark #1a1915;      /* Dark text on light */
-      @define-color claude_accent_hover #d77757;   /* Lighter terra cotta for hover */
-      @define-color claude_accent_active #a54d2c;  /* Darker terra cotta for active */
-      @define-color claude_border #3e3e38;         /* Border color */
-
-      /* Override accent colors with Claude theme */
-      @define-color accent_color @claude_primary;
-      @define-color accent_bg_color @claude_primary;
-      @define-color accent_fg_color @claude_text_light;
-
-      /* Button styling with Claude colors */
-      button {
-        border: 1px solid @claude_border;
-      }
-
-      button.suggested-action {
-        background-image: linear-gradient(@claude_primary, @claude_accent_active);
-        border-color: @claude_accent_active;
-        color: @claude_text_light;
-      }
-
-      button.suggested-action:hover {
-        background-image: linear-gradient(@claude_accent_hover, @claude_primary);
-        border-color: @claude_primary;
-      }
-
-      button.suggested-action:active {
-        background-image: linear-gradient(@claude_accent_active, shade(@claude_accent_active, 0.8));
-        border-color: @claude_accent_active;
-      }
-
-      /* Selection and highlighting */
-      selection,
-      *:selected {
-        background-color: @claude_primary;
-        color: @claude_text_light;
-      }
-
-      /* Text input focus styling */
-      entry:focus,
-      textview:focus {
-        border-color: @claude_primary;
-        box-shadow: 0 0 0 1px @claude_primary;
-      }
-
-      /* Scrollbars with Claude theme */
-      scrollbar slider {
-        background-color: @claude_secondary;
-      }
-
-      scrollbar slider:hover {
-        background-color: @claude_primary;
-      }
-
-      /* Menu item highlighting */
-      menuitem:hover {
-        background-color: @claude_primary;
-        color: @claude_text_light;
-      }
-
-      /* Headerbar with Claude accents */
-      headerbar {
-        border-bottom: 1px solid @claude_border;
-      }
-
-      headerbar button.suggested-action {
-        background-image: linear-gradient(@claude_primary, @claude_accent_active);
-        border-color: @claude_accent_active;
-        color: @claude_text_light;
-      }
-
-      /* Switch control with Claude colors */
-      switch:checked {
-        background-color: @claude_primary;
-        color: @claude_text_light;
-      }
-
-      /* Progress bars */
-      progressbar progress {
-        background-color: @claude_primary;
-      }
-
-      /* Links */
-      link,
-      link:link {
-        color: @claude_primary;
-      }
-
-      link:visited {
-        color: @claude_secondary;
-      }
-
-      link:hover {
-        color: @claude_accent_hover;
-      }
-    '';
-
-    # Custom Claude-themed CSS for GTK4
-    gtk4.extraCss = ''
-      /* Claude Dark Theme Colors for GTK4 */
-      @define-color claude_primary #c15f3c;        /* Claude's Crail terra cotta */
-      @define-color claude_secondary #b1ada1;      /* Claude's Cloudy gray */
-      @define-color claude_light_bg #f4f3ee;       /* Claude's Pampas light */
-      @define-color claude_dark_bg #2a2a2a;        /* Dark background */
-      @define-color claude_darker_bg #1e1e1e;      /* Darker background */
-      @define-color claude_text_light #f4f3ee;     /* Light text on dark */
-      @define-color claude_text_dark #1a1915;      /* Dark text on light */
-      @define-color claude_accent_hover #d77757;   /* Lighter terra cotta for hover */
-      @define-color claude_accent_active #a54d2c;  /* Darker terra cotta for active */
-      @define-color claude_border #3e3e38;         /* Border color */
-
-      /* Override accent colors with Claude theme */
-      @define-color accent_color @claude_primary;
-      @define-color accent_bg_color @claude_primary;
-      @define-color accent_fg_color @claude_text_light;
-
-      /* Button styling with Claude colors */
-      .suggested-action {
-        background: @claude_primary;
-        border-color: @claude_accent_active;
-        color: @claude_text_light;
-      }
-
-      .suggested-action:hover {
-        background: @claude_accent_hover;
-        border-color: @claude_primary;
-      }
-
-      .suggested-action:active {
-        background: @claude_accent_active;
-        border-color: @claude_accent_active;
-      }
-
-      /* Selection and highlighting */
-      selection {
-        background-color: @claude_primary;
-        color: @claude_text_light;
-      }
-
-      /* Text input focus styling */
-      entry:focus-within {
-        border-color: @claude_primary;
-        outline-color: @claude_primary;
-      }
-
-      /* Scrollbars with Claude theme */
-      scrollbar slider {
-        background-color: @claude_secondary;
-      }
-
-      scrollbar slider:hover {
-        background-color: @claude_primary;
-      }
-
-      /* Menu item highlighting */
-      popover.menu menuitem:hover {
-        background-color: @claude_primary;
-        color: @claude_text_light;
-      }
-
-      /* Headerbar with Claude accents */
-      headerbar {
-        border-bottom: 1px solid @claude_border;
-      }
-
-      headerbar .suggested-action {
-        background: @claude_primary;
-        border-color: @claude_accent_active;
-        color: @claude_text_light;
-      }
-
-      /* Switch control with Claude colors */
-      switch:checked {
-        background-color: @claude_primary;
-        color: @claude_text_light;
-      }
-
-      /* Progress bars */
-      progressbar > trough > progress {
-        background-color: @claude_primary;
-      }
-
-      /* Links */
-      link {
-        color: @claude_primary;
-      }
-
-      link:visited {
-        color: @claude_secondary;
-      }
-
-      link:hover {
-        color: @claude_accent_hover;
-      }
-
-      /* Tabs */
-      tabbox > tablist > tab:checked {
-        background-color: @claude_primary;
-        color: @claude_text_light;
-      }
-
-      /* Check and radio buttons */
-      checkbutton:checked,
-      radiobutton:checked {
-        color: @claude_primary;
-      }
-
-      /* Spinner and loading indicators */
-      spinner {
-        color: @claude_primary;
-      }
-    '';
   };
 
-  # Qt theme configuration to match GTK (override Stylix)
+
+  # Qt theme configuration - let Stylix handle theming
   qt = lib.optionalAttrs (desktop == "hyprland") {
     enable = true;
-    platformTheme.name = lib.mkForce "adwaita";
-    style.name = lib.mkForce "adwaita-dark";
   };
 
-  # Hyprpaper configuration (Claude-themed wallpaper) - only for Hyprland
-  home.file.".config/hypr/hyprpaper.conf" = lib.mkIf (desktop == "hyprland") {
-    text = ''
-      preload = /home/tom/Pictures/Wallpapers/astro.png
-      wallpaper = ,/home/tom/Pictures/Wallpapers/astro.png
-      splash = false
-      ipc = on
-    '';
-  };
+  # Hyprpaper configuration now managed by Stylix autoEnable
 
   # Hypridle configuration (idle management) - only for Hyprland
   home.file.".config/hypr/hypridle.conf" = lib.mkIf (desktop == "hyprland") {
@@ -1540,42 +1325,38 @@ in
     '';
   };
 
-  # Stylix Home Manager targets (comprehensive theming for all compatible apps)
+  # Stylix Home Manager targets - let system autoEnable handle most theming
   stylix.targets = lib.optionalAttrs (desktop == "hyprland") {
-    # Terminal and shell theming
-    ghostty.enable = true;
-    fish.enable = true;
-    starship.enable = true;
-
-    # Desktop environment theming
+    # Keep essential desktop-specific theming
     waybar.enable = true;
     wofi.enable = true;
+    
+    # Terminal theming
+    ghostty.enable = true;
+    
+    # GTK CSS override to fix button text visibility
+    gtk.extraCss = ''
+      dialog button,
+      .dialog button,
+      messagedialog button,
+      window.dialog button {
+        color: #f8f7f3 !important;
+      }
+    '';
+  };
 
-    # Text editors (you have these installed)
-    vscode.enable = true; # VSCode
-    micro.enable = true; # Micro editor
-    neovim.enable = true; # Neovim (even if not directly used)
-    vim.enable = true; # Vim (even if not directly used)
 
-    # Media applications
-    mpv.enable = true; # MPV video player
-
-    # PDF viewer
-    zathura.enable = true; # PDF viewer (if you have it)
-
-    # CLI tools
-    bat.enable = true; # Enhanced cat
-
-    # System utilities
-    dunst.enable = true; # Notifications
-    mako.enable = true; # Alternative notifications
-
-    # Browsers (not available as Home Manager targets)
-    # chromium.enable = true;   # Would theme Google Chrome
-    # firefox.enable = true;    # Would theme Firefox
-
-    # Communication apps (not yet available)
-    # discord.enable = true;    # Discord target not available
+  # Hyprpaper configuration with astronaut wallpaper
+  home.file.".config/hypr/hyprpaper.conf" = lib.mkIf (desktop == "hyprland") {
+    text = ''
+      preload = /home/tom/Pictures/Wallpapers/astro.png
+      wallpaper = eDP-1,/home/tom/Pictures/Wallpapers/astro.png
+      wallpaper = DP-2,/home/tom/Pictures/Wallpapers/astro.png
+      wallpaper = DP-3,/home/tom/Pictures/Wallpapers/astro.png
+      wallpaper = DP-4,/home/tom/Pictures/Wallpapers/astro.png
+      splash = false
+      ipc = on
+    '';
   };
 
 }

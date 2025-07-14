@@ -97,11 +97,7 @@ in
       ''}
     '';
 
-    # Install required packages
-    environment.systemPackages = with pkgs; [
-      nodejs
-      nodePackages.npm
-    ];
+    # Note: Node.js and npm are provided by development.nix mixin
 
     # Create a development environment for MCP servers
     environment.shellInit = ''
