@@ -5,28 +5,18 @@
   pkgs,
   lib,
   isWorkstation,
+  isISO,
   ...
 }:
 
 {
-  # Productivity applications (conditionally loaded for workstations)
-  environment.systemPackages = lib.optionals isWorkstation (with pkgs; [
-    # Web browsers
+  # Productivity applications (conditionally loaded for workstations and laptops)
+  environment.systemPackages = lib.optionals (!isISO) (with pkgs; [
+    # Web browsers (only what was actually in original config)
     google-chrome
-    firefox
     
     # Security and password management
     bitwarden-desktop
-    
-    # Office suite
-    libreoffice
-    
-    # PDF viewer and editor
-    zathura
-    evince
-    
-    # Note-taking
-    obsidian
     
     # Development tools
     vscode

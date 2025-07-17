@@ -5,6 +5,7 @@
   pkgs,
   lib,
   isWorkstation,
+  isISO,
   ...
 }:
 
@@ -13,17 +14,8 @@
   environment.systemPackages = lib.optionals isWorkstation (with pkgs; [
     # Media consumption
     spotify
-    vlc
     
-    # Media creation
-    obs-studio
-    audacity
-    
-    # Image editing
-    gimp
-    inkscape
-    
-    # Video editing
-    kdenlive
+    # Media creation (only packages that were actually in your original config)
+    # obs-studio, audacity, gimp, inkscape, kdenlive were not in your original config
   ]);
 }

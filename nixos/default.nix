@@ -55,13 +55,16 @@
       # Import Rust utilities for non-ISO systems
       ./_mixins/features/rust-utils.nix
     ]
+    ++ lib.optionals (!isISO) [
+      # Import productivity profiles for all non-ISO systems
+      ./_mixins/features/profiles/productivity.nix
+    ]
     ++ lib.optionals isWorkstation [
       # Import gaming features only for workstations
       ./_mixins/features/gaming.nix
-      # Import productivity profiles for workstations
+      # Import communication and media profiles for workstations
       ./_mixins/features/profiles/communication.nix
       ./_mixins/features/profiles/media.nix
-      ./_mixins/features/profiles/productivity.nix
     ];
 
   # System state version - consistent across all hosts (but let ISO override)
