@@ -9,6 +9,7 @@
 
 {
   imports = [
+    ./common.nix
     ./wayland-common.nix
   ];
   # Environment configuration
@@ -29,13 +30,9 @@
     etc."niri/config.kdl".text = ''
       // Niri configuration in KDL format
 
-      // Input configuration - maintain Colemak layout
+      // Input configuration - Colemak layout set in common.nix
       input {
           keyboard {
-              xkb {
-                  layout "us"
-                  variant "colemak"
-              }
               repeat-delay 600
               repeat-rate 25
           }
@@ -196,53 +193,13 @@
       spawn-at-startup "swaybg" "-i" "~/.config/wallpaper.jpg" "-m" "fill"
     '';
 
-    # Environment variables for Wayland
+    # Niri-specific session variables
     sessionVariables = {
-      # Existing Wayland variables are already set in base.nix
+      # Existing Wayland variables are already set in base.nix and common.nix
       # Just add Niri-specific ones
       XDG_CURRENT_DESKTOP = "niri";
       XDG_SESSION_DESKTOP = "niri";
-      XDG_SESSION_TYPE = "wayland";
     };
-  };
-
-  # Services configuration
-  services = {
-    # X11 server for XWayland compatibility
-    xserver = {
-      enable = true;
-      excludePackages = [ pkgs.xterm ];
-      xkb = {
-        layout = "us";
-        variant = "colemak";
-      };
-    };
-
-    # Display manager - GDM works well with Wayland compositors
-    displayManager.gdm = {
-      enable = true;
-      wayland = true;
-    };
-
-    # Printing disabled by default (same as other desktop mixins)
-    printing.enable = false;
-  };
-
-  # Security and authentication
-  security = {
-    polkit.enable = true;
-    pam.services.swaylock = { };
-  };
-
-  # XDG Portal for proper Wayland app integration
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-      xdg-desktop-portal-wlr
-    ];
-    config.common.default = "*";
   };
 
   # Hardware acceleration is handled in base.nix

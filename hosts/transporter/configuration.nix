@@ -15,8 +15,7 @@
   networking.hostName = hostname;
 
   # Dell Latitude 7280 specific optimizations
-  # Override base Intel IOMMU setting for stability on this hardware
-  boot.kernelParams = [ "intel_iommu=off" ];
+  # (Kernel parameters moved to hardware-configuration.nix for better organization)
 
   # Btrfs maintenance and snapshots for disko setup
   services.btrfs.autoScrub = {

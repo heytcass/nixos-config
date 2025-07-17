@@ -344,8 +344,7 @@
       tmux
       
       # Archive tools
-      ouch # Modern Rust-based archive tool (zip, tar, gzip, etc.)
-      file-roller # GUI archive manager for file managers
+      ouch # Modern Rust-based archive tool (zip, tar, gzip, etc.) - replaces file-roller
 
       # Keyring management (GNOME keyring is enabled as service)
       seahorse # GUI keyring manager

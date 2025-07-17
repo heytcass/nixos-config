@@ -9,6 +9,7 @@
 
 {
   imports = [
+    ./common.nix
     ./wayland-common.nix
   ];
   # Hyprland window manager
@@ -30,53 +31,15 @@
       hyprsunset # Blue light filter
     ];
 
-    # Environment variables for Wayland
-    sessionVariables = {
-      # Existing Wayland variables are already set in base.nix
-      # Just add Hyprland-specific ones
-      WLR_NO_HARDWARE_CURSORS = "1"; # Fix cursor issues on some hardware
-      XDG_CURRENT_DESKTOP = "Hyprland";
-      XDG_SESSION_DESKTOP = "Hyprland";
-      XDG_SESSION_TYPE = "wayland";
-    };
   };
 
-  # Services configuration consolidated
-  services = {
-    # X11 server for XWayland compatibility
-    xserver = {
-      enable = true;
-      excludePackages = [ pkgs.xterm ];
-      xkb = {
-        layout = "us";
-        variant = "colemak";
-      };
-    };
-
-    # Display manager - GDM works well with Hyprland
-    displayManager.gdm = {
-      enable = true;
-      wayland = true;
-    };
-
-    # Printing disabled by default (same as GNOME mixin)
-    printing.enable = false;
-  };
-
-  # Security and authentication
-  security = {
-    polkit.enable = true;
-    pam.services.swaylock = { };
-  };
-
-  # XDG Portal for proper Wayland app integration
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-      xdg-desktop-portal-wlr
-    ];
+  # Hyprland-specific session variables
+  environment.sessionVariables = {
+    # Existing Wayland variables are already set in base.nix and common.nix
+    # Just add Hyprland-specific ones
+    WLR_NO_HARDWARE_CURSORS = "1"; # Fix cursor issues on some hardware
+    XDG_CURRENT_DESKTOP = "Hyprland";
+    XDG_SESSION_DESKTOP = "Hyprland";
   };
 
   # Hardware acceleration is handled in base.nix

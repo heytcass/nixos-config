@@ -145,6 +145,5 @@
     ],
     "deny": []
   },
-  "enableAllProjectMcpServers": true,
-  "nodeOptions": "--max-listeners=20"
+  "enableAllProjectMcpServers": true
 }

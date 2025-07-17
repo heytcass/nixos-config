@@ -67,11 +67,10 @@ in
     packages = with pkgs; [
       # Development tools
       gh
-      vscode
+      # vscode moved to productivity.nix profile
       starship # Cross-shell prompt
       
       # Material You color generation
-      inputs.matugen.packages.${pkgs.system}.default
 
       # Icon theming
       papirus-folders # Tool to change Papirus folder colors
@@ -95,23 +94,16 @@ in
       croc # Easy file transfer
       magic-wormhole-rs # Secure file sharing
 
-      # Desktop applications (moved from system config)
-      bitwarden-desktop
+      # Heavy desktop applications moved to system profiles for better organization
+      # (communication.nix, media.nix, productivity.nix)
       boatswain
-      claude-code
-      discord
-      google-chrome
-      slack
       
       # Notifications
       libnotify # For notify-send command
-      spotify
       todoist-electron
-      zoom-us
 
       # Bluetooth management tools
-      overskride # Modern GTK4 Bluetooth manager
-      bluetui # TUI Bluetooth manager for terminal use
+      overskride # Modern GTK4 Bluetooth manager - preferred over bluetui
 
       # System logout/shutdown menu
       wlogout # Wayland logout menu
@@ -797,8 +789,8 @@ in
           "hyprland/workspaces"
         ];
         modules-center = [
-          "hyprland/window"
           "custom/jasper"
+          "hyprland/window"
           "custom/nix-shell"
         ];
         modules-right = [
@@ -968,7 +960,6 @@ in
           tooltip-format-enumerate-connected = "{device_alias}\\t{device_address}";
           tooltip-format-enumerate-connected-battery = "{device_alias}\\t{device_address}\\t{device_battery_percentage}%";
           on-click = "overskride";
-          on-click-right = "bluetui";
           interval = 30;
           max-length = 25;
         };

@@ -18,8 +18,6 @@
       # Import Stylix theming
       ./_mixins/services/stylix.nix
 
-      # Import Matugen Material You color generation
-      ./_mixins/services/matugen.nix
 
       # Import development tools for all systems
       ./_mixins/features/development.nix
@@ -60,6 +58,10 @@
     ++ lib.optionals isWorkstation [
       # Import gaming features only for workstations
       ./_mixins/features/gaming.nix
+      # Import productivity profiles for workstations
+      ./_mixins/features/profiles/communication.nix
+      ./_mixins/features/profiles/media.nix
+      ./_mixins/features/profiles/productivity.nix
     ];
 
   # System state version - consistent across all hosts (but let ISO override)

@@ -7,23 +7,15 @@
 }:
 
 {
-  # Desktop Environment
-  services = {
-    desktopManager.gnome.enable = true;
-    displayManager.gdm.enable = true;
+  imports = [
+    ./common.nix
+  ];
 
-    xserver = {
-      enable = true;
-      excludePackages = [ pkgs.xterm ];
-      xkb = {
-        layout = "us";
-        variant = "colemak";
-      };
-    };
+  # GNOME-specific desktop environment configuration
+  services.desktopManager.gnome.enable = true;
 
-    # Printing (disabled by default for laptops)
-    printing.enable = false;
-  };
+  # Override common display manager config for GNOME
+  services.displayManager.gdm.wayland = false; # GNOME handles Wayland internally
 
   # GNOME customization
   environment = {

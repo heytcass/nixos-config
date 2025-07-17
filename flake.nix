@@ -60,11 +60,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Matugen for Material You color generation
-    matugen = {
-      url = "github:InioX/matugen";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     # Jasper personal AI assistant
     jasper = {
@@ -166,12 +161,10 @@
             age
 
             # Binary cache tools
-            cachix
-
-            # Rust utilities for testing
-            uutils-coreutils
-            uutils-findutils
-            sudo-rs
+            # cachix - already available in development.nix
+            
+            # Rust utilities for testing - already available in rust-utils.nix
+            # uutils-coreutils, uutils-findutils, sudo-rs
           ];
 
           shellHook = ''
@@ -189,8 +182,7 @@
             echo "  pre-commit install         # Setup git hooks"
             echo ""
             echo "🧪 Testing Rust utilities:"
-            echo "  uutils-cp, uutils-mv, etc. # Test uutils commands"
-            echo "  sudo-rs --version          # Test sudo-rs"
+            echo "  Available in system packages via rust-utils.nix"
           '';
         };
       });
