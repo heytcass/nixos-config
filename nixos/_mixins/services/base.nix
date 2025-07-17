@@ -68,7 +68,7 @@
     # Move /tmp to tmpfs for better performance (RAM-based)
     tmp = {
       useTmpfs = true;
-      tmpfsSize = "2G"; # Adjust based on your needs
+      tmpfsSize = "8G"; # Sufficient for large builds with 16GB RAM
     };
   };
 
@@ -238,6 +238,7 @@
 
     # Auto-mount USB devices
     udisks2.enable = true;
+    gvfs.enable = true;
 
     # SSD optimization - safe weekly TRIM
     fstrim.enable = lib.mkIf (!isISO) true;

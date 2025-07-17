@@ -37,8 +37,8 @@
       };
 
       sansSerif = {
-        package = pkgs.inter;
-        name = "Inter";
+        package = pkgs.inter-nerdfont;
+        name = "Inter Nerd Font";
       };
 
       serif = {

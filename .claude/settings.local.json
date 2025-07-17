@@ -138,7 +138,11 @@
       "Bash(nix store:*)",
       "Bash(mv:*)",
       "Bash(cp:*)",
-      "WebFetch(domain:claude.ai)"
+      "WebFetch(domain:claude.ai)",
+      "Bash(nix build:*)",
+      "Bash(jasper-companion-daemon:*)",
+      "Bash(home-manager switch:*)",
+      "Bash(/home/tom/git/jasper/waybar-jasper.sh:*)"
     ],
     "deny": []
   },

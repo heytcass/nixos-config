@@ -19,6 +19,7 @@
     xfce.thunar # Lightweight file manager
     xfce.thunar-volman # Volume management for thunar
     xfce.tumbler # Thumbnail support for thunar
+    gvfs # Virtual filesystem for better external drive handling
     imv # Wayland-native image viewer
     mpv # Video player with Wayland support
 

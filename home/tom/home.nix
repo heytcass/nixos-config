@@ -102,6 +102,9 @@ in
       discord
       google-chrome
       slack
+      
+      # Notifications
+      libnotify # For notify-send command
       spotify
       todoist-electron
       zoom-us
@@ -514,11 +517,11 @@ in
       settings = {
         # Monitor configuration for multiple dock setups
         monitor = [
-          # Laptop screen (eDP-1) - left side, workspace 2
-          "eDP-1,1920x1080@60,0x0,1"
+          # Laptop screen (eDP-1) - center screen, workspace 2
+          "eDP-1,1920x1080@60,1920x0,1"
           # Primary desk Dell monitor (DP-2) - right side, 325px higher, workspace 1
           "DP-2,1920x1080@60,1920x-325,1"
-          # Secondary desk - Left Dell monitor (DP-3) - main screen, workspace 1
+          # Secondary desk - Left Dell monitor (DP-3) - left side, workspace 1
           "DP-3,1920x1080@60,0x0,1"
           # Secondary desk - Right Dell monitor (DP-4) - rotated 90° right, workspace 3
           "DP-4,1920x1080@60,3840x0,1,transform,3"
@@ -764,6 +767,7 @@ in
         ];
         modules-center = [
           "hyprland/window"
+          "custom/jasper"
           "custom/nix-shell"
         ];
         modules-right = [
@@ -819,6 +823,16 @@ in
           exec = "if [ -n \"$IN_NIX_SHELL\" ]; then echo '❄️'; else echo ''; fi";
           tooltip-format = "Nix development shell active";
           interval = 5;
+        };
+
+        "custom/jasper" = {
+          format = "{}";
+          tooltip = true;
+          interval = 300;
+          exec = "/home/tom/git/jasper/waybar-jasper.sh";
+          return-type = "json";
+          signal = 8;
+          on-click = "notify-send 'Jasper' 'Refreshing insights...' && pkill -RTMIN+8 waybar";
         };
 
         "custom/power" = {
@@ -956,9 +970,9 @@ in
 
     # Stylix base + selective Claude terracotta accents
     style = ''
-      /* Waybar Inter font override */
+      /* Waybar Inter Nerd Font override */
       * {
-        font-family: "Inter", sans-serif;
+        font-family: "Inter Nerd Font", sans-serif;
         font-weight: 400;
       }
 
@@ -1038,6 +1052,62 @@ in
 
       #battery.charging, #battery.plugged {
         color: #2c7a39;
+      }
+
+      /* Jasper Custom Module Styles - Modern border-based design */
+      #custom-jasper {
+        padding: 0 8px;
+        margin: 0 2px;
+        background-color: transparent;
+        border: 2px solid @base03;
+        border-radius: 6px;
+        font-weight: 500;
+        color: @base05;
+        transition: border-color 0.3s ease;
+        min-width: 28px;
+      }
+
+      #custom-jasper.critical {
+        border-color: @base08;
+        color: @base08;
+        animation: pulse-border 2s infinite;
+      }
+
+      #custom-jasper.warning {
+        border-color: @base0A;
+        color: @base0A;
+      }
+
+      #custom-jasper.info {
+        border-color: @base0D;
+        color: @base0D;
+      }
+
+      #custom-jasper.low {
+        border-color: @base03;
+        color: @base05;
+      }
+
+      #custom-jasper.clear {
+        border-color: @base0B;
+        color: @base0B;
+      }
+
+      #custom-jasper.minimal {
+        border-color: @base02;
+        color: @base05;
+      }
+
+      @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.7; }
+        100% { opacity: 1; }
+      }
+
+      @keyframes pulse-border {
+        0% { border-width: 2px; }
+        50% { border-width: 3px; }
+        100% { border-width: 2px; }
       }
     '';
   };
@@ -1233,7 +1303,7 @@ in
         text = Hi there, $USER
         color = rgb(faf9f5)  # Claude's light text
         font_size = 20
-        font_family = Inter
+        font_family = Inter Nerd Font
         rotate = 0
 
         position = 0, 80
@@ -1246,7 +1316,7 @@ in
         text = $TIME
         color = rgb(d77757)  # Claude's signature terracotta
         font_size = 55
-        font_family = Inter
+        font_family = Inter Nerd Font
         rotate = 0
 
         position = 0, 160

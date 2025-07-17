@@ -34,6 +34,10 @@
       ./_mixins/services/claude-mcp.nix
     ]
     ++ lib.optionals (!isISO) [
+      # Import Jasper personal AI assistant (only for non-ISO systems)
+      ./_mixins/services/jasper.nix
+    ]
+    ++ lib.optionals (!isISO) [
       # Import secrets management (only for non-ISO systems)
       ./_mixins/services/secrets.nix
     ]

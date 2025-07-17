@@ -65,6 +65,12 @@
       url = "github:InioX/matugen";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Jasper personal AI assistant
+    jasper = {
+      url = "path:/home/tom/git/jasper";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
