@@ -20,6 +20,18 @@ let
     dig = "dog";
     ping = "gping";
     du = "dua interactive";
+    
+    # Development environment shortcuts
+    dev-rust = "dev-env rust";
+    dev-web = "dev-env web";
+    dev-python = "dev-env python";
+    
+    # On-demand development tools
+    lazydocker = "nix run nixpkgs#lazydocker";
+    yubikey-manager = "nix run nixpkgs#yubikey-manager";
+    nodejs = "nix run nixpkgs#nodejs";
+    rustc = "nix run nixpkgs#rustc";
+    python = "nix run nixpkgs#python3";
     tree = "eza --tree";
     nano = "micro";
 

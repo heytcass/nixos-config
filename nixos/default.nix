@@ -30,6 +30,9 @@
 
       # Import Claude MCP server configuration
       ./_mixins/services/claude-mcp.nix
+      
+      # Import source cleanup service
+      ./_mixins/services/source-cleanup.nix
     ]
     ++ lib.optionals (!isISO) [
       # Import Jasper personal AI assistant (only for non-ISO systems)

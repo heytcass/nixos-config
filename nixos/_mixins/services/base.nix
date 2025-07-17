@@ -133,6 +133,17 @@
       options = "--delete-older-than 30d";
       persistent = true; # Run even if system was off during scheduled time
     };
+    
+    # Additional source cleanup for large cached sources
+    extraOptions = ''
+      # More aggressive cleanup for source caches
+      min-free = ${toString (1024 * 1024 * 1024)} # 1GB
+      max-free = ${toString (5 * 1024 * 1024 * 1024)} # 5GB
+      
+      # Keep fewer derivations to reduce source cache buildup
+      keep-derivations = false
+      keep-outputs = false
+    '';
   };
   nixpkgs.config.allowUnfree = true;
 
