@@ -7,9 +7,9 @@
 }:
 
 {
-  # X11 server configuration (shared across all desktop environments)
+  # X11 server configuration (conditional based on needs)
   services.xserver = {
-    enable = true;
+    enable = true; # Needed for XWayland support and GNOME
     excludePackages = [ pkgs.xterm ];
     xkb = {
       layout = "us";

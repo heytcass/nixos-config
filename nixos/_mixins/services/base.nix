@@ -131,6 +131,7 @@
       automatic = true;
       dates = "weekly";
       options = "--delete-older-than 30d";
+      persistent = true; # Run even if system was off during scheduled time
     };
   };
   nixpkgs.config.allowUnfree = true;

@@ -6,12 +6,13 @@
   lib,
   pkgs,
   isISO,
+  isWorkstation,
   ...
 }:
 
 {
-  # Only enable Tailscale for non-ISO systems
-  config = lib.mkIf (!isISO) {
+  # Only enable Tailscale for workstation systems (more targeted than all non-ISO)
+  config = lib.mkIf (!isISO && isWorkstation) {
     # Enable Tailscale service
     services.tailscale = {
       enable = true;
