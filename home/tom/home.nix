@@ -149,6 +149,37 @@ in
   # Services
   services.ssh-agent.enable = true;
   
+  # Automatic display configuration based on connected monitors
+  services.kanshi = {
+    enable = true;
+    settings = [
+      # Three-screen setup (gti docked)
+      {
+        profile.name = "three-screen";
+        profile.outputs = [
+          { criteria = "eDP-1"; position = "1920,0"; }
+          { criteria = "DP-3"; position = "0,0"; }
+          { criteria = "DP-4"; position = "3840,0"; transform = "90"; }
+        ];
+      }
+      # Two-screen setup (secondary desk)
+      {
+        profile.name = "two-screen";
+        profile.outputs = [
+          { criteria = "eDP-1"; position = "0,0"; }
+          { criteria = "DP-2"; position = "1920,-325"; }
+        ];
+      }
+      # Laptop only (undocked)
+      {
+        profile.name = "laptop-only";
+        profile.outputs = [
+          { criteria = "eDP-1"; position = "0,0"; }
+        ];
+      }
+    ];
+  };
+  
   # Automatic circadian rhythm screen temperature control
   services.gammastep = {
     enable = true;
@@ -517,7 +548,7 @@ in
       settings = {
         # Monitor configuration for multiple dock setups
         monitor = [
-          # Laptop screen (eDP-1) - center screen, workspace 2
+          # Laptop screen (eDP-1) - center for three-screen setup, adjust with hyprctl for two-screen
           "eDP-1,1920x1080@60,1920x0,1"
           # Primary desk Dell monitor (DP-2) - right side, 325px higher, workspace 1
           "DP-2,1920x1080@60,1920x-325,1"
