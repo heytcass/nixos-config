@@ -33,6 +33,9 @@
       
       # Import source cleanup service
       ./_mixins/services/source-cleanup.nix
+      
+      # Import dock detection service
+      ./_mixins/services/dock-detection.nix
     ]
     ++ lib.optionals (!isISO) [
       # Import Jasper personal AI assistant (only for non-ISO systems)

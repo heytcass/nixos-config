@@ -65,11 +65,6 @@ in
                   HA_TOKEN=$(cat /run/secrets/home_assistant_token)
                 fi
 
-                # Read the Obsidian API key from secrets
-                OBSIDIAN_API_KEY=""
-                if [ -f "/run/secrets/obsidian_api_key" ]; then
-                  OBSIDIAN_API_KEY=$(cat /run/secrets/obsidian_api_key)
-                fi
 
                 # Generate the Claude Desktop configuration with secrets
                 cat > /home/${cfg.user}/.config/Claude/claude_desktop_config.json << EOF

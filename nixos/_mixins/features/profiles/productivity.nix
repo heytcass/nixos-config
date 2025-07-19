@@ -23,5 +23,8 @@
     
     # Claude AI assistant
     claude-code
+    
+    # Task management and productivity
+    super-productivity
   ]);
 }

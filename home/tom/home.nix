@@ -154,24 +154,60 @@ in
   services.ssh-agent.enable = true;
   
   # Automatic display configuration based on connected monitors
+  # Enhanced with comprehensive port coverage to handle post-hibernation renumbering
   services.kanshi = {
     enable = true;
     settings = [
-      # Three-screen setup (gti docked)
+      # Three-screen docked profiles (covers all possible DP port combinations)
+      # DP-3/DP-4 combination
       {
-        profile.name = "three-screen";
+        profile.name = "docked-3-4";
         profile.outputs = [
           { criteria = "eDP-1"; position = "1920,0"; }
           { criteria = "DP-3"; position = "0,0"; }
-          { criteria = "DP-4"; position = "3840,0"; transform = "90"; }
+          { criteria = "DP-4"; position = "3840,0"; transform = "270"; }
         ];
       }
-      # Two-screen setup (secondary desk)
+      # DP-5/DP-6 combination (common after hibernation)
       {
-        profile.name = "two-screen";
+        profile.name = "docked-5-6";
+        profile.outputs = [
+          { criteria = "eDP-1"; position = "1920,0"; }
+          { criteria = "DP-5"; position = "0,0"; }
+          { criteria = "DP-6"; position = "3840,0"; transform = "270"; }
+        ];
+      }
+      # DP-1/DP-2 combination
+      {
+        profile.name = "docked-1-2";
+        profile.outputs = [
+          { criteria = "eDP-1"; position = "1920,0"; }
+          { criteria = "DP-1"; position = "0,0"; }
+          { criteria = "DP-2"; position = "3840,0"; transform = "270"; }
+        ];
+      }
+      # DP-7/DP-8 combination
+      {
+        profile.name = "docked-7-8";
+        profile.outputs = [
+          { criteria = "eDP-1"; position = "1920,0"; }
+          { criteria = "DP-7"; position = "0,0"; }
+          { criteria = "DP-8"; position = "3840,0"; transform = "270"; }
+        ];
+      }
+      # Two-screen setup (secondary desk) - also with multiple port options
+      {
+        profile.name = "secondary-desk-2";
         profile.outputs = [
           { criteria = "eDP-1"; position = "0,0"; }
           { criteria = "DP-2"; position = "1920,-325"; }
+        ];
+      }
+      {
+        profile.name = "secondary-desk-1";
+        profile.outputs = [
+          { criteria = "eDP-1"; position = "0,0"; }
+          { criteria = "DP-1"; position = "1920,-325"; }
         ];
       }
       # Laptop only (undocked)

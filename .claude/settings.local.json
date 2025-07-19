@@ -142,7 +142,14 @@
       "Bash(jasper-companion-daemon:*)",
       "Bash(home-manager switch:*)",
       "Bash(/home/tom/git/jasper/waybar-jasper.sh:*)",
-      "Bash(nix path-info:*)"
+      "Bash(nix path-info:*)",
+      "Bash(kill:*)",
+      "Bash(super-productivity)",
+      "Bash(super-productivity:*)",
+      "Bash(NIXOS_OZONE_WL= super-productivity)",
+      "Bash(GDK_BACKEND=x11 super-productivity:*)",
+      "mcp__nixos__nixos_channels",
+      "Bash(udevadm info:*)"
     ],
     "deny": []
   },

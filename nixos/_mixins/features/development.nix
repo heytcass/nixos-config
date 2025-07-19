@@ -19,6 +19,7 @@
     curl
     wget
     micro
+    marker
     
     # Binary cache tools
     cachix

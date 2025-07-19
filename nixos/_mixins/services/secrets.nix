@@ -65,13 +65,6 @@
           path = "/run/secrets/home_assistant_token";
         };
 
-        # Obsidian API key - for MCP server integration
-        "obsidian_api_key" = {
-          owner = "tom";
-          group = "users";
-          mode = "0400";
-          path = "/run/secrets/obsidian_api_key";
-        };
       };
     };
   };
