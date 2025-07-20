@@ -20,6 +20,8 @@ let
     dig = "dog";
     ping = "gping";
     du = "dua interactive";
+    cn = "cd ~/.nixos";
+    nrs = "sudo nixos-rebuild switch --flake .#$(hostname)";
     
     # Development environment shortcuts
     dev-rust = "dev-env rust";
@@ -837,7 +839,7 @@ in
           "hyprland/workspaces"
         ];
         modules-center = [
-          "custom/jasper"
+          # "custom/jasper"  # Temporarily disabled for CI
           "hyprland/window"
           "custom/nix-shell"
         ];
@@ -896,15 +898,15 @@ in
           interval = 5;
         };
 
-        "custom/jasper" = {
-          format = "{}";
-          tooltip = true;
-          interval = 300;
-          exec = "/home/tom/git/jasper/waybar-jasper.sh";
-          return-type = "json";
-          signal = 8;
-          on-click = "notify-send 'Jasper' 'Refreshing insights...' && pkill -RTMIN+8 waybar";
-        };
+        # "custom/jasper" = {
+        #   format = "{}";
+        #   tooltip = true;
+        #   interval = 300;
+        #   exec = "/home/tom/git/jasper/waybar-jasper.sh";
+        #   return-type = "json";
+        #   signal = 8;
+        #   on-click = "notify-send 'Jasper' 'Refreshing insights...' && pkill -RTMIN+8 waybar";
+        # };
 
         "custom/power" = {
           format = "  ⏻  ";
@@ -1124,7 +1126,8 @@ in
         color: #2c7a39;
       }
 
-      /* Jasper Custom Module Styles - Modern border-based design */
+      /* Jasper Custom Module Styles - Modern border-based design - DISABLED FOR CI */
+      /*
       #custom-jasper {
         padding: 0 8px;
         margin: 0 2px;
@@ -1167,6 +1170,7 @@ in
         border-color: @base02;
         color: @base05;
       }
+      */
 
       @keyframes pulse {
         0% { opacity: 1; }

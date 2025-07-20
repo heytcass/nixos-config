@@ -61,11 +61,11 @@
     };
 
 
-    # Jasper personal AI assistant
-    jasper = {
-      url = "path:/home/tom/git/jasper";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # Jasper personal AI assistant (local development only)
+    # jasper = {
+    #   url = "path:/home/tom/git/jasper";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
   };
 
   outputs =
