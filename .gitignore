@@ -9,3 +9,28 @@ result-*
 .vscode/
 *.swp
 *~
+
+# Private keys and certificates
+*.key
+*.pem
+*.p12
+*.pfx
+id_*
+known_hosts
+*_key
+*.crt
+*.cer
+
+# Environment files
+.env
+.env.local
+.env.*
+
+# Personal/secret files
+*.secret
+secrets_clean.yaml
+
+# Temporary files
+*.tmp
+*.bak
+.DS_Store
