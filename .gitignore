@@ -30,6 +30,9 @@ known_hosts
 *.secret
 secrets_clean.yaml
 
+# Claude settings with permissions (may contain sensitive permissions)
+.claude/settings.local.json
+
 # Temporary files
 *.tmp
 *.bak
