@@ -167,7 +167,7 @@ in
         profile.outputs = [
           { criteria = "eDP-1"; position = "1920,0"; }
           { criteria = "DP-3"; position = "0,0"; }
-          { criteria = "DP-4"; position = "3840,0"; transform = "270"; }
+          { criteria = "DP-4"; position = "3840,-750"; transform = "270"; }
         ];
       }
       # DP-5/DP-6 combination (common after hibernation)
@@ -176,7 +176,7 @@ in
         profile.outputs = [
           { criteria = "eDP-1"; position = "1920,0"; }
           { criteria = "DP-5"; position = "0,0"; }
-          { criteria = "DP-6"; position = "3840,0"; transform = "270"; }
+          { criteria = "DP-6"; position = "3840,-750"; transform = "270"; }
         ];
       }
       # DP-1/DP-2 combination
@@ -185,7 +185,7 @@ in
         profile.outputs = [
           { criteria = "eDP-1"; position = "1920,0"; }
           { criteria = "DP-1"; position = "0,0"; }
-          { criteria = "DP-2"; position = "3840,0"; transform = "270"; }
+          { criteria = "DP-2"; position = "3840,-750"; transform = "270"; }
         ];
       }
       # DP-7/DP-8 combination
@@ -194,7 +194,7 @@ in
         profile.outputs = [
           { criteria = "eDP-1"; position = "1920,0"; }
           { criteria = "DP-7"; position = "0,0"; }
-          { criteria = "DP-8"; position = "3840,0"; transform = "270"; }
+          { criteria = "DP-8"; position = "3840,-750"; transform = "270"; }
         ];
       }
       # Two-screen setup (secondary desk) - also with multiple port options
@@ -825,8 +825,8 @@ in
     };
   };
 
-  # Waybar configuration with Claude theme
-  programs.waybar = lib.mkIf (desktop == "hyprland") {
+  # Waybar configuration with Claude theme - Multi-desktop support
+  programs.waybar = lib.mkIf (!isISO) {
     enable = true;
     settings = {
       mainBar = {
@@ -836,19 +836,25 @@ in
         spacing = 2;
 
         modules-left = [
-          "hyprland/workspaces"
+          "${if desktop == "hyprland" then "hyprland" else "niri"}/workspaces"
+          "custom/dev-env"
         ];
         modules-center = [
-          # "custom/jasper"  # Temporarily disabled for CI
-          "hyprland/window"
+          "custom/jasper"
+          "${if desktop == "hyprland" then "hyprland" else "niri"}/window"
           "custom/nix-shell"
         ];
         modules-right = [
           "tray"
           "pulseaudio"
-          "network"
+          "custom/network"
           "bluetooth"
-          "custom/nix-shell"
+          "custom/tailscale"
+        ] ++ lib.optionals (desktop == "hyprland") [
+          "custom/containers"
+        ] ++ lib.optionals (desktop == "niri") [
+          "custom/storage"
+        ] ++ [
           "cpu"
           "memory"
           "temperature"
@@ -857,7 +863,7 @@ in
           "custom/power"
         ];
 
-        "hyprland/workspaces" = {
+        "hyprland/workspaces" = lib.mkIf (desktop == "hyprland") {
           disable-scroll = true;
           all-outputs = true;
           format = "{icon}";
@@ -877,7 +883,25 @@ in
           };
         };
 
-        "hyprland/window" = {
+        "niri/workspaces" = lib.mkIf (desktop == "niri") {
+          format = "{icon}";
+          format-icons = {
+            "1" = "🏠"; # Home/Main
+            "2" = "🌐"; # Web/Browser
+            "3" = "📝"; # Editor/Code
+            "4" = "📁"; # Files
+            "5" = "💬"; # Communication
+            "6" = "🎵"; # Media
+            "7" = "⚙️"; # Settings/Admin
+            "8" = "🎮"; # Games
+            "9" = "🖥️"; # VMs/Systems
+            "10" = "📋"; # Misc
+            "default" = "💼";
+            "urgent" = "⚠️";
+          };
+        };
+
+        "hyprland/window" = lib.mkIf (desktop == "hyprland") {
           format = "{}";
           max-length = 50;
           tooltip-format = "Active window: {}";
@@ -885,10 +909,27 @@ in
           separate-outputs = true;
         };
 
+        "niri/window" = lib.mkIf (desktop == "niri") {
+          format = "{}";
+          max-length = 50;
+          tooltip-format = "Active window: {}";
+          on-click = "niri msg action toggle-fullscreen";
+        };
+
         tray = {
           spacing = 5;
           icon-size = 16;
           show-passive-items = false;
+        };
+
+        "custom/jasper" = {
+          format = "{}";
+          tooltip = true;
+          interval = 900;  # 15 minutes - matches development config
+          exec = "/home/tom/git/jasper/waybar-jasper.sh";
+          return-type = "json";
+          signal = 8;
+          on-click = "notify-send 'Jasper' 'Refreshing insights...' && pkill -RTMIN+8 waybar";
         };
 
         "custom/nix-shell" = {
@@ -898,45 +939,57 @@ in
           interval = 5;
         };
 
-        # "custom/jasper" = {
-        #   format = "{}";
-        #   tooltip = true;
-        #   interval = 300;
-        #   exec = "/home/tom/git/jasper/waybar-jasper.sh";
-        #   return-type = "json";
-        #   signal = 8;
-        #   on-click = "notify-send 'Jasper' 'Refreshing insights...' && pkill -RTMIN+8 waybar";
-        # };
+        "custom/dev-env" = {
+          format = "{}";
+          exec = "~/.config/waybar/scripts/dev-env-status.sh";
+          on-click = "~/.config/waybar/scripts/dev-env-switcher.sh";
+          tooltip = true;
+          return-type = "json";
+          interval = 10;
+        };
+
+        "custom/tailscale" = {
+          format = "{}";
+          exec = "~/.config/waybar/scripts/tailscale-status.sh";
+          on-click = "ghostty -e sudo tailscale up";
+          on-click-right = "ghostty -e sudo tailscale down";
+          tooltip = true;
+          return-type = "json";
+          interval = 30;
+        };
+
+
+
+        "custom/containers" = lib.mkIf (desktop == "hyprland") {
+          format = "{}";
+          exec = "~/.config/waybar/scripts/containers-status.sh";
+          on-click = "lazydocker";
+          tooltip = true;
+          return-type = "json";
+          interval = 30;
+        };
+
+        "custom/storage" = lib.mkIf (desktop == "niri") {
+          format = "{}";
+          exec = "~/.config/waybar/scripts/storage-status.sh";
+          on-click = "dua interactive";
+          tooltip = true;
+          return-type = "json";
+          interval = 300;
+        };
+
 
         "custom/power" = {
           format = "  ⏻  ";
           tooltip-format = "Power Menu";
           on-click = "wlogout";
-          on-click-right = "hyprlock";
+          on-click-right = "${if desktop == "hyprland" then "hyprlock" else "swaylock-effects"}";
+          on-click-middle = "systemctl suspend";
         };
 
-        "custom/git-status" = {
-          format = "{}";
-          return-type = "json";
-          exec = ''
-            if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-              branch=$(git branch --show-current 2>/dev/null || echo "unknown")
-              if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
-                changes=$(git status --porcelain 2>/dev/null | wc -l)
-                echo "{\"text\": \" $branch\", \"class\": \"git-dirty\", \"tooltip\": \"Git: $branch ($changes changes)\"}"
-              else
-                echo "{\"text\": \" $branch\", \"class\": \"git-clean\", \"tooltip\": \"Git: $branch (clean)\"}"
-              fi
-            else
-              echo "{\"text\": \"\", \"class\": \"git-none\", \"tooltip\": \"Not in git repository\"}"
-            fi
-          '';
-          on-click = "ghostty -e git status";
-          interval = 15;
-        };
 
         clock = {
-          format = "{:%H:%M}";
+          format = "{:%I:%M %p}";
           format-alt = "{:%Y-%m-%d}";
           tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
         };
@@ -971,32 +1024,14 @@ in
         };
 
         battery = {
-          states = {
-            warning = 30;
-            critical = 15;
-          };
           format = "{capacity}%";
-          format-charging = "{capacity}%";
-          format-plugged = "{capacity}%";
-          tooltip-format = "Battery: {capacity}%";
-          format-icons = [
-            ""
-            ""
-            ""
-            ""
-            ""
-          ];
-          interval = 30;
         };
 
-        network = {
-          format-wifi = "{essid} ";
-          format-ethernet = "󰈀 Connected";
-          format-linked = "󰈀 No IP";
-          format-disconnected = "󰈂 Disconnected";
-          tooltip-format-wifi = "WiFi: {essid} ({signalStrength}%)\nIP: {ipaddr}/{cidr}\nGateway: {gwaddr}";
-          tooltip-format-ethernet = "Ethernet: {ifname}\nIP: {ipaddr}/{cidr}\nGateway: {gwaddr}";
+"custom/network" = {
+          exec = "~/.config/waybar/scripts/network-status.sh";
+          return-type = "json";
           interval = 10;
+          signal = 8;
         };
 
         bluetooth = {
@@ -1007,8 +1042,8 @@ in
           format-connected-battery = " {device_alias} {device_battery_percentage}%";
           tooltip-format = "Bluetooth: {status}";
           tooltip-format-connected = "Bluetooth: {device_enumerate}";
-          tooltip-format-enumerate-connected = "{device_alias}\\t{device_address}";
-          tooltip-format-enumerate-connected-battery = "{device_alias}\\t{device_address}\\t{device_battery_percentage}%";
+          tooltip-format-enumerate-connected = "{device_alias} ({device_address})";
+          tooltip-format-enumerate-connected-battery = "{device_alias} ({device_address})\nBattery: {device_battery_percentage}%";
           on-click = "overskride";
           interval = 30;
           max-length = 25;
@@ -1077,6 +1112,57 @@ in
         color: #faf9f5;
       }
 
+      /* Custom module styling with Claude theme */
+      #custom-dev-env, #custom-tailscale,
+      #custom-claude-status, #custom-dock-status, #custom-containers,
+      #custom-storage {
+        padding: 0 8px;
+        margin: 0 2px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+      }
+
+      #custom-dev-env:hover, #custom-tailscale:hover,
+      #custom-claude-status:hover, #custom-dock-status:hover, #custom-containers:hover,
+      #custom-storage:hover {
+        background-color: rgba(215, 119, 87, 0.1);
+      }
+
+      /* Development environment indicators */
+      #custom-dev-env.rust {
+        color: #ce422b;
+      }
+      
+      #custom-dev-env.web {
+        color: #3178c6;
+      }
+      
+      #custom-dev-env.python {
+        color: #3776ab;
+      }
+
+
+      /* Service status indicators */
+      #custom-tailscale.connected {
+        color: #2c7a39;
+      }
+      
+      #custom-tailscale.disconnected {
+        color: #ab2b3f;
+      }
+
+      #custom-claude-status.healthy {
+        color: #d77757;
+      }
+      
+      #custom-claude-status.degraded {
+        color: #966c1e;
+      }
+      
+      #custom-claude-status.offline {
+        color: #ab2b3f;
+      }
+
       /* Window title with Claude accent */
       #window {
         color: #d77757;
@@ -1102,7 +1188,7 @@ in
       /* Subtle hover effects with Claude accent */
       #pulseaudio:hover, #network:hover, #bluetooth:hover,
       #cpu:hover, #memory:hover, #temperature:hover,
-      #battery:hover, #clock:hover, #tray:hover {
+      #battery:hover, #clock:hover, #tray:hover, #custom-nix-shell:hover {
         background-color: rgba(215, 119, 87, 0.1);
       }
 
@@ -1126,8 +1212,7 @@ in
         color: #2c7a39;
       }
 
-      /* Jasper Custom Module Styles - Modern border-based design - DISABLED FOR CI */
-      /*
+      /* Jasper Custom Module Styles - Modern border-based design */
       #custom-jasper {
         padding: 0 8px;
         margin: 0 2px;
@@ -1170,7 +1255,6 @@ in
         border-color: @base02;
         color: @base05;
       }
-      */
 
       @keyframes pulse {
         0% { opacity: 1; }
@@ -1187,7 +1271,7 @@ in
   };
 
   # Wofi launcher configuration with Claude theme
-  programs.wofi = lib.mkIf (desktop == "hyprland") {
+  programs.wofi = lib.mkIf (!isISO) {
     enable = true;
     settings = {
       width = 600;
@@ -1374,7 +1458,7 @@ in
 
       label {
         monitor =
-        text = Hi there, $USER
+        text = cmd[update:1000] bash -c 'hour=$(date +%H); if [ $hour -lt 6 ]; then msg="Still up"; elif [ $hour -lt 9 ]; then msg="Good morning"; elif [ $hour -lt 12 ]; then msg="Morning"; elif [ $hour -lt 17 ]; then msg="Good afternoon"; elif [ $hour -lt 21 ]; then msg="Good evening"; else msg="Evening"; fi; user=$(echo $USER | sed "s/./\U&/"); echo "$msg, $user"'
         color = rgb(faf9f5)  # Claude's light text
         font_size = 20
         font_family = Inter Nerd Font
@@ -1387,7 +1471,7 @@ in
 
       label {
         monitor =
-        text = $TIME
+        text = $TIME12
         color = rgb(d77757)  # Claude's signature terracotta
         font_size = 55
         font_family = Inter Nerd Font
@@ -1470,7 +1554,7 @@ in
   };
 
   # Stylix Home Manager targets - let system autoEnable handle most theming
-  stylix.targets = lib.optionalAttrs (desktop == "hyprland") {
+  stylix.targets = lib.optionalAttrs (!isISO) {
     # Keep essential desktop-specific theming
     waybar.enable = true;
     wofi.enable = true;

@@ -107,7 +107,13 @@ let
         isLaptop = isLaptop hostname;
         isISO = isISO hostname;
       };
-      modules = [ ../home/tom/home.nix ];
+      modules = [ 
+        ../home/tom/home.nix 
+        inputs.stylix.homeModules.stylix
+        {
+          nixpkgs.config.allowUnfree = true;
+        }
+      ];
     };
 
   # Utility for multi-platform support

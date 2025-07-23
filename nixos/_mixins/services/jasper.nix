@@ -4,22 +4,6 @@ with lib;
 
 let
   cfg = config.services.jasperCompanion;
-  
-  # Create a script that looks for jasper-companion-daemon in PATH
-  jasperWrapper = pkgs.writeShellScriptBin "jasper-companion-daemon" ''
-    # Look for jasper-companion-daemon in PATH
-    if command -v jasper-companion-daemon >/dev/null 2>&1; then
-      exec jasper-companion-daemon "$@"
-    else
-      echo "❌ Jasper daemon not found in PATH"
-      echo "💡 To install Jasper:"
-      echo "   1. cd /home/tom/git/jasper"
-      echo "   2. nix build"
-      echo "   3. sudo cp result/bin/jasper-companion-daemon /usr/local/bin/"
-      echo "   4. systemctl --user restart jasper-companion"
-      exit 1
-    fi
-  '';
 in
 {
   # Define the jasper service options directly
@@ -28,7 +12,7 @@ in
     
     package = mkOption {
       type = types.package;
-      default = jasperWrapper;
+      default = inputs.jasper.packages.${pkgs.system}.default;
       description = "Jasper Companion package to use";
     };
     

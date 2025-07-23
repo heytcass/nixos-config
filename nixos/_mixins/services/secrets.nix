@@ -65,6 +65,22 @@
           path = "/run/secrets/home_assistant_token";
         };
 
+        # Google OAuth client ID - for Google Sheets MCP server
+        "google_oauth_client_id" = {
+          owner = "tom";
+          group = "users";
+          mode = "0400";
+          path = "/run/secrets/google_oauth_client_id";
+        };
+
+        # Google OAuth client secret - for Google Sheets MCP server
+        "google_oauth_client_secret" = {
+          owner = "tom";
+          group = "users";
+          mode = "0400";
+          path = "/run/secrets/google_oauth_client_secret";
+        };
+
       };
     };
   };

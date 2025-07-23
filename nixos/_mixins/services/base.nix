@@ -72,6 +72,11 @@
     };
   };
 
+  # Console keyboard configuration - critical for SDDM Colemak support
+  console = {
+    useXkbConfig = true; # Inherit keyboard layout from services.xserver.xkb
+  };
+
   # Internationalization
   i18n = {
     defaultLocale = "en_US.UTF-8";

@@ -18,9 +18,15 @@
   };
 
   # Display manager configuration (shared across all desktop environments)
-  services.displayManager.gdm = {
+  services.displayManager.sddm = {
     enable = true;
-    wayland = true;
+    wayland.enable = true;
+    settings = {
+      # Keyboard layout configuration for SDDM login screen
+      X11 = {
+        ServerArguments = "-xkblayout us -xkbvariant colemak";
+      };
+    };
   };
 
   # Security and authentication (shared across all desktop environments)
