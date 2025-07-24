@@ -166,7 +166,11 @@
       "Bash(bash:*)",
       "Bash(npm run build:*)",
       "Bash(node:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(mount:*)",
+      "WebFetch(domain:stylix.danth.me)",
+      "Bash(swaync-client:*)",
+      "Bash(notify-send:*)"
     ],
     "deny": []
   },

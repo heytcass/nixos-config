@@ -43,7 +43,10 @@
       xdg-desktop-portal-gtk
       xdg-desktop-portal-wlr
     ];
-    config.common.default = "*";
+    config = {
+      common.default = "*";
+      hyprland.default = ["hyprland" "gtk"];
+    };
   };
 
   # Printing disabled by default (shared across all desktop environments)

@@ -70,6 +70,9 @@
       useTmpfs = true;
       tmpfsSize = "8G"; # Sufficient for large builds with 16GB RAM
     };
+
+    # Enable kernel modules for hardware monitoring
+    kernelModules = [ "coretemp" "nct6775" ];
   };
 
   # Console keyboard configuration - critical for SDDM Colemak support
@@ -282,6 +285,16 @@
       MaxRetentionSec=1week
       ForwardToSyslog=no
     '';
+
+    # SMART disk monitoring
+    smartd = lib.mkIf (!isISO) {
+      enable = true;
+      autodetect = true;
+      notifications = {
+        x11.enable = false;
+        wall.enable = true;
+      };
+    };
   };
 
   # Network management (skip for ISO which has its own networking setup)
@@ -295,6 +308,24 @@
     ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="mq-deadline"
     # Optimize NVMe power management
     ACTION=="add|change", KERNEL=="nvme[0-9]*", ATTR{power/control}="auto"
+    
+    # USB device notifications and auto-actions
+    SUBSYSTEMS=="usb", ACTION=="add", ATTRS{idVendor}=="*", ATTRS{idProduct}=="*", \
+      TAG+="systemd", ENV{SYSTEMD_WANTS}="usb-device-added@%k.service"
+    SUBSYSTEMS=="usb", ACTION=="remove", ATTRS{idVendor}=="*", ATTRS{idProduct}=="*", \
+      TAG+="systemd", ENV{SYSTEMD_WANTS}="usb-device-removed@%k.service"
+    
+    # USB storage device auto-mounting with better permissions
+    SUBSYSTEMS=="usb", KERNEL=="sd[a-z][0-9]*", ACTION=="add", \
+      ATTRS{removable}=="1", TAG+="systemd", ENV{SYSTEMD_WANTS}="usb-storage-mount@%k.service"
+    
+    # Logitech Unifying receiver optimization
+    SUBSYSTEMS=="usb", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c52b|c532|c534", \
+      MODE="0664", GROUP="input", TAG+="uaccess"
+    
+    # Dell dock ethernet interface naming
+    SUBSYSTEMS=="usb", ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="8153", \
+      NAME="dock-eth", TAG+="systemd"
   '';
 
   # Zram swap for better memory utilization
@@ -315,8 +346,80 @@
     DefaultDeviceTimeoutSec=15s
   '';
 
+  # USB device management services
+  systemd.user.services = lib.mkIf (!isISO) {
+    "usb-device-added@" = {
+      description = "Handle USB device insertion";
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = pkgs.writeShellScript "usb-device-added" ''
+          set -e
+          DEVICE_PATH="/sys%i"
+          if [ -e "$DEVICE_PATH/idVendor" ] && [ -e "$DEVICE_PATH/idProduct" ]; then
+            VENDOR=$(cat "$DEVICE_PATH/idVendor")
+            PRODUCT=$(cat "$DEVICE_PATH/idProduct")
+            MANUFACTURER=$(cat "$DEVICE_PATH/manufacturer" 2>/dev/null || echo "Unknown")
+            PRODUCT_NAME=$(cat "$DEVICE_PATH/product" 2>/dev/null || echo "USB Device")
+            
+            # Send desktop notification
+            ${pkgs.libnotify}/bin/notify-send \
+              "USB Device Connected" \
+              "$MANUFACTURER $PRODUCT_NAME ($VENDOR:$PRODUCT)" \
+              --icon=usb-creator \
+              --category=device
+          fi
+        '';
+      };
+    };
+    
+    "usb-device-removed@" = {
+      description = "Handle USB device removal";
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = pkgs.writeShellScript "usb-device-removed" ''
+          ${pkgs.libnotify}/bin/notify-send \
+            "USB Device Disconnected" \
+            "USB device removed" \
+            --icon=usb-creator \
+            --category=device
+        '';
+      };
+    };
+    
+    "usb-storage-mount@" = {
+      description = "Auto-mount USB storage device";
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = pkgs.writeShellScript "usb-storage-mount" ''
+          set -e
+          DEVICE="/dev/%i"
+          # Let udisks2 handle mounting, just send notification
+          sleep 2  # Wait for udisks2 to mount
+          MOUNT_POINT=$(${pkgs.util-linux}/bin/findmnt -n -o TARGET "$DEVICE" 2>/dev/null || echo "")
+          if [ -n "$MOUNT_POINT" ]; then
+            LABEL=$(${pkgs.util-linux}/bin/lsblk -n -o LABEL "$DEVICE" 2>/dev/null || echo "USB Drive")
+            ${pkgs.libnotify}/bin/notify-send \
+              "USB Storage Mounted" \
+              "$LABEL mounted at $MOUNT_POINT" \
+              --icon=drive-removable-media \
+              --category=device.added
+          fi
+        '';
+      };
+    };
+  };
+
   # Real-time kit for audio
   security.rtkit.enable = true;
+
+  # Input method support for international typing
+  i18n.inputMethod = lib.mkIf (!isISO) {
+    enable = true;
+    type = "ibus";
+    ibus.engines = with pkgs.ibus-engines; [
+      uniemoji  # Emoji input
+    ];
+  };
 
   # GNOME keyring for secure credential storage
   services.gnome.gnome-keyring.enable = lib.mkIf (!isISO) true;
@@ -339,6 +442,12 @@
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     ELECTRON_OZONE_PLATFORM_HINT = "auto";
+    
+    # Input method variables
+    GTK_IM_MODULE = "ibus";
+    QT_IM_MODULE = "ibus";
+    XMODIFIERS = "@im=ibus";
+    INPUT_METHOD = "ibus";
   };
 
   # Common system packages
@@ -359,6 +468,25 @@
 
       # Development tools
       tmux
+      
+      # Hardware monitoring and control
+      lm_sensors          # Hardware monitoring
+      mission-center     # Modern hardware monitor (replaces psensor)
+      smartmontools      # SMART disk monitoring
+      nvme-cli           # NVMe management tools
+      hdparm             # Disk parameter management
+      usbutils           # lsusb and USB debugging
+      pciutils           # lspci and PCI debugging
+      
+      # System information
+      inxi               # System information tool
+      hwinfo             # Comprehensive hardware info
+      lshw               # Hardware listing
+      dmidecode          # DMI/SMBIOS information
+      
+      # Power management tools
+      acpi               # ACPI information
+      linuxPackages.cpupower  # CPU frequency management
       
       # Archive tools
       ouch # Modern Rust-based archive tool (zip, tar, gzip, etc.) - replaces file-roller

@@ -66,6 +66,34 @@ let
     basename = "uutils-basename";
     dirname = "uutils-dirname";
     readlink = "uutils-readlink";
+    
+    # Enhanced Git workflow
+    gl = "git log --oneline --graph --decorate --all";
+    gs = "git status -sb";
+    gd = "git diff";
+    gdc = "git diff --cached";
+    gap = "git add -p";
+    gcm = "git commit -m";
+    gca = "git commit --amend";
+    gco = "git checkout";
+    gcb = "git checkout -b";
+    gp = "git push";
+    gpu = "git push -u origin HEAD";
+    gpl = "git pull";
+    gr = "git rebase";
+    gri = "git rebase -i";
+    
+    # Modern Git tools
+    lg = "lazygit";
+    
+    # Project and session management
+    z = "zoxide";  # Smart cd replacement (if cd override doesn't work)
+    
+    # Code statistics and analysis  
+    todos = "rg 'TODO|FIXME|HACK|BUG' --type-not sql";
+    
+    # Quick file operations with modern tools
+    preview = "fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'";
   };
 in
 
@@ -334,6 +362,39 @@ in
           '';
           onVariable = "PWD";
         };
+        
+        # Quick project switching with fzf
+        proj = {
+          body = ''
+            set -l project_dir (find ~/git ~/projects ~/.nixos -maxdepth 2 -name ".git" -type d 2>/dev/null | \
+              sed 's/\/.git$//' | fzf --prompt="Project: " --header="Select project to open")
+            
+            if test -n "$project_dir"
+              cd "$project_dir"
+              
+              # Auto-activate development environment if available
+              if test -f flake.nix
+                echo "🚀 Nix flake detected - run 'nix develop' to enter dev shell"
+              else if test -f Cargo.toml
+                echo "🦀 Rust project detected - run 'dev-env rust' for development environment"
+              else if test -f package.json
+                echo "🌐 Web project detected - run 'dev-env web' for development environment"
+              else if test -f pyproject.toml -o -f requirements.txt
+                echo "🐍 Python project detected - run 'dev-env python' for development environment"
+              end
+            end
+          '';
+        };
+        
+        # Quick file editing with fzf
+        edit = {
+          body = ''
+            set -l file (fzf --prompt="Edit: " --preview="bat --color=always --style=numbers --line-range=:500 {}")
+            if test -n "$file"
+              micro "$file"
+            end
+          '';
+        };
       };
     };
 
@@ -483,6 +544,33 @@ in
       userEmail = "heytcass@gmail.com";
       extraConfig = {
         credential.helper = "store";
+        
+        # Enhanced Git configuration with modern tools
+        core.pager = "delta";
+        interactive.diffFilter = "delta --color-only";
+        delta = {
+          navigate = true;
+          light = false;
+          side-by-side = true;
+          line-numbers = true;
+          syntax-theme = "base16";
+        };
+        merge.conflictstyle = "diff3";
+        diff.colorMoved = "default";
+        
+        # Better Git aliases
+        alias = {
+          st = "status -sb";
+          co = "checkout";
+          br = "branch";
+          last = "log -1 HEAD";
+          visual = "!gitk";
+          lg = "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
+          unstage = "reset HEAD --";
+          staged = "diff --cached";
+          unstaged = "diff";
+          track = "branch -u origin/$(git branch --show-current)";
+        };
       };
     };
 
@@ -723,6 +811,28 @@ in
           "bordercolor rgb(c2c0b6), class:^(thunar)$"
           "bordercolor rgb(c96442), class:^(mpv)$"
           "bordercolor rgb(c96442), class:^(imv)$"
+          
+          # Gaming optimizations
+          "fullscreen, class:^(steam_app_.*)$"
+          "workspace 8, class:^(steam)$"
+          "workspace 8, class:^(steam_app_.*)$"
+          "immediate, class:^(steam_app_.*)$"  # Disable animations for games
+          "noborder, class:^(steam_app_.*)$"
+          "suppressevent maximize, class:^(steam_app_.*)$"
+          
+          # Video conferencing optimizations
+          "float, class:^(zoom)$"
+          "center, class:^(zoom)$"
+          "size 1200 800, class:^(zoom)$"
+          
+          # Claude Desktop specific
+          "bordercolor rgb(d77757), class:^(claude-desktop)$"
+          "workspace 2, class:^(claude-desktop)$"
+          
+          # Screen sharing applications
+          "float, title:^(.*screen share.*)$"
+          "pin, title:^(.*screen share.*)$"
+          "noborder, title:^(.*screen share.*)$"
         ];
 
         # Keybindings - using Super (Windows/Cmd) key
@@ -790,14 +900,23 @@ in
           "$mod SHIFT, Print, exec, grim - | wl-copy"
 
           # Media keys
-          ", XF86AudioRaiseVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ +5%"
-          ", XF86AudioLowerVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ -5%"
-          ", XF86AudioMute, exec, pactl set-sink-mute @DEFAULT_SINK@ toggle"
-          ", XF86MonBrightnessUp, exec, brightnessctl set 5%+"
-          ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
+          ", XF86AudioRaiseVolume, exec, avizo-client --increase=5"
+          ", XF86AudioLowerVolume, exec, avizo-client --decrease=5"
+          ", XF86AudioMute, exec, avizo-client --toggle-mute"
+          ", XF86MonBrightnessUp, exec, avizo-client --increase-brightness=5"
+          ", XF86MonBrightnessDown, exec, avizo-client --decrease-brightness=5"
           ", XF86AudioPlay, exec, playerctl play-pause"
           ", XF86AudioNext, exec, playerctl next"
           ", XF86AudioPrev, exec, playerctl previous"
+          ", XF86AudioMicMute, exec, pactl set-source-mute @DEFAULT_SOURCE@ toggle"
+          "$mod, F6, exec, pactl set-source-mute @DEFAULT_SOURCE@ toggle"  # Manual mic toggle
+          "$mod, F7, exec, ~/.config/scripts/audio-switcher.sh"  # Audio device switching
+
+          # Clipboard history
+          "$mod, C, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy"
+          
+          # Notification center
+          "$mod, N, exec, swaync-client -t"
 
           # Color temperature controls (Claude-themed)
           "$mod, F1, exec, hyprsunset -t 6500" # Daylight (cool)
@@ -805,6 +924,10 @@ in
           "$mod, F3, exec, hyprsunset -t 4500" # Claude warm (default)
           "$mod, F4, exec, hyprsunset -t 3000" # Very warm (evening)
           "$mod, F5, exec, pkill hyprsunset" # Disable filter
+          
+          # Gaming mode toggle (disables effects for performance)
+          "$mod, F12, exec, hyprctl --batch \"keyword decoration:blur:enabled false; keyword animations:enabled false\""
+          "$mod SHIFT, F12, exec, hyprctl reload"  # Restore normal mode
         ];
 
         # Mouse bindings
@@ -816,13 +939,349 @@ in
         # Startup applications with Claude theme integration
         "exec-once" = [
           "hyprpaper" # Start wallpaper first to prevent flash
+          "swaync" # Start notification daemon before waybar
           "waybar"
-          "swaync"
           "hypridle"
+          "avizo-service" # Start volume OSD service
         ];
 
       };
     };
+  };
+
+  # Clipboard history service
+  systemd.user.services.cliphist = lib.mkIf (desktop == "hyprland" || desktop == "niri") {
+    Unit = {
+      Description = "Clipboard history service";
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.wl-clipboard}/bin/wl-paste --watch ${pkgs.cliphist}/bin/cliphist store";
+      Restart = "always";
+      RestartSec = 1;
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
+
+  # System maintenance automation
+  systemd.user.services.system-maintenance = lib.mkIf (!isISO) {
+    Unit.Description = "Automatic system maintenance";
+    Service = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "system-maintenance" ''
+        set -e
+        
+        # Clean up old journal logs
+        journalctl --user --vacuum-time=2weeks
+        
+        # Clean up old Nix generations (keep last 7)
+        nix-collect-garbage --delete-older-than 7d
+        
+        # Log maintenance
+        echo "$(date): System maintenance completed" >> ~/.local/share/maintenance.log
+        
+        ${pkgs.libnotify}/bin/notify-send \
+          "System Maintenance" \
+          "Automatic cleanup completed" \
+          --icon=system-run \
+          --category=system
+      '';
+    };
+  };
+
+  systemd.user.timers.system-maintenance = lib.mkIf (!isISO) {
+    Unit.Description = "Run system maintenance weekly";
+    Timer = {
+      OnCalendar = "Sun 02:00";
+      Persistent = true;
+    };
+    Install.WantedBy = [ "timers.target" ];
+  };
+
+  # Modern terminal multiplexer (themed by Stylix)
+  programs.zellij = lib.mkIf (!isISO) {
+    enable = true;
+    settings = {
+      default_shell = "fish";
+      pane_frames = false;
+      # Theme handled by Stylix - removed manual theme
+      
+      keybinds = {
+        normal = {
+          "Alt h" = { MoveFocus = "Left"; };
+          "Alt l" = { MoveFocus = "Right"; };
+          "Alt j" = { MoveFocus = "Down"; };
+          "Alt k" = { MoveFocus = "Up"; };
+        };
+      };
+    };
+  };
+
+
+  # Fuzzy finder (manual theming - no Stylix support)
+  programs.fzf = lib.mkIf (!isISO) {
+    enable = true;
+    enableFishIntegration = true;
+    enableBashIntegration = true;
+    defaultCommand = "fd --type f --hidden --follow --exclude .git";
+    defaultOptions = [
+      "--height 40%"
+      "--layout=reverse"
+      "--border"
+      "--color=bg+:#30302e,bg:#262624,border:#c96442,spinner:#c96442"
+      "--color=hl:#c96442,fg:#c2c0b6,header:#c96442,info:#74b9ff"
+      "--color=pointer:#c96442,marker:#27ae60,fg+:#f8f7f3,prompt:#c96442"
+    ];
+    fileWidgetCommand = "fd --type f --hidden --follow --exclude .git";
+    changeDirWidgetCommand = "fd --type d --hidden --follow --exclude .git";
+  };
+
+  # Smart directory navigation
+  programs.zoxide = lib.mkIf (!isISO) {
+    enable = true;
+    enableFishIntegration = true;
+    enableBashIntegration = true;
+    options = [ "--cmd cd" ];  # Replace cd with smart navigation
+  };
+
+  # SwayNotificationCenter configuration files
+  xdg.configFile."swaync/config.json" = lib.mkIf (!isISO) {
+    text = builtins.toJSON {
+      positionX = "right";
+      positionY = "top";
+      layer = "overlay";
+      control-center-layer = "overlay";
+      layer-shell = true;
+      cssPriority = "application";
+      control-center-margin-top = 10;
+      control-center-margin-bottom = 10;
+      control-center-margin-right = 10;
+      control-center-margin-left = 10;
+      notification-2fa-action = true;
+      notification-inline-replies = false;
+      notification-icon-size = 64;
+      notification-body-image-height = 100;
+      notification-body-image-width = 200;
+      timeout = 10;
+      timeout-low = 5;
+      timeout-critical = 0;
+      fit-to-screen = true;
+      control-center-width = 500;
+      control-center-height = 600;
+      notification-window-width = 500;
+      keyboard-shortcuts = true;
+      image-visibility = "when-available";
+      transition-time = 200;
+      hide-on-clear = false;
+      hide-on-action = true;
+      script-fail-notify = true;
+    };
+  };
+
+  # SwayNotificationCenter CSS styling
+  xdg.configFile."swaync/style.css" = lib.mkIf (!isISO) {
+    text = ''
+      /* Swaync CSS - Claude theme integration */
+      
+      /* Main notification window */
+      .notification-row {
+        outline: none;
+        margin: 10px;
+        padding: 0;
+      }
+
+      .notification-row:focus,
+      .notification-row:hover {
+        background: #2a2a2a;
+      }
+
+      /* Individual notification */
+      .notification {
+        border-radius: 8px;
+        margin: 6px 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        padding: 0;
+        background: #1e1e1e;
+        border: 1px solid #3a3a3a;
+      }
+
+      /* Notification content */
+      .notification-content {
+        background: transparent;
+        padding: 14px;
+        border-radius: 8px;
+      }
+
+      /* Close button */
+      .close-button {
+        background: #d77757;
+        color: #faf9f5;
+        text-shadow: none;
+        padding: 0;
+        border-radius: 50%;
+        margin-top: 10px;
+        margin-right: 16px;
+        box-shadow: none;
+        border: none;
+        min-width: 24px;
+        min-height: 24px;
+      }
+
+      .close-button:hover {
+        box-shadow: none;
+        background: #ab2b3f;
+        transition: all 0.15s ease-in-out;
+        border: none;
+      }
+
+      /* Notification body text */
+      .notification-default-action,
+      .notification-action {
+        padding: 4px;
+        margin: 0;
+        box-shadow: none;
+        background: transparent;
+        border: 1px solid #3a3a3a;
+        color: #faf9f5;
+      }
+
+      .notification-default-action:hover,
+      .notification-action:hover {
+        background: #2a2a2a;
+        border: 1px solid #d77757;
+      }
+
+      /* Summary and body text */
+      .summary {
+        font-size: 16px;
+        font-weight: bold;
+        background: transparent;
+        color: #d77757;
+        text-shadow: none;
+      }
+
+      .body {
+        font-size: 15px;
+        font-weight: normal;
+        background: transparent;
+        color: #c3c0b6;
+        text-shadow: none;
+      }
+
+      /* Time */
+      .time {
+        background: transparent;
+        color: #7fc8ff;
+        text-shadow: none;
+        font-size: 12px;
+        margin-right: 18px;
+      }
+
+      /* Icon */
+      .icon {
+        color: #d77757;
+      }
+
+      /* Control center */
+      .control-center {
+        background: #1e1e1e;
+        border: 1px solid #3a3a3a;
+        border-radius: 12px;
+        margin: 18px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+      }
+
+      .control-center-list {
+        background: transparent;
+      }
+
+      .control-center .notification-row:focus,
+      .control-center .notification-row:hover {
+        background: #2a2a2a;
+      }
+
+      /* Control center header */
+      .control-center-dnd {
+        margin-top: 5px;
+        border-radius: 8px;
+        background: #2a2a2a;
+        border: 1px solid #3a3a3a;
+        box-shadow: none;
+      }
+
+      .control-center-dnd:checked {
+        background: #d77757;
+      }
+
+      .control-center-dnd slider {
+        background: #faf9f5;
+        border-radius: 8px;
+      }
+
+      /* Widget dnd */
+      .widget-dnd {
+        background: #2a2a2a;
+        padding: 8px;
+        margin: 8px;
+        border-radius: 8px;
+        border: 1px solid #3a3a3a;
+      }
+
+      .widget-dnd > switch {
+        border-radius: 4px;
+        background: #3a3a3a;
+      }
+
+      .widget-dnd > switch:checked {
+        background: #d77757;
+      }
+
+      .widget-dnd > switch slider {
+        background: #faf9f5;
+        border-radius: 8px;
+        border: 1px solid #525152;
+      }
+
+      /* Title widget */
+      .widget-title {
+        color: #d77757;
+        background: #2a2a2a;
+        border-radius: 8px;
+        padding: 8px;
+        margin: 8px;
+        font-size: 1.5rem;
+        border: 1px solid #3a3a3a;
+      }
+
+      .widget-title > button {
+        font-size: 1rem;
+        color: #c3c0b6;
+        text-shadow: none;
+        background: #3a3a3a;
+        box-shadow: none;
+        border-radius: 4px;
+        border: 1px solid #525152;
+      }
+
+      .widget-title > button:hover {
+        background: #d77757;
+        color: #faf9f5;
+      }
+
+      /* Other styling */
+      .floating-notifications {
+        background: transparent;
+      }
+
+      /* Make sure we're visible */
+      .blank-window {
+        background: alpha(black, 0.1);
+      }
+
+      .notification-window {
+        background: transparent;
+      }
+    '';
   };
 
   # Waybar configuration with Claude theme - Multi-desktop support
@@ -847,6 +1306,7 @@ in
         modules-right = [
           "tray"
           "pulseaudio"
+          "custom/notification"
           "custom/network"
           "bluetooth"
           "custom/tailscale"
@@ -1034,6 +1494,28 @@ in
           signal = 8;
         };
 
+        "custom/notification" = {
+          tooltip = false;
+          format = "{icon}";
+          format-icons = {
+            notification = "<span foreground='red'><sup></sup></span>";
+            none = "";
+            dnd-notification = "<span foreground='red'><sup></sup></span>";
+            dnd-none = "";
+            inhibited-notification = "<span foreground='red'><sup></sup></span>";
+            inhibited-none = "";
+            dnd-inhibited-notification = "<span foreground='red'><sup></sup></span>";
+            dnd-inhibited-none = "";
+          };
+          return-type = "json";
+          exec-if = "which swaync-client";
+          exec = "swaync-client -swb";
+          on-click = "swaync-client -t";
+          on-click-right = "swaync-client -d";
+          restart-interval = 1;
+          escape = true;
+        };
+
         bluetooth = {
           format = " {status}";
           format-disabled = "";
@@ -1050,13 +1532,12 @@ in
         };
 
         pulseaudio = {
-          format = "{volume}% {icon}";
-          format-bluetooth = "{volume}% {icon}";
-          format-bluetooth-muted = " {icon}";
-          format-muted = " ";
+          format = "{volume}% {icon} {format_source}";
+          format-bluetooth = "{volume}% {icon} {format_source}";
+          format-bluetooth-muted = " {icon} {format_source}";
+          format-muted = " {format_source}";
           format-source = "{volume}% ";
           format-source-muted = "";
-          tooltip-format = "Audio: {volume}% ({desc})\nSource: {source_volume}%";
           format-icons = {
             headphone = "";
             hands-free = "";
@@ -1064,13 +1545,13 @@ in
             phone = "";
             portable = "";
             car = "";
-            default = [
-              ""
-              ""
-              ""
-            ];
+            default = ["" "" ""];
           };
           on-click = "pavucontrol";
+          on-click-right = "~/.config/scripts/audio-switcher.sh";
+          on-scroll-up = "avizo-client --increase=2";
+          on-scroll-down = "avizo-client --decrease=2";
+          tooltip-format = "Output: {desc}\nVolume: {volume}%\nSource: {source_desc}\nSource Volume: {source_volume}%";
         };
       };
     };

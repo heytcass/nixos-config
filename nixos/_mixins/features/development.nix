@@ -21,6 +21,32 @@
     micro
     marker
     
+    # Terminal multiplexing and session management
+    zellij           # Modern terminal multiplexer (preferred over tmux)
+    
+    # Modern Git workflow tools
+    lazygit          # Most popular, intuitive Git TUI
+    gitui            # Rust-based Git TUI alternative
+    delta            # Better diff viewer with syntax highlighting
+    git-absorb       # Automatic fixup commits
+    git-cliff        # Changelog generation
+    
+    # Code navigation and search
+    ripgrep          # Fast search (rg)
+    fzf              # Fuzzy finder for files/commands
+    zoxide           # Smart directory navigation (z command)
+    fd               # Fast find alternative
+    just             # Command runner (modern make alternative)
+    
+    # Language servers and development tools
+    nil              # Nix LSP
+    nixd             # Alternative Nix LSP  
+    nixfmt-rfc-style # Nix formatting
+    
+    # Container development
+    skopeo           # Container image operations
+    buildah          # Container building
+    
     # Binary cache tools
     cachix
     

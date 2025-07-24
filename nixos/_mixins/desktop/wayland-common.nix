@@ -12,6 +12,8 @@
     grim # Screenshot tool
     slurp # Area selection for screenshots
     wl-clipboard # Wayland clipboard utilities
+    cliphist # Wayland clipboard history manager
+    wl-clip-persist # Persistent clipboard for Wayland
     wlr-randr # Display configuration
     kanshi # Dynamic display configuration
 
@@ -27,6 +29,7 @@
     brightnessctl # Brightness control
     playerctl # Media player control
     pavucontrol # PulseAudio/PipeWire volume control
+    avizo # Modern volume/brightness OSD for Wayland
 
     # Development and terminal tools
     wev # Wayland event viewer (for debugging)
