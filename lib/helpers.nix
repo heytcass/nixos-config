@@ -15,17 +15,6 @@ let
   isLaptop = hostname: lib.hasInfix "transporter" hostname;
   isISO = hostname: hostname == "iso";
 
-  # Helper to dynamically import all modules in a directory
-  importDirectory =
-    path:
-    let
-      entries = builtins.readDir path;
-      nixFiles = lib.filterAttrs (
-        name: type: type == "regular" && lib.hasSuffix ".nix" name && name != "default.nix"
-      ) entries;
-      importPath = name: path + "/${name}";
-    in
-    map importPath (lib.attrNames nixFiles);
 
   # Create NixOS system configuration with consistent patterns
   mkNixOS =
@@ -125,17 +114,6 @@ let
     "x86_64-darwin"
   ];
 
-  # Package utilities for conditional inclusion
-  optionalPackages = condition: packages: if condition then packages else [ ];
-
-  # Create package set with overlays
-  mkPkgs =
-    platform:
-    import inputs.nixpkgs {
-      system = platform;
-      overlays = [ outputs.overlays.default or (_final: _prev: { }) ];
-      config.allowUnfree = true;
-    };
 
 in
 {
@@ -144,13 +122,10 @@ in
     mkNixOS
     mkHome
     forAllSystems
-    importDirectory
     ;
   inherit
     isWorkstation
     isLaptop
     isISO
-    optionalPackages
-    mkPkgs
     ;
 }

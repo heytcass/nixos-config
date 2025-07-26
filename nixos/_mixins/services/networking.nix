@@ -9,16 +9,6 @@
 }:
 
 {
-  # Tailscale VPN - conditional based on system type
-  services.tailscale = {
-    enable = lib.mkIf (!isISO && isWorkstation) true;
-    useRoutingFeatures = lib.mkIf (!isISO && isWorkstation) "client";
-    extraUpFlags = lib.mkIf (!isISO && isWorkstation) [
-      "--ssh"
-      "--accept-routes"
-    ];
-  };
-
   # NetworkManager - essential for all non-ISO systems
   networking = {
     networkmanager = {
@@ -32,5 +22,36 @@
       allowedTCPPorts = lib.mkIf (!isISO) [ 22 ]; # SSH
       checkReversePath = lib.mkDefault "loose"; # For Tailscale
     };
+  };
+
+  # SSH server configuration with security hardening
+  services.openssh = lib.mkIf (!isISO) {
+    enable = true;
+    settings = {
+      # Disable root login
+      PermitRootLogin = "no";
+      # Only allow key-based authentication
+      PasswordAuthentication = false;
+      PubkeyAuthentication = true;
+      # Disable X11 forwarding for security
+      X11Forwarding = false;
+      # Disable TCP forwarding
+      AllowTcpForwarding = "no";
+      # Client timeout settings
+      ClientAliveInterval = 300;
+      ClientAliveCountMax = 2;
+      # Limit authentication attempts
+      MaxAuthTries = 3;
+      LoginGraceTime = 30;
+      # Use SSH protocol 2 only
+      Protocol = 2;
+    };
+    # Disable SFTP subsystem
+    allowSFTP = false;
+    # Additional security configuration
+    extraConfig = ''
+      AllowUsers tom
+      DenyUsers root
+    '';
   };
 }

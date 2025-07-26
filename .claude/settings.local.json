@@ -182,7 +182,9 @@
       "Bash(~/.config/scripts/audio-switcher.sh:*)",
       "Bash(swaync)",
       "Bash(timedatectl:*)",
-      "Bash(pre-commit run:*)"
+      "Bash(pre-commit run:*)",
+      "Bash(deadnix:*)",
+      "Bash(NIXPKGS_ALLOW_UNFREE=1 nix develop --impure --command bash -c \"nix path-info -S nixpkgs#google-chrome nixpkgs#vscode nixpkgs#discord nixpkgs#steam\")"
     ],
     "deny": []
   },

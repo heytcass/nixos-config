@@ -14,14 +14,4 @@
 
   # ISO-specific optimizations for smaller builds
   iso-optimizations = import ./iso-optimizations.nix;
-
-  # Development-specific overlays (future expansion)
-  development = _final: _prev: {
-    # Development tool overrides can go here
-  };
-
-  # Performance optimizations (future expansion)
-  performance = _final: _prev: {
-    # Performance-focused package overrides
-  };
 }

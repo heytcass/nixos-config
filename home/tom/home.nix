@@ -8,6 +8,11 @@
 }:
 
 let
+  # Desktop environment helper variables
+  isHyprland = desktop == "hyprland";
+  isNiri = desktop == "niri";
+  isWayland = isHyprland || isNiri;
+
   # Common shell aliases for modern CLI tools
   commonShellAliases = {
     cat = "bat";
@@ -37,35 +42,20 @@ let
     tree = "eza --tree";
     nano = "micro";
 
-    # Rust utility aliases (with fallback to GNU versions)
+    # Rust utility aliases (generated programmatically)
     # sudo = "sudo-rs";  # Disabled until system rebuild completes
-    # Core utilities (most common first)
-    cp = "uutils-cp";
-    mv = "uutils-mv";
-    rm = "uutils-rm";
-    mkdir = "uutils-mkdir";
-    rmdir = "uutils-rmdir";
-    touch = "uutils-touch";
-    chmod = "uutils-chmod";
-    chown = "uutils-chown";
+  } // (lib.genAttrs [
+    # Core utilities
+    "cp" "mv" "rm" "mkdir" "rmdir" "touch" "chmod" "chown"
     # Text processing
-    sort = "uutils-sort";
-    uniq = "uutils-uniq";
-    cut = "uutils-cut";
-    head = "uutils-head";
-    tail = "uutils-tail";
-    wc = "uutils-wc";
-    # File operations
-    stat = "uutils-stat";
-    ln = "uutils-ln";
+    "sort" "uniq" "cut" "head" "tail" "wc"
+    # File operations  
+    "stat" "ln"
     # System info
-    whoami = "uutils-whoami";
-    id = "uutils-id";
-    groups = "uutils-groups";
+    "whoami" "id" "groups"
     # Path utilities
-    basename = "uutils-basename";
-    dirname = "uutils-dirname";
-    readlink = "uutils-readlink";
+    "basename" "dirname" "readlink"
+  ] (cmd: "uutils-${cmd}")) // {
 
     # Enhanced Git workflow
     gl = "git log --oneline --graph --decorate --all";
@@ -98,7 +88,7 @@ let
 in
 
 {
-  imports = lib.optionals (desktop == "hyprland") [ inputs.hyprland.homeManagerModules.default ];
+  imports = lib.optionals isHyprland [ inputs.hyprland.homeManagerModules.default ];
 
   # User configuration
   home = {
@@ -166,7 +156,7 @@ in
       SYSTEMD_EDITOR = "micro";
       VISUAL = "micro";
     }
-    // lib.optionalAttrs (desktop == "hyprland") {
+    // lib.optionalAttrs isHyprland {
       # Force dark theme for applications
       GTK_THEME = "Adwaita:dark";
       QT_STYLE_OVERRIDE = lib.mkForce "adwaita-dark";
@@ -988,7 +978,7 @@ in
   };
 
   # Clipboard history service
-  systemd.user.services.cliphist = lib.mkIf (desktop == "hyprland" || desktop == "niri") {
+  systemd.user.services.cliphist = lib.mkIf isWayland {
     Unit = {
       Description = "Clipboard history service";
       PartOf = [ "graphical-session.target" ];

@@ -107,14 +107,19 @@
         "nix-command"
       ];
       substituters = [
+        # Official Nix cache (highest priority)
         "https://cache.nixos.org/"
+        # Personal cache (second priority for frequent hits)
+        "https://tcass-nixos-config.cachix.org"
+        # Community caches (third priority)
         "https://nix-community.cachix.org"
-        "https://nixpkgs-wayland.cachix.org"
-        "https://devenv.cachix.org"
+        # Specialized desktop environment caches
         "https://hyprland.cachix.org"
         "https://niri.cachix.org"
+        "https://nixpkgs-wayland.cachix.org"
+        # Development and application-specific caches
+        "https://devenv.cachix.org"
         "https://ghostty.cachix.org"
-        "https://tcass-nixos-config.cachix.org"
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
@@ -469,8 +474,6 @@
       gnome-calculator # Simple calculator app
       gedit # GNOME text editor
 
-      # Development tools
-      tmux
 
       # Hardware monitoring and control
       lm_sensors # Hardware monitoring

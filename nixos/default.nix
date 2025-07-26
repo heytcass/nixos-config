@@ -23,7 +23,10 @@
     # Import user configuration
     ./_mixins/services/users.nix
 
-    # Import Tailscale networking
+    # Import network services (SSH, NetworkManager)
+    ./_mixins/services/networking.nix
+
+    # Import Tailscale VPN
     ./_mixins/services/tailscale.nix
 
     # Import Claude MCP server configuration
@@ -36,12 +39,11 @@
     ./_mixins/services/dock-detection.nix
   ]
   ++ lib.optionals (!isISO) [
-    # Import Jasper personal AI assistant (only for non-ISO systems)
+    # Import non-ISO system features and services
     ./_mixins/services/jasper.nix
-  ]
-  ++ lib.optionals (!isISO) [
-    # Import secrets management (only for non-ISO systems)
     ./_mixins/services/secrets.nix
+    ./_mixins/features/rust-utils.nix
+    ./_mixins/features/profiles/productivity.nix
   ]
   ++ lib.optionals (!isISO && desktop == "gnome") [
     # Import GNOME desktop configuration
@@ -54,14 +56,6 @@
   ++ lib.optionals (!isISO && desktop == "niri") [
     # Import Niri desktop configuration
     ./_mixins/desktop/niri.nix
-  ]
-  ++ lib.optionals (!isISO) [
-    # Import Rust utilities for non-ISO systems
-    ./_mixins/features/rust-utils.nix
-  ]
-  ++ lib.optionals (!isISO) [
-    # Import productivity profiles for all non-ISO systems
-    ./_mixins/features/profiles/productivity.nix
   ]
   ++ lib.optionals isWorkstation [
     # Import gaming features only for workstations

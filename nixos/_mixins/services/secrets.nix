@@ -22,8 +22,8 @@
 
       # Age configuration
       age = {
-        # Use the age key we generated
-        keyFile = "/home/tom/.config/sops/age/keys.txt";
+        # Use the age key stored in system location for better security
+        keyFile = "/etc/sops/age/keys.txt";
         generateKey = false; # We already generated it manually
       };
 
@@ -82,6 +82,17 @@
         };
 
       };
+    };
+
+    # Ensure proper age key permissions on system activation
+    system.activationScripts.sops-age-key = {
+      text = ''
+        if [ -f /etc/sops/age/keys.txt ]; then
+          chown root:root /etc/sops/age/keys.txt
+          chmod 600 /etc/sops/age/keys.txt
+        fi
+      '';
+      deps = [ "etc" ];
     };
   };
 }

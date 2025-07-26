@@ -23,6 +23,7 @@
 
     # Terminal multiplexing and session management
     zellij # Modern terminal multiplexer (preferred over tmux)
+    # tmux # Traditional fallback option - uncomment if needed
 
     # Modern Git workflow tools
     lazygit # Most popular, intuitive Git TUI
