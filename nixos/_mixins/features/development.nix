@@ -20,50 +20,50 @@
     wget
     micro
     marker
-    
+
     # Terminal multiplexing and session management
-    zellij           # Modern terminal multiplexer (preferred over tmux)
-    
+    zellij # Modern terminal multiplexer (preferred over tmux)
+
     # Modern Git workflow tools
-    lazygit          # Most popular, intuitive Git TUI
-    gitui            # Rust-based Git TUI alternative
-    delta            # Better diff viewer with syntax highlighting
-    git-absorb       # Automatic fixup commits
-    git-cliff        # Changelog generation
-    
+    lazygit # Most popular, intuitive Git TUI
+    gitui # Rust-based Git TUI alternative
+    delta # Better diff viewer with syntax highlighting
+    git-absorb # Automatic fixup commits
+    git-cliff # Changelog generation
+
     # Code navigation and search
-    ripgrep          # Fast search (rg)
-    fzf              # Fuzzy finder for files/commands
-    zoxide           # Smart directory navigation (z command)
-    fd               # Fast find alternative
-    just             # Command runner (modern make alternative)
-    
+    ripgrep # Fast search (rg)
+    fzf # Fuzzy finder for files/commands
+    zoxide # Smart directory navigation (z command)
+    fd # Fast find alternative
+    just # Command runner (modern make alternative)
+
     # Language servers and development tools
-    nil              # Nix LSP
-    nixd             # Alternative Nix LSP  
+    nil # Nix LSP
+    nixd # Alternative Nix LSP
     nixfmt-rfc-style # Nix formatting
-    
+
     # Container development
-    skopeo           # Container image operations
-    buildah          # Container building
-    
+    skopeo # Container image operations
+    buildah # Container building
+
     # Binary cache tools
     cachix
-    
+
     # Container tools (lightweight)
     podman
-    
+
     # Development environment manager
     (writeShellScriptBin "dev-env" ''
       #!/usr/bin/env bash
-      
+
       # Development environment activation script
       # Provides easy access to project-specific development environments
-      
+
       set -e
-      
+
       TEMPLATES_DIR="/home/tom/.nixos/templates"
-      
+
       show_help() {
           echo "🔧 Development Environment Manager"
           echo
@@ -90,18 +90,18 @@
           echo "  nix run nixpkgs#rustc -- --version"
           echo "  nix run nixpkgs#nodejs -- --version"
       }
-      
+
       init_environment() {
           local env_type="$1"
           local template_dir="$TEMPLATES_DIR/$env_type-dev"
-          
+
           if [ ! -d "$template_dir" ]; then
               echo "❌ Environment template '$env_type' not found"
               echo "Available templates:"
               ls "$TEMPLATES_DIR" | grep -E '.*-dev$' | sed 's/-dev$//' | sed 's/^/  /'
               exit 1
           fi
-          
+
           if [ -f "flake.nix" ]; then
               echo "⚠️  flake.nix already exists. Overwrite? (y/N)"
               read -r response
@@ -110,49 +110,49 @@
                   exit 1
               fi
           fi
-          
+
           echo "📋 Initializing $env_type development environment..."
           cp "$template_dir/flake.nix" .
-          
+
           echo "✅ Environment initialized!"
           echo "   Run 'nix develop' to enter the development shell"
       }
-      
+
       enter_shell() {
           local env_type="$1"
           local template_dir="$TEMPLATES_DIR/$env_type-dev"
-          
+
           if [ ! -d "$template_dir" ]; then
               echo "❌ Environment template '$env_type' not found"
               exit 1
           fi
-          
+
           echo "🚀 Entering $env_type development environment..."
           cd "$template_dir"
           nix develop
       }
-      
+
       run_command() {
           local env_type="$1"
           shift
           local template_dir="$TEMPLATES_DIR/$env_type-dev"
-          
+
           if [ ! -d "$template_dir" ]; then
               echo "❌ Environment template '$env_type' not found"
               exit 1
           fi
-          
+
           echo "🏃 Running command in $env_type environment..."
           cd "$template_dir"
           nix develop --command "$@"
       }
-      
+
       # Main script logic
       if [ $# -eq 0 ]; then
           show_help
           exit 0
       fi
-      
+
       case "$1" in
           -h|--help|help)
               show_help
@@ -160,7 +160,7 @@
           rust|web|python)
               env_type="$1"
               action="''${2:-shell}"
-              
+
               case "$action" in
                   init)
                       init_environment "$env_type"
@@ -186,7 +186,7 @@
               ;;
       esac
     '')
-    
+
     # NOTE: Heavy development tools moved to conditional loading:
     # - nodejs/npm: Use project-specific flake.nix or dev-env script
     # - lazydocker: Use on-demand with 'nix run nixpkgs#lazydocker'

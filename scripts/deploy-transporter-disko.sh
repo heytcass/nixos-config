@@ -133,22 +133,22 @@ if nix --extra-experimental-features "nix-command flakes" \
     run 'github:nix-community/disko/latest#disko-install' -- \
     --flake ".#transporter" \
     --disk main "$DEVICE"; then
-    
+
     success "disko-install completed successfully!"
-    
+
 else
     warn "disko-install failed, falling back to manual step-by-step process..."
-    
+
     # Manual fallback process
     info "Step 1: Partition and format disk..."
     nix --extra-experimental-features "nix-command flakes" run \
         github:nix-community/disko/latest -- \
         --mode destroy,format,mount \
         ./hosts/transporter/disko-config.nix
-    
+
     info "Step 2: Generate hardware configuration..."
     nixos-generate-config --no-filesystems --root /mnt
-    
+
     info "Step 3: Install NixOS..."
     nixos-install --root /mnt --flake '.#transporter'
 fi
@@ -176,7 +176,7 @@ if [[ -d /mnt/etc/nixos ]]; then
     echo
     success "🎉 Dell Latitude 7280 deployment complete!"
     warn "⚠️  Reboot to complete installation: reboot"
-    
+
 else
     error "Installation appears to have failed - /mnt/etc/nixos not found"
     # Restore backup before exiting

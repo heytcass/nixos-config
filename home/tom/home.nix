@@ -22,12 +22,12 @@ let
     du = "dua interactive";
     cn = "cd ~/.nixos";
     nrs = "sudo nixos-rebuild switch --flake .#$(hostname)";
-    
+
     # Development environment shortcuts
     dev-rust = "dev-env rust";
     dev-web = "dev-env web";
     dev-python = "dev-env python";
-    
+
     # On-demand development tools
     lazydocker = "nix run nixpkgs#lazydocker";
     yubikey-manager = "nix run nixpkgs#yubikey-manager";
@@ -66,7 +66,7 @@ let
     basename = "uutils-basename";
     dirname = "uutils-dirname";
     readlink = "uutils-readlink";
-    
+
     # Enhanced Git workflow
     gl = "git log --oneline --graph --decorate --all";
     gs = "git status -sb";
@@ -82,16 +82,16 @@ let
     gpl = "git pull";
     gr = "git rebase";
     gri = "git rebase -i";
-    
+
     # Modern Git tools
     lg = "lazygit";
-    
+
     # Project and session management
-    z = "zoxide";  # Smart cd replacement (if cd override doesn't work)
-    
-    # Code statistics and analysis  
+    z = "zoxide"; # Smart cd replacement (if cd override doesn't work)
+
+    # Code statistics and analysis
     todos = "rg 'TODO|FIXME|HACK|BUG' --type-not sql";
-    
+
     # Quick file operations with modern tools
     preview = "fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'";
   };
@@ -99,6 +99,7 @@ in
 
 {
   imports = lib.optionals (desktop == "hyprland") [ inputs.hyprland.homeManagerModules.default ];
+
   # User configuration
   home = {
     username = "tom";
@@ -111,7 +112,7 @@ in
       gh
       # vscode moved to productivity.nix profile
       starship # Cross-shell prompt
-      
+
       # Material You color generation
 
       # Icon theming
@@ -139,7 +140,7 @@ in
       # Heavy desktop applications moved to system profiles for better organization
       # (communication.nix, media.nix, productivity.nix)
       boatswain
-      
+
       # Notifications
       libnotify # For notify-send command
       todoist-electron
@@ -159,30 +160,29 @@ in
     # Authentication can be done manually: gh auth login --with-token < /run/secrets/github_token
 
     # Environment variables
-    sessionVariables =
-      {
-        STEAM_EXTRA_COMPAT_TOOLS_PATHS = "$HOME/.steam/root/compatibilitytools.d";
-        EDITOR = "micro";
-        SYSTEMD_EDITOR = "micro";
-        VISUAL = "micro";
-      }
-      // lib.optionalAttrs (desktop == "hyprland") {
-        # Force dark theme for applications
-        GTK_THEME = "Adwaita:dark";
-        QT_STYLE_OVERRIDE = lib.mkForce "adwaita-dark";
+    sessionVariables = {
+      STEAM_EXTRA_COMPAT_TOOLS_PATHS = "$HOME/.steam/root/compatibilitytools.d";
+      EDITOR = "micro";
+      SYSTEMD_EDITOR = "micro";
+      VISUAL = "micro";
+    }
+    // lib.optionalAttrs (desktop == "hyprland") {
+      # Force dark theme for applications
+      GTK_THEME = "Adwaita:dark";
+      QT_STYLE_OVERRIDE = lib.mkForce "adwaita-dark";
 
-        # Cursor theme managed by Stylix
+      # Cursor theme managed by Stylix
 
-        # Claude-themed terminal colors for applications that support it
-        CLAUDE_BRAND_COLOR = "#d77757";
-        CLAUDE_DARK_BG = "#1f1e1d";
-        CLAUDE_LIGHT_FG = "#faf9f5";
-      };
+      # Claude-themed terminal colors for applications that support it
+      CLAUDE_BRAND_COLOR = "#d77757";
+      CLAUDE_DARK_BG = "#1f1e1d";
+      CLAUDE_LIGHT_FG = "#faf9f5";
+    };
   };
 
   # Services
   services.ssh-agent.enable = true;
-  
+
   # Automatic display configuration based on connected monitors
   # Enhanced with comprehensive port coverage to handle post-hibernation renumbering
   services.kanshi = {
@@ -193,63 +193,118 @@ in
       {
         profile.name = "docked-3-4";
         profile.outputs = [
-          { criteria = "eDP-1"; position = "1920,0"; }
-          { criteria = "DP-3"; position = "0,0"; }
-          { criteria = "DP-4"; position = "3840,-750"; transform = "270"; }
+          {
+            criteria = "eDP-1";
+            position = "1920,0";
+          }
+          {
+            criteria = "DP-3";
+            position = "0,0";
+          }
+          {
+            criteria = "DP-4";
+            position = "3840,-750";
+            transform = "270";
+          }
         ];
       }
       # DP-5/DP-6 combination (common after hibernation)
       {
         profile.name = "docked-5-6";
         profile.outputs = [
-          { criteria = "eDP-1"; position = "1920,0"; }
-          { criteria = "DP-5"; position = "0,0"; }
-          { criteria = "DP-6"; position = "3840,-750"; transform = "270"; }
+          {
+            criteria = "eDP-1";
+            position = "1920,0";
+          }
+          {
+            criteria = "DP-5";
+            position = "0,0";
+          }
+          {
+            criteria = "DP-6";
+            position = "3840,-750";
+            transform = "270";
+          }
         ];
       }
       # DP-1/DP-2 combination
       {
         profile.name = "docked-1-2";
         profile.outputs = [
-          { criteria = "eDP-1"; position = "1920,0"; }
-          { criteria = "DP-1"; position = "0,0"; }
-          { criteria = "DP-2"; position = "3840,-750"; transform = "270"; }
+          {
+            criteria = "eDP-1";
+            position = "1920,0";
+          }
+          {
+            criteria = "DP-1";
+            position = "0,0";
+          }
+          {
+            criteria = "DP-2";
+            position = "3840,-750";
+            transform = "270";
+          }
         ];
       }
       # DP-7/DP-8 combination
       {
         profile.name = "docked-7-8";
         profile.outputs = [
-          { criteria = "eDP-1"; position = "1920,0"; }
-          { criteria = "DP-7"; position = "0,0"; }
-          { criteria = "DP-8"; position = "3840,-750"; transform = "270"; }
+          {
+            criteria = "eDP-1";
+            position = "1920,0";
+          }
+          {
+            criteria = "DP-7";
+            position = "0,0";
+          }
+          {
+            criteria = "DP-8";
+            position = "3840,-750";
+            transform = "270";
+          }
         ];
       }
       # Two-screen setup (secondary desk) - also with multiple port options
       {
         profile.name = "secondary-desk-2";
         profile.outputs = [
-          { criteria = "eDP-1"; position = "0,0"; }
-          { criteria = "DP-2"; position = "1920,-325"; }
+          {
+            criteria = "eDP-1";
+            position = "0,0";
+          }
+          {
+            criteria = "DP-2";
+            position = "1920,-325";
+          }
         ];
       }
       {
         profile.name = "secondary-desk-1";
         profile.outputs = [
-          { criteria = "eDP-1"; position = "0,0"; }
-          { criteria = "DP-1"; position = "1920,-325"; }
+          {
+            criteria = "eDP-1";
+            position = "0,0";
+          }
+          {
+            criteria = "DP-1";
+            position = "1920,-325";
+          }
         ];
       }
       # Laptop only (undocked)
       {
         profile.name = "laptop-only";
         profile.outputs = [
-          { criteria = "eDP-1"; position = "0,0"; }
+          {
+            criteria = "eDP-1";
+            position = "0,0";
+          }
         ];
       }
     ];
   };
-  
+
   # Automatic circadian rhythm screen temperature control
   services.gammastep = {
     enable = true;
@@ -257,8 +312,8 @@ in
     latitude = 42.69121049601569;
     longitude = -83.15813907911111;
     temperature = {
-      day = 6500;    # Cool daylight temperature
-      night = 3000;  # Warm evening temperature
+      day = 6500; # Cool daylight temperature
+      night = 3000; # Warm evening temperature
     };
     settings = {
       general = {
@@ -298,7 +353,6 @@ in
     "application/x-terminal-emulator" = "ghostty.desktop";
     "x-scheme-handler/terminal" = "ghostty.desktop";
   };
-
 
   # Program configurations
   programs = {
@@ -362,16 +416,16 @@ in
           '';
           onVariable = "PWD";
         };
-        
+
         # Quick project switching with fzf
         proj = {
           body = ''
             set -l project_dir (find ~/git ~/projects ~/.nixos -maxdepth 2 -name ".git" -type d 2>/dev/null | \
               sed 's/\/.git$//' | fzf --prompt="Project: " --header="Select project to open")
-            
+
             if test -n "$project_dir"
               cd "$project_dir"
-              
+
               # Auto-activate development environment if available
               if test -f flake.nix
                 echo "🚀 Nix flake detected - run 'nix develop' to enter dev shell"
@@ -385,7 +439,7 @@ in
             end
           '';
         };
-        
+
         # Quick file editing with fzf
         edit = {
           body = ''
@@ -544,7 +598,7 @@ in
       userEmail = "heytcass@gmail.com";
       extraConfig = {
         credential.helper = "store";
-        
+
         # Enhanced Git configuration with modern tools
         core.pager = "delta";
         interactive.diffFilter = "delta --color-only";
@@ -557,7 +611,7 @@ in
         };
         merge.conflictstyle = "diff3";
         diff.colorMoved = "default";
-        
+
         # Better Git aliases
         alias = {
           st = "status -sb";
@@ -671,10 +725,6 @@ in
       enable = true;
       package = inputs.hyprland.packages.${pkgs.system}.hyprland;
 
-      # Plugins configuration
-      plugins = [
-        inputs.hyprland-plugins.packages.${pkgs.system}.hyprexpo
-      ];
       settings = {
         # Monitor configuration for multiple dock setups
         monitor = [
@@ -778,21 +828,9 @@ in
           disable_splash_rendering = true; # Disable splash screen
         };
 
-        # Hyprexpo plugin configuration
-        plugin.hyprexpo = {
-          columns = 3;
-          gap_size = 5;
-          bg_col = "rgb(262624)"; # Match Claude's dark mode background
-          workspace_method = "center current";
-          enable_gesture = true;
-          gesture_fingers = 3;
-          gesture_distance = 300;
-          gesture_positive = true;
-        };
-
         # Workspace rules with Claude's semantic color system and monitor assignments
         workspace = [
-          "1, border_color:rgb(2c7a39), monitor:DP-3" # Success workspace (development/terminal) - Left Dell monitor
+          "1, border_color:rgb(2c7a39), monitor:DP-3, gapsin:4, gapsout:8" # Success workspace (development/terminal) - Left Dell monitor
           "2, border_color:rgb(d97757), monitor:eDP-1" # Claude brand workspace (main work) - Laptop screen
           "3, border_color:rgb(966c1e), monitor:DP-4" # Warning workspace (monitoring/logs) - Right Dell monitor (rotated)
           "4, border_color:rgb(ab2b3f)" # Error workspace (debugging)
@@ -805,30 +843,30 @@ in
         # Window rules with Claude theme colors for installed packages
         windowrulev2 = [
           "float, class:^(pavucontrol)$"
-          "float, class:^(thunar)$"
-          "size 800 600, class:^(thunar)$"
+          "float, class:^(nautilus)$"
+          "size 800 600, class:^(nautilus)$"
           "bordercolor rgb(d77757), class:^(ghostty)$"
-          "bordercolor rgb(c2c0b6), class:^(thunar)$"
+          "bordercolor rgb(c2c0b6), class:^(nautilus)$"
           "bordercolor rgb(c96442), class:^(mpv)$"
           "bordercolor rgb(c96442), class:^(imv)$"
-          
+
           # Gaming optimizations
           "fullscreen, class:^(steam_app_.*)$"
           "workspace 8, class:^(steam)$"
           "workspace 8, class:^(steam_app_.*)$"
-          "immediate, class:^(steam_app_.*)$"  # Disable animations for games
+          "immediate, class:^(steam_app_.*)$" # Disable animations for games
           "noborder, class:^(steam_app_.*)$"
           "suppressevent maximize, class:^(steam_app_.*)$"
-          
+
           # Video conferencing optimizations
           "float, class:^(zoom)$"
           "center, class:^(zoom)$"
           "size 1200 800, class:^(zoom)$"
-          
+
           # Claude Desktop specific
           "bordercolor rgb(d77757), class:^(claude-desktop)$"
           "workspace 2, class:^(claude-desktop)$"
-          
+
           # Screen sharing applications
           "float, title:^(.*screen share.*)$"
           "pin, title:^(.*screen share.*)$"
@@ -842,10 +880,10 @@ in
         bind = [
           "$mod, Return, exec, ghostty"
           "$mod, space, exec, wofi --show drun"
-          "$mod, E, exec, thunar"
+          "$mod, E, exec, nautilus"
 
-          # Hyprexpo plugin binding - tap SUPER key alone
-          "SUPER, SUPER_L, hyprexpo:expo, toggle"
+          # Search key for quick launcher access
+          ", XF86Search, exec, wofi --show drun"
 
           # Window management
           "$mod, Q, killactive"
@@ -899,22 +937,22 @@ in
           "SHIFT, Print, exec, grim -g \"$(slurp)\" - | wl-copy"
           "$mod SHIFT, Print, exec, grim - | wl-copy"
 
-          # Media keys
-          ", XF86AudioRaiseVolume, exec, avizo-client --increase=5"
-          ", XF86AudioLowerVolume, exec, avizo-client --decrease=5"
-          ", XF86AudioMute, exec, avizo-client --toggle-mute"
-          ", XF86MonBrightnessUp, exec, avizo-client --increase-brightness=5"
-          ", XF86MonBrightnessDown, exec, avizo-client --decrease-brightness=5"
+          # Media keys with avizo OSD via dedicated scripts
+          ", XF86AudioRaiseVolume, exec, ~/.config/scripts/volume-up.sh"
+          ", XF86AudioLowerVolume, exec, ~/.config/scripts/volume-down.sh"
+          ", XF86AudioMute, exec, ~/.config/scripts/volume-mute.sh"
+          ", XF86MonBrightnessUp, exec, ~/.config/scripts/brightness-up.sh"
+          ", XF86MonBrightnessDown, exec, ~/.config/scripts/brightness-down.sh"
           ", XF86AudioPlay, exec, playerctl play-pause"
           ", XF86AudioNext, exec, playerctl next"
           ", XF86AudioPrev, exec, playerctl previous"
-          ", XF86AudioMicMute, exec, pactl set-source-mute @DEFAULT_SOURCE@ toggle"
-          "$mod, F6, exec, pactl set-source-mute @DEFAULT_SOURCE@ toggle"  # Manual mic toggle
-          "$mod, F7, exec, ~/.config/scripts/audio-switcher.sh"  # Audio device switching
+          ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+          "$mod, F6, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle" # Manual mic toggle
+          "$mod, F7, exec, ~/.config/scripts/audio-switcher.sh" # Audio device switching
 
           # Clipboard history
           "$mod, C, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy"
-          
+
           # Notification center
           "$mod, N, exec, swaync-client -t"
 
@@ -924,10 +962,10 @@ in
           "$mod, F3, exec, hyprsunset -t 4500" # Claude warm (default)
           "$mod, F4, exec, hyprsunset -t 3000" # Very warm (evening)
           "$mod, F5, exec, pkill hyprsunset" # Disable filter
-          
+
           # Gaming mode toggle (disables effects for performance)
           "$mod, F12, exec, hyprctl --batch \"keyword decoration:blur:enabled false; keyword animations:enabled false\""
-          "$mod SHIFT, F12, exec, hyprctl reload"  # Restore normal mode
+          "$mod SHIFT, F12, exec, hyprctl reload" # Restore normal mode
         ];
 
         # Mouse bindings
@@ -970,16 +1008,16 @@ in
       Type = "oneshot";
       ExecStart = pkgs.writeShellScript "system-maintenance" ''
         set -e
-        
+
         # Clean up old journal logs
         journalctl --user --vacuum-time=2weeks
-        
+
         # Clean up old Nix generations (keep last 7)
         nix-collect-garbage --delete-older-than 7d
-        
+
         # Log maintenance
         echo "$(date): System maintenance completed" >> ~/.local/share/maintenance.log
-        
+
         ${pkgs.libnotify}/bin/notify-send \
           "System Maintenance" \
           "Automatic cleanup completed" \
@@ -1005,18 +1043,25 @@ in
       default_shell = "fish";
       pane_frames = false;
       # Theme handled by Stylix - removed manual theme
-      
+
       keybinds = {
         normal = {
-          "Alt h" = { MoveFocus = "Left"; };
-          "Alt l" = { MoveFocus = "Right"; };
-          "Alt j" = { MoveFocus = "Down"; };
-          "Alt k" = { MoveFocus = "Up"; };
+          "Alt h" = {
+            MoveFocus = "Left";
+          };
+          "Alt l" = {
+            MoveFocus = "Right";
+          };
+          "Alt j" = {
+            MoveFocus = "Down";
+          };
+          "Alt k" = {
+            MoveFocus = "Up";
+          };
         };
       };
     };
   };
-
 
   # Fuzzy finder (manual theming - no Stylix support)
   programs.fzf = lib.mkIf (!isISO) {
@@ -1041,7 +1086,7 @@ in
     enable = true;
     enableFishIntegration = true;
     enableBashIntegration = true;
-    options = [ "--cmd cd" ];  # Replace cd with smart navigation
+    options = [ "--cmd cd" ]; # Replace cd with smart navigation
   };
 
   # SwayNotificationCenter configuration files
@@ -1078,212 +1123,6 @@ in
     };
   };
 
-  # SwayNotificationCenter CSS styling
-  xdg.configFile."swaync/style.css" = lib.mkIf (!isISO) {
-    text = ''
-      /* Swaync CSS - Claude theme integration */
-      
-      /* Main notification window */
-      .notification-row {
-        outline: none;
-        margin: 10px;
-        padding: 0;
-      }
-
-      .notification-row:focus,
-      .notification-row:hover {
-        background: #2a2a2a;
-      }
-
-      /* Individual notification */
-      .notification {
-        border-radius: 8px;
-        margin: 6px 12px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        padding: 0;
-        background: #1e1e1e;
-        border: 1px solid #3a3a3a;
-      }
-
-      /* Notification content */
-      .notification-content {
-        background: transparent;
-        padding: 14px;
-        border-radius: 8px;
-      }
-
-      /* Close button */
-      .close-button {
-        background: #d77757;
-        color: #faf9f5;
-        text-shadow: none;
-        padding: 0;
-        border-radius: 50%;
-        margin-top: 10px;
-        margin-right: 16px;
-        box-shadow: none;
-        border: none;
-        min-width: 24px;
-        min-height: 24px;
-      }
-
-      .close-button:hover {
-        box-shadow: none;
-        background: #ab2b3f;
-        transition: all 0.15s ease-in-out;
-        border: none;
-      }
-
-      /* Notification body text */
-      .notification-default-action,
-      .notification-action {
-        padding: 4px;
-        margin: 0;
-        box-shadow: none;
-        background: transparent;
-        border: 1px solid #3a3a3a;
-        color: #faf9f5;
-      }
-
-      .notification-default-action:hover,
-      .notification-action:hover {
-        background: #2a2a2a;
-        border: 1px solid #d77757;
-      }
-
-      /* Summary and body text */
-      .summary {
-        font-size: 16px;
-        font-weight: bold;
-        background: transparent;
-        color: #d77757;
-        text-shadow: none;
-      }
-
-      .body {
-        font-size: 15px;
-        font-weight: normal;
-        background: transparent;
-        color: #c3c0b6;
-        text-shadow: none;
-      }
-
-      /* Time */
-      .time {
-        background: transparent;
-        color: #7fc8ff;
-        text-shadow: none;
-        font-size: 12px;
-        margin-right: 18px;
-      }
-
-      /* Icon */
-      .icon {
-        color: #d77757;
-      }
-
-      /* Control center */
-      .control-center {
-        background: #1e1e1e;
-        border: 1px solid #3a3a3a;
-        border-radius: 12px;
-        margin: 18px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-      }
-
-      .control-center-list {
-        background: transparent;
-      }
-
-      .control-center .notification-row:focus,
-      .control-center .notification-row:hover {
-        background: #2a2a2a;
-      }
-
-      /* Control center header */
-      .control-center-dnd {
-        margin-top: 5px;
-        border-radius: 8px;
-        background: #2a2a2a;
-        border: 1px solid #3a3a3a;
-        box-shadow: none;
-      }
-
-      .control-center-dnd:checked {
-        background: #d77757;
-      }
-
-      .control-center-dnd slider {
-        background: #faf9f5;
-        border-radius: 8px;
-      }
-
-      /* Widget dnd */
-      .widget-dnd {
-        background: #2a2a2a;
-        padding: 8px;
-        margin: 8px;
-        border-radius: 8px;
-        border: 1px solid #3a3a3a;
-      }
-
-      .widget-dnd > switch {
-        border-radius: 4px;
-        background: #3a3a3a;
-      }
-
-      .widget-dnd > switch:checked {
-        background: #d77757;
-      }
-
-      .widget-dnd > switch slider {
-        background: #faf9f5;
-        border-radius: 8px;
-        border: 1px solid #525152;
-      }
-
-      /* Title widget */
-      .widget-title {
-        color: #d77757;
-        background: #2a2a2a;
-        border-radius: 8px;
-        padding: 8px;
-        margin: 8px;
-        font-size: 1.5rem;
-        border: 1px solid #3a3a3a;
-      }
-
-      .widget-title > button {
-        font-size: 1rem;
-        color: #c3c0b6;
-        text-shadow: none;
-        background: #3a3a3a;
-        box-shadow: none;
-        border-radius: 4px;
-        border: 1px solid #525152;
-      }
-
-      .widget-title > button:hover {
-        background: #d77757;
-        color: #faf9f5;
-      }
-
-      /* Other styling */
-      .floating-notifications {
-        background: transparent;
-      }
-
-      /* Make sure we're visible */
-      .blank-window {
-        background: alpha(black, 0.1);
-      }
-
-      .notification-window {
-        background: transparent;
-      }
-    '';
-  };
-
   # Waybar configuration with Claude theme - Multi-desktop support
   programs.waybar = lib.mkIf (!isISO) {
     enable = true;
@@ -1306,20 +1145,23 @@ in
         modules-right = [
           "tray"
           "pulseaudio"
-          "custom/notification"
           "custom/network"
           "bluetooth"
           "custom/tailscale"
-        ] ++ lib.optionals (desktop == "hyprland") [
+        ]
+        ++ lib.optionals (desktop == "hyprland") [
           "custom/containers"
-        ] ++ lib.optionals (desktop == "niri") [
+        ]
+        ++ lib.optionals (desktop == "niri") [
           "custom/storage"
-        ] ++ [
+        ]
+        ++ [
           "cpu"
           "memory"
           "temperature"
           "battery"
           "clock"
+          "custom/notification"
           "custom/power"
         ];
 
@@ -1385,7 +1227,7 @@ in
         "custom/jasper" = {
           format = "{}";
           tooltip = true;
-          interval = 900;  # 15 minutes - matches development config
+          interval = 60;
           exec = "/home/tom/git/jasper/waybar-jasper.sh";
           return-type = "json";
           signal = 8;
@@ -1418,8 +1260,6 @@ in
           interval = 30;
         };
 
-
-
         "custom/containers" = lib.mkIf (desktop == "hyprland") {
           format = "{}";
           exec = "~/.config/waybar/scripts/containers-status.sh";
@@ -1438,7 +1278,6 @@ in
           interval = 300;
         };
 
-
         "custom/power" = {
           format = "  ⏻  ";
           tooltip-format = "Power Menu";
@@ -1446,7 +1285,6 @@ in
           on-click-right = "${if desktop == "hyprland" then "hyprlock" else "swaylock-effects"}";
           on-click-middle = "systemctl suspend";
         };
-
 
         clock = {
           format = "{:%I:%M %p}";
@@ -1487,7 +1325,7 @@ in
           format = "{capacity}%";
         };
 
-"custom/network" = {
+        "custom/network" = {
           exec = "~/.config/waybar/scripts/network-status.sh";
           return-type = "json";
           interval = 10;
@@ -1498,14 +1336,14 @@ in
           tooltip = false;
           format = "{icon}";
           format-icons = {
-            notification = "<span foreground='red'><sup></sup></span>";
-            none = "";
-            dnd-notification = "<span foreground='red'><sup></sup></span>";
-            dnd-none = "";
-            inhibited-notification = "<span foreground='red'><sup></sup></span>";
-            inhibited-none = "";
-            dnd-inhibited-notification = "<span foreground='red'><sup></sup></span>";
-            dnd-inhibited-none = "";
+            notification = "<span foreground='red'>🔔</span>";
+            none = "🔔";
+            dnd-notification = "<span foreground='red'>🔕</span>";
+            dnd-none = "🔕";
+            inhibited-notification = "<span foreground='red'>🔔</span>";
+            inhibited-none = "🔔";
+            dnd-inhibited-notification = "<span foreground='red'>🔕</span>";
+            dnd-inhibited-none = "🔕";
           };
           return-type = "json";
           exec-if = "which swaync-client";
@@ -1545,7 +1383,11 @@ in
             phone = "";
             portable = "";
             car = "";
-            default = ["" "" ""];
+            default = [
+              ""
+              ""
+              ""
+            ];
           };
           on-click = "pavucontrol";
           on-click-right = "~/.config/scripts/audio-switcher.sh";
@@ -1613,11 +1455,11 @@ in
       #custom-dev-env.rust {
         color: #ce422b;
       }
-      
+
       #custom-dev-env.web {
         color: #3178c6;
       }
-      
+
       #custom-dev-env.python {
         color: #3776ab;
       }
@@ -1627,7 +1469,7 @@ in
       #custom-tailscale.connected {
         color: #2c7a39;
       }
-      
+
       #custom-tailscale.disconnected {
         color: #ab2b3f;
       }
@@ -1635,11 +1477,11 @@ in
       #custom-claude-status.healthy {
         color: #d77757;
       }
-      
+
       #custom-claude-status.degraded {
         color: #966c1e;
       }
-      
+
       #custom-claude-status.offline {
         color: #ab2b3f;
       }
@@ -1852,7 +1694,6 @@ in
     };
   };
 
-
   # Qt theme configuration - let Stylix handle theming
   qt = lib.optionalAttrs (desktop == "hyprland") {
     enable = true;
@@ -2034,15 +1875,22 @@ in
     '';
   };
 
-  # Stylix Home Manager targets - let system autoEnable handle most theming
+  # Stylix Home Manager targets - comprehensive application theming
   stylix.targets = lib.optionalAttrs (!isISO) {
-    # Keep essential desktop-specific theming
+    # Desktop environment theming
     waybar.enable = true;
     wofi.enable = true;
-    
-    # Terminal theming
+
+    # Terminal and shell theming
     ghostty.enable = true;
-    
+    fish.enable = true;
+    starship.enable = true;
+
+    # Application theming
+    swaync.enable = true;
+    avizo.enable = true;
+    vscode.enable = true;
+
     # GTK CSS override to fix button text visibility
     gtk.extraCss = ''
       dialog button,
@@ -2053,7 +1901,6 @@ in
       }
     '';
   };
-
 
   # Hyprpaper configuration with astronaut wallpaper
   home.file.".config/hypr/hyprpaper.conf" = lib.mkIf (desktop == "hyprland") {

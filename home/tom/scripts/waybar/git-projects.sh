@@ -4,7 +4,7 @@
 # Common development directories
 SEARCH_DIRS=(
     "$HOME/git"
-    "$HOME/projects" 
+    "$HOME/projects"
     "$HOME/Development"
     "$HOME/.nixos"
     "$HOME/work"

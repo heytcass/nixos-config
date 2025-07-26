@@ -25,7 +25,7 @@
       base0B = "27ae60"; # Green (success)
       base0C = "74b9ff"; # Cyan (info)
       base0D = "2c82d7"; # Blue (links/actions)
-      base0E = "a29bfe"; # Magenta (special highlights)
+      base0E = "d97757";
       base0F = "7d4a38"; # Brown (secondary accents)
     };
 
@@ -58,14 +58,12 @@
     autoEnable = true;
 
     targets = {
-      # System-level theming
+      # System-level theming only (application theming moved to Home Manager)
       console.enable = true;
       plymouth.enable = true;
       gtk.enable = true;
       gnome.enable = true;
-      qt.enable = true; # Enable Qt theming
-
-      # Additional targets for better coverage
+      qt.enable = true;
       grub.enable = true;
       nixos-icons.enable = true;
     };

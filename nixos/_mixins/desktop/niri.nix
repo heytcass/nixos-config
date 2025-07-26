@@ -18,7 +18,7 @@
     systemPackages = with pkgs; [
       # Niri compositor from flake
       inputs.niri.packages.${pkgs.system}.niri
-      
+
       # Sway-specific tools for Niri
       swaylock-effects # Screen locker with effects
       swayidle # Idle management daemon

@@ -60,8 +60,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-
-    # Jasper personal AI assistant 
+    # Jasper personal AI assistant
     jasper = {
       url = "github:heytcass/jasper";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -88,7 +87,7 @@
       overlays = import ./overlays { inherit inputs; };
 
       # NixOS configurations using helper functions
-      nixosConfigurations = 
+      nixosConfigurations =
         let
           hostConfigs = {
             # Workstation with gaming (Dell XPS 13 9370)
@@ -120,7 +119,8 @@
             };
           };
         in
-        builtins.mapAttrs (hostname: config: 
+        builtins.mapAttrs (
+          hostname: config:
           helper.mkNixOS ({
             inherit hostname;
             inherit (config) desktop modules;
@@ -128,14 +128,21 @@
         ) hostConfigs;
 
       # Home Manager configurations (for potential standalone use)
-      homeConfigurations = 
+      homeConfigurations =
         let
           homeConfigs = {
-            "tom@gti" = { hostname = "gti"; desktop = "hyprland"; };
-            "tom@transporter" = { hostname = "transporter"; desktop = "niri"; };
+            "tom@gti" = {
+              hostname = "gti";
+              desktop = "hyprland";
+            };
+            "tom@transporter" = {
+              hostname = "transporter";
+              desktop = "niri";
+            };
           };
         in
-        builtins.mapAttrs (userHost: config:
+        builtins.mapAttrs (
+          _userHost: config:
           helper.mkHome ({
             username = "tom";
             inherit (config) hostname desktop;
@@ -162,7 +169,7 @@
 
             # Binary cache tools
             # cachix - already available in development.nix
-            
+
             # Rust utilities for testing - already available in rust-utils.nix
             # uutils-coreutils, uutils-findutils, sudo-rs
           ];

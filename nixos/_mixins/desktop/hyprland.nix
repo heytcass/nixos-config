@@ -29,10 +29,10 @@
       hyprlock # GPU-accelerated screen locker
       hypridle # Official idle management
       hyprsunset # Blue light filter
-      
+
       # Authentication agent for auto-mounting
       polkit_gnome # Polkit authentication agent
-      
+
       # Screen sharing and portal support
       xdg-desktop-portal-hyprland # Essential for screen sharing in video calls
     ];
@@ -49,7 +49,7 @@
   };
 
   # Hardware acceleration is handled in base.nix
-  
+
   # Polkit authentication agent service
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
     description = "polkit-gnome-authentication-agent-1";

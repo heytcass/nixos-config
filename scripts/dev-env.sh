@@ -38,14 +38,14 @@ show_help() {
 init_environment() {
     local env_type="$1"
     local template_dir="$TEMPLATES_DIR/$env_type-dev"
-    
+
     if [ ! -d "$template_dir" ]; then
         echo "❌ Environment template '$env_type' not found"
         echo "Available templates:"
         ls "$TEMPLATES_DIR" | grep -dev | sed 's/-dev$//' | sed 's/^/  /'
         exit 1
     fi
-    
+
     if [ -f "flake.nix" ]; then
         echo "⚠️  flake.nix already exists. Overwrite? (y/N)"
         read -r response
@@ -54,10 +54,10 @@ init_environment() {
             exit 1
         fi
     fi
-    
+
     echo "📋 Initializing $env_type development environment..."
     cp "$template_dir/flake.nix" .
-    
+
     echo "✅ Environment initialized!"
     echo "   Run 'nix develop' to enter the development shell"
 }
@@ -65,12 +65,12 @@ init_environment() {
 enter_shell() {
     local env_type="$1"
     local template_dir="$TEMPLATES_DIR/$env_type-dev"
-    
+
     if [ ! -d "$template_dir" ]; then
         echo "❌ Environment template '$env_type' not found"
         exit 1
     fi
-    
+
     echo "🚀 Entering $env_type development environment..."
     cd "$template_dir"
     nix develop
@@ -80,12 +80,12 @@ run_command() {
     local env_type="$1"
     shift
     local template_dir="$TEMPLATES_DIR/$env_type-dev"
-    
+
     if [ ! -d "$template_dir" ]; then
         echo "❌ Environment template '$env_type' not found"
         exit 1
     fi
-    
+
     echo "🏃 Running command in $env_type environment..."
     cd "$template_dir"
     nix develop --command "$@"
@@ -104,7 +104,7 @@ case "$1" in
     rust|web|python)
         env_type="$1"
         action="${2:-shell}"
-        
+
         case "$action" in
             init)
                 init_environment "$env_type"

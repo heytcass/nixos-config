@@ -1,7 +1,7 @@
 # Dock detection and automatic monitor configuration
 # Handles Thunderbolt dock connection/disconnection events and triggers appropriate kanshi profiles
 
-{ pkgs, config, ... }:
+{ pkgs, ... }:
 
 {
   # Udev rules for dock detection
@@ -9,7 +9,7 @@
     # Detect dock connection/disconnection via USB device (Foxconn/Hon Hai dock)
     ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="0489", ATTRS{idProduct}=="e0a2", TAG+="systemd", ENV{SYSTEMD_WANTS}="dock-connected@%k.service"
     ACTION=="remove", SUBSYSTEM=="usb", ATTRS{idVendor}=="0489", ATTRS{idProduct}=="e0a2", TAG+="systemd", ENV{SYSTEMD_WANTS}="dock-disconnected@%k.service"
-    
+
     # Alternative detection via Thunderbolt bridge
     ACTION=="add", SUBSYSTEM=="pci", ATTRS{vendor}=="0x8086", ATTRS{device}=="0x15d3", TAG+="systemd", ENV{SYSTEMD_WANTS}="thunderbolt-dock-connected.service"
     ACTION=="remove", SUBSYSTEM=="pci", ATTRS{vendor}=="0x8086", ATTRS{device}=="0x15d3", TAG+="systemd", ENV{SYSTEMD_WANTS}="thunderbolt-dock-disconnected.service"
@@ -23,19 +23,19 @@
         Type = "oneshot";
         ExecStart = "${pkgs.writeShellScript "dock-connected" ''
           set -e
-          
+
           # Wait a moment for all devices to be discovered
           sleep 2
-          
+
           # Log the event
           echo "$(date): Dock connected - triggering monitor configuration" >> /home/tom/.local/share/dock-events.log
-          
+
           # Force kanshi to re-evaluate profiles
           systemctl --user restart kanshi
-          
+
           # Give kanshi time to apply configuration
           sleep 1
-          
+
           # If kanshi doesn't work, fallback to manual hyprctl (temporary)
           # This can be removed once kanshi dock profiles are working
           if ! systemctl --user is-active kanshi >/dev/null 2>&1; then
@@ -57,16 +57,16 @@
         Type = "oneshot";
         ExecStart = "${pkgs.writeShellScript "dock-disconnected" ''
           set -e
-          
+
           # Log the event
           echo "$(date): Dock disconnected - switching to laptop-only mode" >> /home/tom/.local/share/dock-events.log
-          
+
           # Force kanshi to re-evaluate profiles
           systemctl --user restart kanshi
-          
+
           # Give kanshi time to apply configuration
           sleep 1
-          
+
           # If kanshi doesn't work, fallback to manual hyprctl (temporary)
           if ! systemctl --user is-active kanshi >/dev/null 2>&1; then
             echo "$(date): Kanshi not active, applying laptop-only configuration" >> /home/tom/.local/share/dock-events.log
@@ -110,6 +110,6 @@
       mkdir -p /home/tom/.local/share
       chown tom:users /home/tom/.local/share
     '';
-    deps = [];
+    deps = [ ];
   };
 }

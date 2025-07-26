@@ -72,7 +72,10 @@
     };
 
     # Enable kernel modules for hardware monitoring
-    kernelModules = [ "coretemp" "nct6775" ];
+    kernelModules = [
+      "coretemp"
+      "nct6775"
+    ];
   };
 
   # Console keyboard configuration - critical for SDDM Colemak support
@@ -141,13 +144,13 @@
       options = "--delete-older-than 30d";
       persistent = true; # Run even if system was off during scheduled time
     };
-    
+
     # Additional source cleanup for large cached sources
     extraOptions = ''
       # More aggressive cleanup for source caches
       min-free = ${toString (1024 * 1024 * 1024)} # 1GB
       max-free = ${toString (5 * 1024 * 1024 * 1024)} # 5GB
-      
+
       # Keep fewer derivations to reduce source cache buildup
       keep-derivations = false
       keep-outputs = false
@@ -308,21 +311,21 @@
     ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="mq-deadline"
     # Optimize NVMe power management
     ACTION=="add|change", KERNEL=="nvme[0-9]*", ATTR{power/control}="auto"
-    
+
     # USB device notifications and auto-actions
     SUBSYSTEMS=="usb", ACTION=="add", ATTRS{idVendor}=="*", ATTRS{idProduct}=="*", \
       TAG+="systemd", ENV{SYSTEMD_WANTS}="usb-device-added@%k.service"
     SUBSYSTEMS=="usb", ACTION=="remove", ATTRS{idVendor}=="*", ATTRS{idProduct}=="*", \
       TAG+="systemd", ENV{SYSTEMD_WANTS}="usb-device-removed@%k.service"
-    
+
     # USB storage device auto-mounting with better permissions
     SUBSYSTEMS=="usb", KERNEL=="sd[a-z][0-9]*", ACTION=="add", \
       ATTRS{removable}=="1", TAG+="systemd", ENV{SYSTEMD_WANTS}="usb-storage-mount@%k.service"
-    
+
     # Logitech Unifying receiver optimization
     SUBSYSTEMS=="usb", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c52b|c532|c534", \
       MODE="0664", GROUP="input", TAG+="uaccess"
-    
+
     # Dell dock ethernet interface naming
     SUBSYSTEMS=="usb", ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="8153", \
       NAME="dock-eth", TAG+="systemd"
@@ -360,7 +363,7 @@
             PRODUCT=$(cat "$DEVICE_PATH/idProduct")
             MANUFACTURER=$(cat "$DEVICE_PATH/manufacturer" 2>/dev/null || echo "Unknown")
             PRODUCT_NAME=$(cat "$DEVICE_PATH/product" 2>/dev/null || echo "USB Device")
-            
+
             # Send desktop notification
             ${pkgs.libnotify}/bin/notify-send \
               "USB Device Connected" \
@@ -371,7 +374,7 @@
         '';
       };
     };
-    
+
     "usb-device-removed@" = {
       description = "Handle USB device removal";
       serviceConfig = {
@@ -385,7 +388,7 @@
         '';
       };
     };
-    
+
     "usb-storage-mount@" = {
       description = "Auto-mount USB storage device";
       serviceConfig = {
@@ -417,7 +420,7 @@
     enable = true;
     type = "ibus";
     ibus.engines = with pkgs.ibus-engines; [
-      uniemoji  # Emoji input
+      uniemoji # Emoji input
     ];
   };
 
@@ -442,7 +445,7 @@
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     ELECTRON_OZONE_PLATFORM_HINT = "auto";
-    
+
     # Input method variables
     GTK_IM_MODULE = "ibus";
     QT_IM_MODULE = "ibus";
@@ -468,26 +471,26 @@
 
       # Development tools
       tmux
-      
+
       # Hardware monitoring and control
-      lm_sensors          # Hardware monitoring
-      mission-center     # Modern hardware monitor (replaces psensor)
-      smartmontools      # SMART disk monitoring
-      nvme-cli           # NVMe management tools
-      hdparm             # Disk parameter management
-      usbutils           # lsusb and USB debugging
-      pciutils           # lspci and PCI debugging
-      
+      lm_sensors # Hardware monitoring
+      mission-center # Modern hardware monitor (replaces psensor)
+      smartmontools # SMART disk monitoring
+      nvme-cli # NVMe management tools
+      hdparm # Disk parameter management
+      usbutils # lsusb and USB debugging
+      pciutils # lspci and PCI debugging
+
       # System information
-      inxi               # System information tool
-      hwinfo             # Comprehensive hardware info
-      lshw               # Hardware listing
-      dmidecode          # DMI/SMBIOS information
-      
+      inxi # System information tool
+      hwinfo # Comprehensive hardware info
+      lshw # Hardware listing
+      dmidecode # DMI/SMBIOS information
+
       # Power management tools
-      acpi               # ACPI information
-      linuxPackages.cpupower  # CPU frequency management
-      
+      acpi # ACPI information
+      linuxPackages.cpupower # CPU frequency management
+
       # Archive tools
       ouch # Modern Rust-based archive tool (zip, tar, gzip, etc.) - replaces file-roller
 

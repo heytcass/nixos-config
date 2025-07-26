@@ -18,9 +18,8 @@
     kanshi # Dynamic display configuration
 
     # File management and media
-    xfce.thunar # Lightweight file manager
-    xfce.thunar-volman # Volume management for thunar
-    xfce.tumbler # Thumbnail support for thunar
+    nautilus # GNOME file manager with excellent Wayland support
+    gnome-online-accounts # Google Drive integration for nautilus
     gvfs # Virtual filesystem for better external drive handling
     imv # Wayland-native image viewer
     mpv # Video player with Wayland support

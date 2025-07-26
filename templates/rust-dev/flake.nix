@@ -7,8 +7,14 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, rust-overlay, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      nixpkgs,
+      rust-overlay,
+      flake-utils,
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         overlays = [ (import rust-overlay) ];
         pkgs = import nixpkgs {
@@ -21,17 +27,17 @@
             # Rust toolchain
             rust-bin.stable.latest.default
             rust-analyzer
-            
+
             # Development tools
             cargo-watch
             cargo-nextest
             cargo-audit
             cargo-edit
-            
+
             # Build dependencies
             pkg-config
             openssl
-            
+
             # Optional: Additional tools
             # cargo-flamegraph
             # cargo-benchcmp
@@ -43,5 +49,6 @@
             echo "   Cargo version: $(cargo --version)"
           '';
         };
-      });
+      }
+    );
 }

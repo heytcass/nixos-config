@@ -8,7 +8,7 @@ monitor_count=$(niri msg outputs | jq '. | length' 2>/dev/null || echo "1")
 # Check for USB dock (Foxconn/Hon Hai: 0489:e0a2)
 usb_dock=$(lsusb | grep -i "0489:e0a2" | wc -l)
 
-# Check for Thunderbolt dock (Intel: 8086:15d3)  
+# Check for Thunderbolt dock (Intel: 8086:15d3)
 tb_dock=$(lspci | grep -i "15d3" | wc -l)
 
 # Determine dock status

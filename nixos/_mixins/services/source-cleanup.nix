@@ -17,9 +17,9 @@
       User = "root";
       ExecStart = pkgs.writeShellScript "source-cleanup" ''
         set -e
-        
+
         echo "🧹 Starting Nix source cleanup..."
-        
+
         # Find and remove large source directories older than 7 days
         find /nix/store -maxdepth 1 -name "*-source" -type d -mtime +7 -exec du -sh {} \; | \
           sort -hr | head -20 | while read size path; do
@@ -28,13 +28,13 @@
               rm -rf "$path" || true
             fi
           done
-        
+
         # Clean up build-time dependencies that aren't runtime dependencies
         nix-collect-garbage --delete-older-than 7d
-        
+
         # Optimize store after cleanup
         nix-store --optimize
-        
+
         echo "✅ Source cleanup complete"
       '';
       TimeoutSec = 3600; # 1 hour timeout

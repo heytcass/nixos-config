@@ -170,7 +170,19 @@
       "Bash(mount:*)",
       "WebFetch(domain:stylix.danth.me)",
       "Bash(swaync-client:*)",
-      "Bash(notify-send:*)"
+      "Bash(notify-send:*)",
+      "Bash(avizo-client:*)",
+      "Bash(pactl get-sink-volume:*)",
+      "Bash(wpctl get-volume:*)",
+      "Bash(wpctl set-volume:*)",
+      "Bash(~/.config/scripts/volume-up.sh:*)",
+      "Bash(brightnessctl:*)",
+      "Bash(~/.config/scripts/brightness-up.sh:*)",
+      "Bash(wpctl status:*)",
+      "Bash(~/.config/scripts/audio-switcher.sh:*)",
+      "Bash(swaync)",
+      "Bash(timedatectl:*)",
+      "Bash(pre-commit run:*)"
     ],
     "deny": []
   },

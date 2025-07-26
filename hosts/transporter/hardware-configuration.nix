@@ -22,19 +22,19 @@
         "usb_storage"
         "sd_mod"
         "rtsx_pci_sdmmc"
-        "nvme"       # Added for potential NVMe support
-        "usbhid"     # Added for USB HID devices
-        "i2c_hid"    # Added for I2C HID devices
+        "nvme" # Added for potential NVMe support
+        "usbhid" # Added for USB HID devices
+        "i2c_hid" # Added for I2C HID devices
       ];
       kernelModules = [ ];
     };
     kernelModules = [ "kvm-intel" ];
     extraModulePackages = [ ];
-    
+
     # Dell-specific optimizations
     kernelParams = [
-      "intel_iommu=off"  # Moved from host config for better organization
-      "i915.enable_psr=0"  # Disable PSR for better display stability
+      "intel_iommu=off" # Moved from host config for better organization
+      "i915.enable_psr=0" # Disable PSR for better display stability
     ];
   };
 
@@ -45,10 +45,10 @@
   hardware = {
     # Enable Intel microcode updates
     cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-    
+
     # Enable firmware updates
     enableRedistributableFirmware = lib.mkDefault true;
-    
+
     # Dell-specific hardware support
     enableAllFirmware = lib.mkDefault true;
   };

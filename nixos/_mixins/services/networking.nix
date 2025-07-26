@@ -25,7 +25,7 @@
       enable = lib.mkIf (!isISO) true;
       wifi.powersave = lib.mkIf (!isISO) true;
     };
-    
+
     # Firewall configuration
     firewall = {
       enable = lib.mkDefault true;
