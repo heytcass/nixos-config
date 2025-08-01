@@ -1,0 +1,105 @@
+{ config, pkgs, lib, notion-mac-flake, claude-desktop-linux-flake, sops-nix, nix-output-monitor, ... }:
+
+let
+  shared = import ./modules/shared.nix { inherit lib pkgs; };
+  
+  # Trusted binary cache sources
+  substituters = [
+    "https://cache.nixos.org/"
+    "https://nix-community.cachix.org"
+  ];
+  
+  # Public keys for binary cache verification
+  trustedPublicKeys = [
+    "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+  ];
+  
+  # Nix configuration settings
+  nixSettings = {
+    experimental-features = [ "nix-command" "flakes" ];
+    auto-optimise-store = true;
+    trusted-users = [ "root" shared.user.name ];
+    substituters = substituters;
+    trusted-public-keys = trustedPublicKeys;
+  };
+  
+  # Configuration moved to systemd.nix for better organization
+in
+{
+  imports = [
+    ./hardware-configuration.nix
+    ./modules/boot.nix
+    ./modules/hardware.nix
+    ./modules/desktop.nix
+    ./modules/networking.nix
+    ./modules/security.nix
+    ./modules/performance.nix
+    ./modules/systemd.nix
+    { _module.args = { inherit notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor; }; }
+    ./modules/tools.nix
+    ./modules/secrets.nix
+  ];
+
+  # System version
+  system.stateVersion = "25.05";
+
+  # Localization
+  time.timeZone = shared.hardware.timezone;
+  i18n.defaultLocale = shared.hardware.locale;
+
+  # Package and system management
+  nixpkgs.config.allowUnfree = true;
+  
+  nix = {
+    settings = nixSettings;
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than ${shared.security.gcRetentionDays}";
+    };
+    optimise = {
+      automatic = true;
+      dates = [ "weekly" ];
+    };
+  };
+
+  # Container platform with enhanced security
+  virtualisation.podman = {
+    enable = true;
+    dockerCompat = true;
+    defaultNetwork.settings.dns_enabled = true;
+    
+    # Security configurations
+    autoPrune = {
+      enable = true;
+      dates = "weekly";
+      flags = [ "--all" ];
+    };
+  };
+  
+  # Rootless container support
+  virtualisation.containers = {
+    enable = true;
+    registries.search = [ "docker.io" "quay.io" ];
+    policy = {
+      default = [ { type = "insecureAcceptAnything"; } ];
+      transports = {
+        docker-daemon = {
+          "" = [ { type = "insecureAcceptAnything"; } ];
+        };
+      };
+    };
+  };
+
+  # System services (journald config moved to systemd.nix)
+  programs.dconf.enable = true;
+
+  # User account
+  users.users.${shared.user.name} = {
+    isNormalUser = true;
+    description = shared.user.fullName;
+    shell = shared.user.shell;
+    extraGroups = shared.user.groups;
+  };
+}
