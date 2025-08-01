@@ -19,7 +19,7 @@ let
   nixSettings = {
     experimental-features = [ "nix-command" "flakes" ];
     auto-optimise-store = true;
-    trusted-users = [ "root" shared.user.name ];
+    trusted-users = [ "root" config.mySystem.user.name ];
     substituters = substituters;
     trusted-public-keys = trustedPublicKeys;
   };
@@ -29,6 +29,7 @@ in
 {
   imports = [
     ./hardware-configuration.nix
+    ./modules/options.nix
     ./modules/boot.nix
     ./modules/hardware.nix
     ./modules/desktop.nix
@@ -45,8 +46,8 @@ in
   system.stateVersion = "25.05";
 
   # Localization
-  time.timeZone = shared.hardware.timezone;
-  i18n.defaultLocale = shared.hardware.locale;
+  time.timeZone = config.mySystem.hardware.timezone;
+  i18n.defaultLocale = config.mySystem.hardware.locale;
 
   # Package and system management
   nixpkgs.config.allowUnfree = true;
@@ -56,7 +57,7 @@ in
     gc = {
       automatic = true;
       dates = "weekly";
-      options = "--delete-older-than ${shared.security.gcRetentionDays}";
+      options = "--delete-older-than ${config.mySystem.security.gcRetentionDays}";
     };
     optimise = {
       automatic = true;
@@ -96,10 +97,10 @@ in
   programs.dconf.enable = true;
 
   # User account
-  users.users.${shared.user.name} = {
+  users.users.${config.mySystem.user.name} = {
     isNormalUser = true;
-    description = shared.user.fullName;
-    shell = shared.user.shell;
-    extraGroups = shared.user.groups;
+    description = config.mySystem.user.fullName;
+    shell = config.mySystem.user.shell;
+    extraGroups = config.mySystem.user.groups;
   };
 }

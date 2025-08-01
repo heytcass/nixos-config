@@ -1,8 +1,4 @@
 { config, pkgs, lib, ... }:
-
-let
-  shared = import ./shared.nix { inherit lib pkgs; };
-in
 {
   hardware = {
     # Enable all hardware optimizations
@@ -48,7 +44,7 @@ in
   # Memory optimization with zram
   zramSwap = {
     enable = true;
-    algorithm = shared.performance.zramAlgorithm;
-    memoryPercent = shared.performance.zramPercent;
+    algorithm = config.mySystem.performance.zramAlgorithm;
+    memoryPercent = config.mySystem.performance.zramPercent;
   };
 }
