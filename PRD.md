@@ -649,6 +649,346 @@ This setup provides professional-grade audio and video for your copywriting clie
 - [ ] Performance maintains or improves
 - [ ] Security features function as expected
 
+## **Fresh Installation Guide: Complete From-Scratch Setup**
+
+This section provides a comprehensive guide for deploying this entire NixOS configuration on a new system, including the advanced disko+impermanence setup completed in Phase 5.
+
+### **Prerequisites**
+- Dell XPS 13 9370 (or compatible hardware)
+- NixOS installation media (latest unstable)
+- YubiKey for hardware security (optional but recommended)
+- Backup of any existing data
+
+### **Option A: Traditional Installation + Migration**
+
+#### **Step 1: Basic NixOS Installation**
+1. **Boot NixOS Installer**:
+   ```bash
+   # Boot from NixOS installation media
+   # Connect to WiFi if needed:
+   sudo systemctl start wpa_supplicant
+   wpa_cli
+   > add_network
+   > set_network 0 ssid "YourWiFiName"
+   > set_network 0 psk "YourPassword"
+   > enable_network 0
+   > quit
+   ```
+
+2. **Partition Disk (Manual)**:
+   ```bash
+   # Create partitions matching our disko configuration:
+   sudo fdisk /dev/nvme0n1
+   # Create GPT table and partitions:
+   # - 1G EFI System Partition (type 1, label BOOT)
+   # - 220G Linux filesystem (type 20, label nixos)  
+   # - 16G Linux swap (type 19, label swap)
+   
+   # Format partitions:
+   sudo mkfs.fat -F 32 -n BOOT /dev/nvme0n1p1
+   sudo mkfs.ext4 -L nixos /dev/nvme0n1p2
+   sudo mkswap -L swap /dev/nvme0n1p3
+   ```
+
+3. **Mount and Install**:
+   ```bash
+   # Mount filesystems:
+   sudo mount /dev/disk/by-label/nixos /mnt
+   sudo mkdir -p /mnt/boot
+   sudo mount /dev/disk/by-label/BOOT /mnt/boot
+   sudo swapon /dev/disk/by-label/swap
+   
+   # Generate hardware config:
+   sudo nixos-generate-config --root /mnt
+   ```
+
+4. **Clone Configuration**:
+   ```bash
+   # Install git and clone config:
+   nix-shell -p git
+   cd /mnt/etc
+   sudo git clone https://github.com/yourusername/nixos-config.git nixos
+   cd nixos
+   
+   # Replace generated hardware-configuration.nix with ours:
+   sudo cp /mnt/etc/nixos/hardware-configuration.nix ./hardware-configuration.nix
+   ```
+
+5. **Install System**:
+   ```bash
+   # Install NixOS:
+   sudo nixos-install --flake /mnt/etc/nixos#gti
+   
+   # Set user password:
+   sudo nixos-enter --root /mnt
+   passwd tom
+   exit
+   
+   # Reboot:
+   reboot
+   ```
+
+#### **Step 2: Post-Installation Configuration**
+Follow the "Next Steps" section in this PRD for:
+- YubiKey setup
+- Secrets management 
+- GNOME extensions
+- Professional video conferencing setup
+
+### **Option B: Disko Automated Installation (Advanced)**
+
+This method uses our disko configuration for completely automated disk setup.
+
+#### **Step 1: Prepare Installation Environment**
+```bash
+# Boot NixOS installer and connect to internet
+# Install disko in the installer environment:
+nix-shell -p git disko
+
+# Clone the configuration:
+git clone https://github.com/yourusername/nixos-config.git /tmp/config
+cd /tmp/config
+```
+
+#### **Step 2: Automated Disk Setup**
+```bash
+# Run disko to automatically partition and format:
+sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko -- --mode disko ./modules/disko.nix --arg device '"/dev/nvme0n1"'
+
+# This will:
+# - Create GPT partition table
+# - Create EFI, root, and swap partitions 
+# - Format all filesystems
+# - Mount everything at /mnt
+```
+
+#### **Step 3: Install with Full Configuration**
+```bash
+# Install the complete system:
+sudo nixos-install --flake /tmp/config#gti
+
+# Set user password:
+sudo nixos-enter --root /mnt
+passwd tom
+exit
+
+reboot
+```
+
+### **Option C: Impermanence-Ready Fresh Install**
+
+For the most advanced setup with ephemeral root from day one:
+
+#### **Step 1: Initial Installation**
+Follow Option A or B above, but before final installation:
+
+#### **Step 2: Prepare Impermanence Structure**
+```bash
+# After mounting but before nixos-install:
+# Create persistent directory structure:
+sudo mkdir -p /mnt/persist/{etc,var/lib,var/log,home}
+sudo mkdir -p /mnt/persist/home/tom
+
+# Copy essential system files to persistent storage:
+sudo cp -r /mnt/etc/nixos /mnt/persist/etc/
+sudo mkdir -p /mnt/persist/etc/ssh
+sudo mkdir -p /mnt/persist/var/lib/nixos
+
+# Update the configuration to enable tmpfs root:
+cd /mnt/persist/etc/nixos
+sudo nano modules/impermanence.nix
+# Uncomment the tmpfs root configuration lines (104-115)
+```
+
+#### **Step 3: Install Impermanence System**
+```bash
+# Install with impermanence enabled:
+sudo nixos-install --flake /mnt/persist/etc/nixos#gti
+
+# The system will boot with:
+# - Ephemeral root filesystem (tmpfs)
+# - Persistent data in /persist
+# - All user data preserved across reboots
+```
+
+### **Hardware-Specific Setup (Dell XPS 13 9370)**
+
+#### **BIOS/UEFI Settings**
+```bash
+# Recommended BIOS settings:
+# - Secure Boot: Disabled initially (enable after lanzaboote setup)
+# - AHCI Mode: Enabled
+# - Thunderbolt Security: User Authorization (or disabled)
+# - Intel TXT: Enabled (for TPM)
+# - TPM 2.0: Enabled
+```
+
+#### **Driver and Firmware**
+```bash
+# After installation, update firmware:
+sudo fwupdmgr get-devices
+sudo fwupdmgr refresh
+sudo fwupdmgr update
+
+# Test hardware features:
+# - WiFi: Should work automatically with iwlwifi
+# - Bluetooth: Should pair normally
+# - Audio: Test with speaker-test
+# - Display: Test external monitor connectivity
+```
+
+### **Validation and Testing**
+
+#### **System Health Check**
+```bash
+# Verify all services:
+systemctl status
+systemctl --user status
+
+# Test rebuild:
+sudo nixos-rebuild switch --flake ~/.nixos#gti
+
+# Verify hardware optimization:
+cat /proc/cpuinfo | grep flags  # Check for Intel optimizations
+lscpu | grep MHz                # Verify performance scaling
+```
+
+#### **Impermanence Verification (if enabled)**
+```bash
+# Test ephemeral root:
+sudo touch /test-file
+sudo reboot
+# File should be gone after reboot
+
+# Verify persistent data:
+ls -la /persist/home/tom/  # User data should persist
+ls -la /persist/etc/nixos/ # System config should persist
+```
+
+#### **Security Feature Testing**
+```bash
+# Test AppArmor:
+sudo aa-status
+
+# Test firewall:
+sudo iptables -L
+
+# Test YubiKey (if configured):
+gpg --card-status
+```
+
+### **Advanced Features Activation**
+
+#### **Secure Boot with Lanzaboote**
+```bash
+# Generate keys:
+sudo sbctl create-keys
+
+# Enroll in UEFI:
+sudo sbctl enroll-keys --microsoft
+
+# Enable in configuration:
+# Edit modules/secure-boot.nix:
+# - Set boot.lanzaboote.enable = true
+# - Uncomment systemd-boot disable line
+
+# Rebuild and enable in BIOS:
+sudo nixos-rebuild switch --flake ~/.nixos#gti
+# Reboot and enable Secure Boot in UEFI
+```
+
+#### **Full Impermanence Migration (from existing system)**
+```bash
+# Create persistent structure:
+sudo mkdir -p /persist/{etc,var,home}
+
+# Copy critical data:
+sudo cp -r /etc/nixos /persist/etc/
+sudo cp -r /etc/ssh /persist/etc/
+sudo cp -r /home/tom /persist/home/
+sudo cp -r /var/lib/nixos /persist/var/lib/
+
+# Enable tmpfs root in configuration:
+# Edit modules/impermanence.nix and uncomment lines 104-115
+
+# Test and deploy:
+sudo nixos-rebuild build --flake ~/.nixos#gti
+sudo nixos-rebuild switch --flake ~/.nixos#gti
+sudo reboot
+```
+
+### **Troubleshooting Common Issues**
+
+#### **Build Failures**
+```bash
+# Check for common issues:
+# 1. Hardware config UUID mismatch
+# 2. Missing flake inputs
+# 3. Conflicting filesystem definitions
+
+# Debug build:
+sudo nixos-rebuild build --flake ~/.nixos#gti --show-trace
+
+# Rollback if needed:
+sudo nixos-rebuild switch --rollback
+```
+
+#### **Boot Issues**
+```bash
+# From NixOS installer:
+# Mount the broken system:
+sudo mount /dev/disk/by-label/nixos /mnt
+sudo mount /dev/disk/by-label/BOOT /mnt/boot
+
+# Chroot and fix:
+sudo nixos-enter --root /mnt
+# Edit configuration and rebuild
+nixos-rebuild switch --flake /etc/nixos#gti
+```
+
+#### **Impermanence Recovery**
+```bash
+# If impermanence breaks system access:
+# Boot from installer
+# Mount persistent partition:
+sudo mount /dev/disk/by-label/nixos /mnt
+cd /mnt/persist/etc/nixos
+
+# Disable impermanence temporarily:
+# Comment out tmpfs root lines in modules/impermanence.nix
+# Install fixed configuration:
+sudo nixos-install --root /mnt --flake .#gti
+```
+
+### **Performance Optimization Verification**
+
+#### **Memory and CPU**
+```bash
+# Verify Intel optimizations:
+cat /proc/cpuinfo | grep -E "(model name|flags)" | head -2
+
+# Check memory optimization:
+cat /proc/sys/vm/swappiness  # Should be 10
+free -h                      # Check zram swap
+
+# Verify kernel parameters:
+cat /proc/cmdline | grep mitigations  # Should be "auto"
+```
+
+#### **Storage Performance**
+```bash
+# Test NVMe performance:
+sudo hdparm -t /dev/nvme0n1
+
+# Check filesystem optimization:
+mount | grep ext4  # Should show noatime,commit=60
+
+# Verify nix store optimization:
+nix store optimise  # Should find shared files
+```
+
+This comprehensive guide ensures anyone can deploy this exact configuration from scratch, whether on new hardware or migrating from an existing system. The multiple installation options accommodate different skill levels and requirements.
+
 ## **Implementation Log**
 - **2025-01-11**: PRD created, Phase 1 implementation started
 - **2025-01-11**: Phase 1 completed successfully - security hardening, structured secrets, secure containers deployed
