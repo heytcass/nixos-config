@@ -1,7 +1,6 @@
 { config, pkgs, lib, notion-mac-flake, claude-desktop-linux-flake, nix-output-monitor, ... }:
 
 let
-  shared = import ./shared.nix { inherit lib pkgs; };
   
   # Modern Rust-based utilities (oxidizr-inspired)
   rustTools = with pkgs; [
@@ -114,7 +113,7 @@ in
   programs = {
     fish = {
       enable = true;
-      shellAliases = shared.modernAliases;
+      shellAliases = config.mySystem.modernAliases;
       interactiveShellInit = shellInit;
     };
     

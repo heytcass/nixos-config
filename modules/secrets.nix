@@ -1,8 +1,4 @@
 { config, pkgs, lib, sops-nix, ... }:
-
-let
-  shared = import ./shared.nix { inherit lib pkgs; };
-in
 {
   # Add sops and age packages
   environment.systemPackages = with pkgs; [
@@ -30,17 +26,17 @@ in
     # System secrets - temporarily disabled until age keys are properly configured
     secrets = {
       # Commented out until decryption keys are set up properly
-      # "wifi/home_password" = shared.secrets.system // { mode = "0440"; };
-      # "services/github_token" = shared.secrets.development;
-      # "services/openai_api_key" = shared.secrets.development;
-      # "services/anthropic_api_key" = shared.secrets.development;
+      # "wifi/home_password" = config.mySystem.secrets.system // { mode = "0440"; };
+      # "services/github_token" = config.mySystem.secrets.development;
+      # "services/openai_api_key" = config.mySystem.secrets.development;
+      # "services/anthropic_api_key" = config.mySystem.secrets.development;
     };
   };
 
   # Create initial age key directory for user
   systemd.tmpfiles.rules = [
-    "d /home/${shared.user.name}/.config 0755 ${shared.user.name} users -"
-    "d /home/${shared.user.name}/.config/sops 0755 ${shared.user.name} users -"
-    "d /home/${shared.user.name}/.config/sops/age 0700 ${shared.user.name} users -"
+    "d /home/${config.mySystem.user.name}/.config 0755 ${config.mySystem.user.name} users -"
+    "d /home/${config.mySystem.user.name}/.config/sops 0755 ${config.mySystem.user.name} users -"
+    "d /home/${config.mySystem.user.name}/.config/sops/age 0700 ${config.mySystem.user.name} users -"
   ];
 }

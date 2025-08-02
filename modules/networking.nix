@@ -1,7 +1,6 @@
 { config, pkgs, lib, ... }:
 
 let
-  shared = import ./shared.nix { inherit lib pkgs; };
   
   # DNS servers (Cloudflare and Google)
   dnsServers = [ "1.1.1.1" "8.8.8.8" ];
@@ -11,7 +10,7 @@ let
 in
 {
   networking = {
-    hostName = shared.hardware.hostname;
+    hostName = config.mySystem.hardware.hostname;
     
     # Network management with performance tuning
     networkmanager = {

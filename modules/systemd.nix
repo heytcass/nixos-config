@@ -1,8 +1,4 @@
 { config, pkgs, lib, ... }:
-
-let
-  shared = import ./shared.nix { inherit lib pkgs; };
-in
 {
   # Systemd user services and D-Bus integration
   services = {
@@ -46,15 +42,15 @@ in
       "/usr/share" 
       "/usr/local/share"
       "/var/lib/flatpak/exports/share"
-      "/home/${shared.user.name}/.local/share/flatpak/exports/share"
+      "/home/${config.mySystem.user.name}/.local/share/flatpak/exports/share"
     ];
   };
 
   # Advanced logging configuration
   services.journald = {
     extraConfig = ''
-      SystemMaxUse=${shared.security.journalMaxSize}
-      RuntimeMaxUse=${shared.security.runtimeMaxSize}
+      SystemMaxUse=${config.mySystem.security.journalMaxSize}
+      RuntimeMaxUse=${config.mySystem.security.runtimeMaxSize}
       MaxRetentionSec=1month
       MaxFileSec=1week
       ForwardToSyslog=no

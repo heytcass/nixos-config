@@ -1,8 +1,6 @@
 { config, pkgs, lib, notion-mac-flake, claude-desktop-linux-flake, sops-nix, nix-output-monitor, ... }:
 
 let
-  shared = import ./modules/shared.nix { inherit lib pkgs; };
-  
   # Trusted binary cache sources
   substituters = [
     "https://cache.nixos.org/"

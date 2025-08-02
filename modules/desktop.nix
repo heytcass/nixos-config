@@ -1,7 +1,6 @@
 { config, pkgs, lib, ... }:
 
 let
-  shared = import ./shared.nix { inherit lib pkgs; };
   
   # Unwanted GNOME applications
   excludedGnomePackages = with pkgs; [
@@ -43,8 +42,8 @@ in
     xserver = {
       enable = true;
       xkb = {
-        layout = shared.hardware.keyboardLayout;
-        variant = shared.hardware.keyboardVariant;
+        layout = config.mySystem.hardware.keyboardLayout;
+        variant = config.mySystem.hardware.keyboardVariant;
       };
       excludePackages = [ pkgs.xterm ];
     };

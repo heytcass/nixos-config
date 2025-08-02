@@ -1,12 +1,10 @@
 { config, pkgs, lib, ... }:
 
 let
-  shared = import ./modules/shared.nix { inherit lib pkgs; };
-  
   # System management functions
   systemFunctions = {
-    rebuild = "sudo nixos-rebuild switch --flake /home/${shared.user.name}/.nixos#${shared.hardware.hostname}";
-    update = "sudo nixos-rebuild switch --upgrade --flake /home/${shared.user.name}/.nixos#${shared.hardware.hostname}";
+    rebuild = "sudo nixos-rebuild switch --flake /home/tom/.nixos#gti";
+    update = "sudo nixos-rebuild switch --upgrade --flake /home/tom/.nixos#gti";
     mkcd = "mkdir -p $argv[1]; and cd $argv[1]";
   };
   
@@ -20,7 +18,22 @@ let
   };
   
   # Combined shell abbreviations
-  allAbbrs = shared.systemAbbrs // shared.gitAbbrs // {
+  allAbbrs = {
+    # System abbreviations
+    rb = "rebuild";
+    up = "update";
+    ".." = "cd ..";
+    "..." = "cd ../..";
+    # Git abbreviations
+    g = "git";
+    gst = "git status";
+    gaa = "git add --all";
+    gcmsg = "git commit -m";
+    gco = "git checkout";
+    gb = "git branch";
+    gd = "git diff";
+    glog = "git log --oneline --graph --decorate";
+    # Additional abbreviations
     ll = "eza -l --icons --git";
     la = "eza -la --icons --git";
   };
@@ -90,8 +103,8 @@ in
 {
   # Home Manager configuration
   home = {
-    username = shared.user.name;
-    homeDirectory = "/home/${shared.user.name}";
+    username = "tom";
+    homeDirectory = "/home/tom";
     stateVersion = "25.05";
     packages = with pkgs; [
       nerd-fonts.fira-code
@@ -122,7 +135,7 @@ in
   # sops-nix user configuration
   sops = {
     # User age key file
-    age.keyFile = "/home/${shared.user.name}/.config/sops/age/keys.txt";
+    age.keyFile = "/home/tom/.config/sops/age/keys.txt";
     
     # Default user secrets file
     defaultSopsFile = ./secrets/user-secrets.yaml;
@@ -141,8 +154,8 @@ in
     # Git version control
     git = {
       enable = true;
-      userName = shared.user.fullName;
-      userEmail = shared.user.email;
+      userName = "Tom Cassady";
+      userEmail = "heytcass@gmail.com";
       extraConfig = gitConfig;
       delta = {
         enable = true;

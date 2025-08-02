@@ -1,7 +1,6 @@
 { config, pkgs, lib, ... }:
 
 let
-  shared = import ./shared.nix { inherit lib pkgs; };
   
   # Network security parameters
   networkSecurity = {

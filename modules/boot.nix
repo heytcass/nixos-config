@@ -1,8 +1,4 @@
 { config, pkgs, lib, ... }:
-
-let
-  shared = import ./shared.nix { inherit lib pkgs; };
-in
 {
   boot = {
     # Boot loader configuration
@@ -16,7 +12,7 @@ in
     kernelPackages = pkgs.linuxPackages_latest;
     
     # Combined kernel parameters for performance and Intel graphics
-    kernelParams = shared.perfKernelParams ++ shared.intelFlags;
+    kernelParams = config.mySystem.perfKernelParams ++ config.mySystem.intelFlags;
     
     # Optimized initrd
     initrd = {
@@ -38,16 +34,16 @@ in
     # System performance tuning
     kernel.sysctl = {
       # Memory management
-      "vm.swappiness" = shared.performance.swapiness;
-      "vm.vfs_cache_pressure" = shared.performance.cachePressure;
-      "vm.dirty_ratio" = shared.performance.dirtyRatio;
-      "vm.dirty_background_ratio" = shared.performance.dirtyBackgroundRatio;
+      "vm.swappiness" = config.mySystem.performance.swapiness;
+      "vm.vfs_cache_pressure" = config.mySystem.performance.cachePressure;
+      "vm.dirty_ratio" = config.mySystem.performance.dirtyRatio;
+      "vm.dirty_background_ratio" = config.mySystem.performance.dirtyBackgroundRatio;
       
       # Advanced memory management
-      "vm.max_map_count" = shared.performance.maxMapCount;
-      "vm.mmap_min_addr" = shared.performance.mmapMinAddr;
-      "vm.overcommit_memory" = shared.performance.overcommitMemory;
-      "vm.overcommit_ratio" = shared.performance.overcommitRatio;
+      "vm.max_map_count" = config.mySystem.performance.maxMapCount;
+      "vm.mmap_min_addr" = config.mySystem.performance.mmapMinAddr;
+      "vm.overcommit_memory" = config.mySystem.performance.overcommitMemory;
+      "vm.overcommit_ratio" = config.mySystem.performance.overcommitRatio;
     };
   };
 }
