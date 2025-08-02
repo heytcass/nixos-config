@@ -146,7 +146,14 @@ error: The option `fileSystems."/".device' has conflicting definition values:
 **Solution Attempt 1**: ❌ Removed explicit filesystem definitions - FAILED
 **Still Getting Same Error**: Disko automatically generates filesystem definitions from disk layout
 
-**Solution Attempt 2**: Disable disko's automatic filesystem generation by removing mountpoints from partitions
+**Solution Attempt 2**: ✅ **SUCCESS!** 
+**What Worked**: Removed mountpoints from disko partition definitions
+- Removed `mountpoint = "/boot"` from ESP partition
+- Removed `mountpoint = "/"` from root partition  
+- **Result**: Disko no longer generates conflicting filesystem definitions
+- **Build Status**: ✅ **SUCCESSFUL** - System builds without conflicts
+
+**Key Learning**: Disko automatically creates fileSystems entries when mountpoints are specified. For existing systems, remove mountpoints to use disko for documentation/installation planning only.
 
 #### **Step 2: Impermanence Implementation** (PLANNED)
 **Strategy**: Conservative approach preserving essential directories initially
