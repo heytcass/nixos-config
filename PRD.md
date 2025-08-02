@@ -46,23 +46,24 @@
    - ✅ Added helvum and qpwgraph for professional audio routing visualization
 
 5. **Enhanced GNOME Productivity Suite** ✅
-   - ✅ Just Perfection for interface optimization and focus (verified available)
+   - ✅ Just Perfection for interface optimization and focus
    - ✅ Advanced clipboard history management for copywriting workflow  
    - ✅ Vitals for system monitoring
-   - ✅ wdisplays for GUI-based display management
-   - ⚠️ Some extensions (sound-output-device-chooser, workspace-indicator, window-list) not available in nixpkgs - can be installed via GNOME Extensions website
+   - ❌ Removed wdisplays (incompatible with GNOME - requires wlroots protocols)
+   - ⚠️ Some extensions (sound-output-device-chooser, workspace-indicator, window-list) not available in nixpkgs - require manual installation via GNOME Extensions Manager
 
-6. **Multi-Display Management** ✅
-   - ✅ Added kanshi package for Wayland display configuration
-   - ✅ Integrated ddcutil for external monitor hardware control  
-   - ✅ Added autorandr for automatic display configuration
+6. **Multi-Display Management** ✅ 
+   - ❌ Removed kanshi (incompatible with GNOME - wlroots/sway only)
+   - ✅ Integrated ddcutil for external monitor hardware control via DDC/CI
+   - ✅ Added autorandr for automatic display configuration (X11/Wayland compatible)
    - ✅ v4l-utils for camera control during video calls
 
 **Implementation Notes:**
 - All communication tools follow existing modular organization pattern
 - PipeWire optimizations maintain compatibility while enabling professional audio
 - Some GNOME extensions require manual installation via Extensions Manager (noted in Next Steps)
-- Fixed multiple build issues: kanshi service config, PAM U2F settings, extension names
+- **Build Issues Resolved**: Removed incompatible wayland-only tools (kanshi, wdisplays) that require wlroots/sway
+- **Extension Compatibility**: Used only GNOME-compatible tools (autorandr, ddcutil) for multi-display management
 - Secrets management temporarily disabled pending age key configuration
 
 ### **Phase 3: Future-Proof Architecture Migration**
@@ -99,7 +100,23 @@
 - Performance analysis and debugging tools included
 - System builds successfully with all advanced tooling
 
-9. **Advanced Linux-Only Capabilities** (Future Enhancement)
+### **Phase 5: Declarative Disk Management & Impermanence**
+**Status: PLANNED - Implementation Starting 2025-08-02**
+
+9. **Disko Integration for Declarative Disk Layout**
+   - Document current disk partitioning scheme declaratively
+   - Enable automated installation and reproduction
+   - Prepare for remote deployment scenarios
+   - Version control disk layout alongside system configuration
+
+10. **Impermanence for Stateless System**
+    - Implement root filesystem reset on every boot
+    - Preserve only explicitly declared persistent data
+    - Enhance security by eliminating log/cache accumulation
+    - Force declarative configuration of all important state
+    - Perfect for professional consulting work requiring clean environments
+
+**Phase 6: Advanced Linux-Only Capabilities** (Future Enhancement)
    - Container orchestration for isolated client environments
    - Real-time systemd automation for workflow optimization
    - Advanced input device and hardware support
@@ -494,7 +511,7 @@ This setup provides professional-grade audio and video for your copywriting clie
 - **2025-01-11**: PRD created, Phase 1 implementation started
 - **2025-01-11**: Phase 1 completed successfully - security hardening, structured secrets, secure containers deployed
 - **2025-01-11**: Phase 2 completed successfully - professional communication, video conferencing, GNOME productivity suite deployed
-- **2025-01-11**: Fixed multiple build issues: kanshi configuration, PAM U2F settings, GNOME extension availability
+- **2025-01-11**: Resolved compatibility issues: removed kanshi/wdisplays (wlroots-only), fixed PAM U2F settings, GNOME extension availability
 - **2025-01-11**: Secrets management temporarily disabled pending age key resolution - system builds successfully
 - **2025-01-11**: Updated Next Steps with current status and manual configuration requirements
 - **2025-08-02**: Phase 3 completed successfully - architecture migration to proper NixOS options completed
