@@ -40,6 +40,7 @@ in
     ./modules/secrets.nix
     ./modules/secure-boot.nix
     ./modules/advanced-tools.nix
+    ./modules/disko.nix
   ];
 
   # System version

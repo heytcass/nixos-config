@@ -101,20 +101,129 @@
 - System builds successfully with all advanced tooling
 
 ### **Phase 5: Declarative Disk Management & Impermanence**
-**Status: PLANNED - Implementation Starting 2025-08-02**
+**Status: IN PROGRESS - Implementation Started 2025-08-02**
 
-9. **Disko Integration for Declarative Disk Layout**
-   - Document current disk partitioning scheme declaratively
-   - Enable automated installation and reproduction
-   - Prepare for remote deployment scenarios
-   - Version control disk layout alongside system configuration
+#### **Implementation Strategy & Context Preservation**
+- **Branch**: `phase5-disko-impermanence` (safe rollback available)
+- **Approach**: Disko first (safe/documentation), then impermanence (system-changing)
+- **Context Risk**: Impermanence will wipe conversation history - all decisions documented here
+- **Current Disk Layout**: `/dev/nvme0n1` - 1G EFI, 220.6G ext4 root, 16.9G swap
 
-10. **Impermanence for Stateless System**
-    - Implement root filesystem reset on every boot
-    - Preserve only explicitly declared persistent data
-    - Enhance security by eliminating log/cache accumulation
-    - Force declarative configuration of all important state
-    - Perfect for professional consulting work requiring clean environments
+#### **Step 1: Disko Configuration** ✅ **COMPLETED**
+**What Was Done:**
+- **File Created**: `modules/disko.nix` - declarative disk layout matching current system
+- **Flake Integration**: Added `disko.nixosModules.disko` to flake.nix
+- **Configuration Import**: Added `./modules/disko.nix` to configuration.nix imports
+- **Disk Layout Documented**: 
+  ```
+  /dev/nvme0n1p1: 1G vfat /boot (EFI System Partition)  
+  /dev/nvme0n1p2: 220.6G ext4 / (root filesystem)
+  /dev/nvme0n1p3: 16.9G swap (with hibernation support)
+  ```
+
+**Technical Details Implemented:**
+- **GPT Partition Table**: Proper EFI/UEFI compatibility
+- **Filesystem Labels**: BOOT, nixos, swap for consistent identification
+- **Mount Options**: Standard defaults, hibernation support enabled
+- **Disko Device Structure**: Complete declarative representation
+- **Build Integration**: Module included in system configuration
+
+**Files Modified:**
+- `modules/disko.nix` (new) - Complete disk configuration
+- `flake.nix` - Added disko module import and specialArgs
+- `configuration.nix` - Added disko module to imports
+
+**Build Test Status**: PENDING - Ready for testing
+
+#### **Step 2: Impermanence Implementation** (PLANNED)
+**Strategy**: Conservative approach preserving essential directories initially
+
+**Critical Persistent Directories to Preserve:**
+```bash
+# System essentials
+/etc/nixos -> /persist/etc/nixos
+/var/lib/nixos -> /persist/var/lib/nixos  
+/etc/ssh -> /persist/etc/ssh
+/etc/machine-id -> /persist/etc/machine-id
+
+# User data  
+/home/tom -> /persist/home/tom
+
+# Hardware/firmware
+/var/lib/fwupd -> /persist/var/lib/fwupd
+/var/lib/bluetooth -> /persist/var/lib/bluetooth
+
+# Secrets and keys
+/var/lib/sops-nix -> /persist/var/lib/sops-nix
+/etc/secureboot -> /persist/etc/secureboot
+
+# Development and containers
+/var/lib/containers -> /persist/var/lib/containers
+/var/cache/nix -> /persist/var/cache/nix (optional for performance)
+```
+
+**Impermanence Module Plan:**
+- **Conservative Start**: Preserve logs initially for debugging
+- **Tmpfs Root**: Root filesystem reset on each boot
+- **Bind Mounts**: Essential directories bound to /persist
+- **User Data**: Complete /home/tom preservation
+- **Gradual Reduction**: Remove persistent directories as confidence grows
+
+**Implementation Files to Create:**
+- `modules/impermanence.nix` - Main impermanence configuration  
+- `modules/options.nix` - Add impermanence options if needed
+- Update `hardware-configuration.nix` - May need tmpfs root configuration
+
+**Testing Strategy:**
+1. **Build Test**: Ensure configuration builds without errors
+2. **VM Test**: Test in virtual machine first if possible  
+3. **Backup Strategy**: Git branch allows complete rollback
+4. **Recovery Plan**: Boot from NixOS ISO if needed, restore from git
+
+**Context Preservation Strategy:**
+- **All Implementation Details**: Documented in this PRD section
+- **Git History**: Complete implementation in version control  
+- **Recovery Commands**: Document exact rollback steps
+- **Build Commands**: Document all testing and deployment commands
+
+**Risk Mitigation:**
+- **Branch Safety**: Can `git checkout main` and rebuild to rollback
+- **Incremental**: Disko first (safe), impermanence second (major change)
+- **Documentation**: All context preserved in this PRD for post-reboot reference
+
+#### **Recovery & Rollback Commands**
+**If System Breaks - Emergency Recovery:**
+```bash
+# Boot from NixOS ISO or existing system, then:
+cd ~/.nixos
+git checkout main                    # Return to working state
+sudo nixos-rebuild switch --flake .#gti  # Restore working system
+```
+
+**Phase 5 Implementation Commands (for reference):**
+```bash
+# Current branch
+git checkout phase5-disko-impermanence
+
+# Test disko configuration  
+sudo nixos-rebuild build --flake ~/.nixos#gti
+
+# If build succeeds, deploy disko
+sudo nixos-rebuild switch --flake ~/.nixos#gti  
+
+# Test impermanence (after implementing)
+sudo nixos-rebuild build --flake ~/.nixos#gti   # Test first
+sudo nixos-rebuild switch --flake ~/.nixos#gti  # Deploy if build succeeds
+reboot  # Test impermanence behavior
+```
+
+**Post-Impermanence Recovery (if needed):**
+```bash
+# From any terminal after reboot
+cd ~/.nixos  # Should be in /persist if impermanence working
+git status   # Verify git state preserved  
+# All context in this PRD section - continue implementation from here
+```
 
 **Phase 6: Advanced Linux-Only Capabilities** (Future Enhancement)
    - Container orchestration for isolated client environments

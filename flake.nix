@@ -48,12 +48,13 @@
     }) // {
       nixosConfigurations.gti = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit home-manager notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote; };
+        specialArgs = { inherit home-manager notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko; };
         modules = [
           ./configuration.nix
           nixos-hardware.nixosModules.dell-xps-13-9370
           sops-nix.nixosModules.sops
           lanzaboote.nixosModules.lanzaboote
+          disko.nixosModules.disko
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
