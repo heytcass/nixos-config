@@ -32,7 +32,7 @@
   # Enable experimental Nix features for advanced usage
   nix.settings = {
     # Already set in configuration.nix, but ensuring consistency
-    experimental-features = [ "nix-command" "flakes" "repl-flake" ];
+    experimental-features = [ "nix-command" "flakes" ];
     
     # Optimize for parallel builds
     max-jobs = "auto";
