@@ -133,7 +133,17 @@
 - `flake.nix` - Added disko module import and specialArgs
 - `configuration.nix` - Added disko module to imports
 
-**Build Test Status**: PENDING - Ready for testing
+**Build Test Status**: ❌ **EXPECTED CONFLICT DISCOVERED**
+**Actual Error Encountered:**
+```
+error: The option `fileSystems."/".device' has conflicting definition values:
+- In disko module: "/dev/disk/by-partlabel/disk-main-root"  
+- In hardware-configuration.nix: "/dev/disk/by-uuid/0e306945-1bb5-4a94-a518-2d472628a272"
+```
+
+**Root Cause**: Disko automatically generates fileSystems definitions that conflict with existing hardware-configuration.nix
+
+**Solution**: Remove conflicting filesystem definitions from disko.nix - let hardware-configuration.nix handle mounts, disko handles disk layout documentation only
 
 #### **Step 2: Impermanence Implementation** (PLANNED)
 **Strategy**: Conservative approach preserving essential directories initially

@@ -53,21 +53,6 @@
     };
   };
   
-  # Ensure fileSystems entries are generated
-  # (disko automatically creates these, but being explicit)
-  fileSystems."/" = {
-    device = "/dev/disk/by-label/nixos";
-    fsType = "ext4";
-    options = [ "defaults" ];
-  };
-  
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-label/BOOT";
-    fsType = "vfat";
-    options = [ "defaults" ];
-  };
-  
-  swapDevices = [
-    { device = "/dev/disk/by-label/swap"; }
-  ];
+  # Note: fileSystems and swapDevices are handled by hardware-configuration.nix
+  # This disko configuration is for documentation and automated installation only
 }
