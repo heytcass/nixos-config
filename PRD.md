@@ -101,7 +101,7 @@
 - System builds successfully with all advanced tooling
 
 ### **Phase 5: Declarative Disk Management & Impermanence**
-**Status: IN PROGRESS - Implementation Started 2025-08-02**
+**Status: ✅ DEPLOYED - Ready for Final Reboot Test 2025-08-02**
 
 #### **Implementation Strategy & Context Preservation**
 - **Branch**: `phase5-disko-impermanence` (safe rollback available)
@@ -196,6 +196,32 @@ error: The option `fileSystems."/".device' has conflicting definition values:
 - Ready for `sudo nixos-rebuild switch --flake ~/.nixos#gti && sudo reboot`
 
 **Key Learning**: Hardware-configuration.nix filesystem definitions require `lib.mkForce` override for impermanence tmpfs root.
+
+#### **Step 4: Final Deployment & Activation** ✅ **COMPLETED**
+**What Was Done:**
+- **Fixed activation conflicts**: Removed `.bashrc` and `.bash_history` from impermanence files due to existing file conflicts
+- **Deployed impermanence system**: `sudo nixos-rebuild switch --flake ~/.nixos#gti`
+- **Verified bind mounts**: All persistent directories successfully mounted via systemd units
+- **System Status**: Impermanence active, tmpfs root configured, ready for reboot
+
+**Deployment Results**:
+- ❌ **First Deployment**: File conflicts with `.bashrc`, `.bash_history`, `/etc/machine-id`
+- **Solution 1**: Removed `/etc/machine-id` from directories (file vs directory conflict)
+- **Solution 2**: Removed `.bashrc` and `.bash_history` from files (existing file conflicts)
+- ✅ **Second Deployment**: ✅ **SUCCESS!** Impermanence system deployed successfully
+
+**Active Bind Mounts Created**:
+```
+etc-nixos.mount, etc-ssh.mount, home-tom-.config.mount, home-tom-.nixos.mount,
+var-lib-nixos.mount, var-log.mount, persist.mount, and 20+ other bind mounts
+```
+
+**System State**:
+- **Current**: Impermanence bind mounts active on ext4 root
+- **After Reboot**: Will switch to ephemeral tmpfs root with persistent data preserved
+- **Ready for Final Test**: `sudo reboot` to complete Phase 5
+
+**Key Learning**: Impermanence activation conflicts occur with existing files. Remove conflicting entries from configuration rather than trying to force overwrite.
 
 **Critical Persistent Directories to Preserve:**
 ```bash

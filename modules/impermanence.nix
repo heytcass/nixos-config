@@ -16,7 +16,6 @@
       
       # SSH and machine identity
       "/etc/ssh"
-      "/etc/machine-id"
       
       # Hardware and firmware  
       "/var/lib/fwupd"
@@ -51,7 +50,7 @@
     
     # Individual files that need persistence
     files = [
-      "/etc/machine-id"
+      # machine-id handled automatically by NixOS
     ];
     
     # User data - complete preservation initially
@@ -87,9 +86,8 @@
       ];
       
       files = [
-        ".bashrc"
-        ".bash_history"
         # Fish shell history will be in .local/share/fish - covered by directories
+        # Note: .bashrc and .bash_history removed due to conflicts with existing files
       ];
     };
   };
