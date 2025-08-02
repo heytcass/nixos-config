@@ -38,6 +38,8 @@ in
     { _module.args = { inherit notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor; }; }
     ./modules/tools.nix
     ./modules/secrets.nix
+    ./modules/secure-boot.nix
+    ./modules/advanced-tools.nix
   ];
 
   # System version
