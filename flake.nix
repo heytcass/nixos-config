@@ -33,9 +33,12 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    impermanence = {
+      url = "github:nix-community/impermanence";
+    };
   };
 
-  outputs = { self, nixpkgs, nixos-hardware, flake-utils, home-manager, notion-mac-flake, claude-desktop-linux-flake, sops-nix, nix-output-monitor, lanzaboote, disko }:
+  outputs = { self, nixpkgs, nixos-hardware, flake-utils, home-manager, notion-mac-flake, claude-desktop-linux-flake, sops-nix, nix-output-monitor, lanzaboote, disko, impermanence }:
     flake-utils.lib.eachDefaultSystem (system: {
       # Development shell for system maintenance
       devShells.default = nixpkgs.legacyPackages.${system}.mkShell {
@@ -48,13 +51,14 @@
     }) // {
       nixosConfigurations.gti = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit home-manager notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko; };
+        specialArgs = { inherit home-manager notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko impermanence; };
         modules = [
           ./configuration.nix
           nixos-hardware.nixosModules.dell-xps-13-9370
           sops-nix.nixosModules.sops
           lanzaboote.nixosModules.lanzaboote
           disko.nixosModules.disko
+          impermanence.nixosModules.impermanence
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;

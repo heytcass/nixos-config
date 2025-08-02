@@ -155,8 +155,15 @@ error: The option `fileSystems."/".device' has conflicting definition values:
 
 **Key Learning**: Disko automatically creates fileSystems entries when mountpoints are specified. For existing systems, remove mountpoints to use disko for documentation/installation planning only.
 
-#### **Step 2: Impermanence Implementation** (PLANNED)
-**Strategy**: Conservative approach preserving essential directories initially
+#### **Step 2: Impermanence Implementation** ✅ **IN PROGRESS**
+**What Was Done:**
+- **Flake Integration**: Added impermanence to flake.nix inputs and modules
+- **Module Created**: `modules/impermanence.nix` with conservative persistent directories
+- **Configuration**: Added impermanence module to configuration.nix imports
+- **Conservative Setup**: Disabled tmpfs root initially - module documents target state
+- **User Data**: Complete /home/tom preservation plus essential system directories
+
+**Build Test**: File not committed error - needs commit before testing
 
 **Critical Persistent Directories to Preserve:**
 ```bash
