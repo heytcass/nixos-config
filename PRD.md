@@ -166,9 +166,10 @@ error: The option `fileSystems."/".device' has conflicting definition values:
 **Build Test Results**:
 - ❌ **First Attempt**: File not committed error - FIXED by committing
 - ❌ **Second Attempt**: `programs.fuse.userMount` option doesn't exist
-- **Error**: `The option 'programs.fuse.userMount' does not exist`
+- **Solution**: Removed invalid fuse option from impermanence.nix
+- ✅ **Third Attempt**: ✅ **SUCCESS!** Build completed successfully
 
-**Solution**: Remove invalid fuse option, test other impermanence configuration
+**Key Learning**: The programs.fuse.userMount option doesn't exist in current NixOS. Impermanence works without this option.
 
 **Critical Persistent Directories to Preserve:**
 ```bash
