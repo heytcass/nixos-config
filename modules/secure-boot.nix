@@ -2,11 +2,6 @@
 { config, pkgs, lib, ... }:
 
 {
-  # Install sbctl for secure boot key management
-  environment.systemPackages = with pkgs; [
-    sbctl
-  ];
-
   # Lanzaboote configuration for secure boot
   boot.lanzaboote = {
     enable = false; # Set to true after generating and enrolling keys
@@ -31,8 +26,12 @@
     abrmd.enable = false; # Use in-kernel resource manager
   };
 
-  # Additional packages for TPM2 management
+  # Secure boot and TPM2 management packages
   environment.systemPackages = with pkgs; [
+    # Secure boot tools
+    sbctl
+    
+    # TPM2 tools
     tpm2-tss
     tpm2-tools
     tpm2-pkcs11
