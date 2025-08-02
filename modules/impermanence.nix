@@ -114,8 +114,8 @@
   #   neededForBoot = true;
   # };
   
-  # Programs that need special handling for impermanence
-  programs.fuse.userMount = true;
+  # Programs that may need special handling for impermanence
+  # Note: programs.fuse.userMount doesn't exist in current NixOS version
   
   # Essential services that need early availability
   systemd.tmpfiles.rules = [

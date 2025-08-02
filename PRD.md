@@ -163,7 +163,12 @@ error: The option `fileSystems."/".device' has conflicting definition values:
 - **Conservative Setup**: Disabled tmpfs root initially - module documents target state
 - **User Data**: Complete /home/tom preservation plus essential system directories
 
-**Build Test**: File not committed error - needs commit before testing
+**Build Test Results**:
+- ❌ **First Attempt**: File not committed error - FIXED by committing
+- ❌ **Second Attempt**: `programs.fuse.userMount` option doesn't exist
+- **Error**: `The option 'programs.fuse.userMount' does not exist`
+
+**Solution**: Remove invalid fuse option, test other impermanence configuration
 
 **Critical Persistent Directories to Preserve:**
 ```bash
