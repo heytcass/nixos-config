@@ -1,0 +1,21 @@
+# Nix build results
+result
+result-*
+
+# Backup files
+*.backup
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Secrets (just in case)
+*.key
+*.pem
