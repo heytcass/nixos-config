@@ -4,9 +4,6 @@
 {
   # Advanced NixOS management tools
   environment.systemPackages = with pkgs; [
-    # Remote deployment and installation
-    nixos-anywhere
-    
     # Fast Nix operations
     nix-fast-build
     
@@ -15,8 +12,7 @@
     
     # Additional deployment and management tools
     nixos-generators    # Generate images for various platforms
-    deploy-rs          # Alternative deployment tool
-    colmena           # NixOS deployment tool
+    colmena            # NixOS deployment tool
     
     # System inspection and debugging
     nix-tree          # Visualize Nix store dependencies
@@ -27,6 +23,9 @@
     # Performance analysis
     hyperfine         # Command-line benchmarking tool
     flamegraph        # Generate flamegraphs from perf data
+    
+    # Note: nixos-anywhere is run directly from its flake
+    # Note: deploy-rs needs to be added as a flake input if desired
   ];
 
   # Enable experimental Nix features for advanced usage
@@ -53,7 +52,7 @@
     
     # Deployment shortcuts
     deploy = "nixos-rebuild switch --flake .#";
-    deploy-remote = "nixos-anywhere";
+    deploy-remote = "nix run github:nix-community/nixos-anywhere --";
     
     # System analysis
     nix-why = "nix-tree";
