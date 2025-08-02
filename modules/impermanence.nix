@@ -100,19 +100,19 @@
   # 3. Then reconfigure root as tmpfs
   # This configuration documents the target state but needs manual migration
   
-  # TODO: This will be implemented after creating /persist directory structure
-  # fileSystems."/" = {
-  #   device = "none";
-  #   fsType = "tmpfs";
-  #   options = [ "defaults" "size=2G" "mode=755" ];
-  #   neededForBoot = true;
-  # };
-  # 
-  # fileSystems."/persist" = {
-  #   device = "/dev/disk/by-uuid/0e306945-1bb5-4a94-a518-2d472628a272";
-  #   fsType = "ext4";
-  #   neededForBoot = true;
-  # };
+  # Enable tmpfs root filesystem for impermanence
+  fileSystems."/" = lib.mkForce {
+    device = "none";
+    fsType = "tmpfs";
+    options = [ "defaults" "size=2G" "mode=755" ];
+    neededForBoot = true;
+  };
+  
+  fileSystems."/persist" = {
+    device = "/dev/disk/by-uuid/0e306945-1bb5-4a94-a518-2d472628a272";
+    fsType = "ext4";
+    neededForBoot = true;
+  };
   
   # Programs that may need special handling for impermanence
   # Note: programs.fuse.userMount doesn't exist in current NixOS version

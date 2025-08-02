@@ -171,6 +171,32 @@ error: The option `fileSystems."/".device' has conflicting definition values:
 
 **Key Learning**: The programs.fuse.userMount option doesn't exist in current NixOS. Impermanence works without this option.
 
+#### **Step 3: Enable Tmpfs Root & Deploy** ✅ **COMPLETED**
+**What Was Done:**
+- **Enabled tmpfs root**: Uncommented and configured tmpfs filesystem in impermanence.nix
+- **Fixed filesystem conflict**: Added `lib.mkForce` to override hardware-configuration.nix root definition
+- **Created /persist structure**: `sudo mkdir -p /persist/{etc,var/lib,var/log,home}`
+- **Copied critical data to /persist**:
+  ```bash
+  sudo cp -r /etc/nixos /persist/etc/
+  sudo cp -r /etc/ssh /persist/etc/
+  sudo cp -r /home/tom /persist/home/
+  sudo cp -r /var/lib/nixos /persist/var/lib/
+  ```
+
+**Build Test Results**:
+- ❌ **First Attempt**: `fileSystems."/".fsType' has conflicting definition values`
+- **Error**: hardware-configuration.nix (ext4) vs impermanence.nix (tmpfs) conflict
+- **Solution**: Added `lib.mkForce` to override hardware-configuration.nix
+- ✅ **Second Attempt**: ✅ **SUCCESS!** Build completed successfully
+
+**System Ready for Deployment**:
+- Configuration builds successfully with tmpfs root enabled
+- All critical data copied to /persist directory structure  
+- Ready for `sudo nixos-rebuild switch --flake ~/.nixos#gti && sudo reboot`
+
+**Key Learning**: Hardware-configuration.nix filesystem definitions require `lib.mkForce` override for impermanence tmpfs root.
+
 **Critical Persistent Directories to Preserve:**
 ```bash
 # System essentials
