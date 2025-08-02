@@ -18,10 +18,7 @@
               content = {
                 type = "filesystem";
                 format = "vfat";
-                mountpoint = "/boot";
-                mountOptions = [
-                  "defaults"
-                ];
+                # mountpoint removed to avoid conflicts with hardware-configuration.nix
               };
             };
             
@@ -31,10 +28,7 @@
               content = {
                 type = "filesystem";
                 format = "ext4";
-                mountpoint = "/";
-                mountOptions = [
-                  "defaults"
-                ];
+                # mountpoint removed to avoid conflicts with hardware-configuration.nix
               };
             };
             

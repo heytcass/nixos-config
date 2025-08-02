@@ -143,7 +143,10 @@ error: The option `fileSystems."/".device' has conflicting definition values:
 
 **Root Cause**: Disko automatically generates fileSystems definitions that conflict with existing hardware-configuration.nix
 
-**Solution**: Remove conflicting filesystem definitions from disko.nix - let hardware-configuration.nix handle mounts, disko handles disk layout documentation only
+**Solution Attempt 1**: ❌ Removed explicit filesystem definitions - FAILED
+**Still Getting Same Error**: Disko automatically generates filesystem definitions from disk layout
+
+**Solution Attempt 2**: Disable disko's automatic filesystem generation by removing mountpoints from partitions
 
 #### **Step 2: Impermanence Implementation** (PLANNED)
 **Strategy**: Conservative approach preserving essential directories initially
