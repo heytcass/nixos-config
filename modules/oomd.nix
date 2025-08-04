@@ -5,20 +5,8 @@
   # Provides proactive memory management to prevent system freezes
   
   systemd = {
-    # Global oomd configuration 
-    oomd = {
-      enable = true;
-      
-      settings = {
-        OOM = {
-          # Conservative memory pressure duration - act quickly but not too aggressively
-          DefaultMemoryPressureDurationSec = config.mySystem.oomd.pressureDurationSec;
-          
-          # Swap thrashing protection - kill processes causing excessive swap usage
-          SwapUsedLimit = config.mySystem.oomd.swapUsedLimit;
-        };
-      };
-    };
+    # Enable systemd-oomd (already enabled by default, but being explicit)
+    oomd.enable = true;
     
     # Configure system slice behavior
     slices."system.slice" = {
@@ -42,6 +30,13 @@
       };
     };
   };
+  
+  # Create custom oomd configuration file
+  environment.etc."systemd/oomd.conf".text = ''
+    [OOM]
+    DefaultMemoryPressureDurationSec=${config.mySystem.oomd.pressureDurationSec}
+    SwapUsedLimit=${config.mySystem.oomd.swapUsedLimit}
+  '';
   
   # Enhanced memory management sysctls to work with oomd
   boot.kernel.sysctl = {
