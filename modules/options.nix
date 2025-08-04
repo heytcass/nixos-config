@@ -168,6 +168,33 @@ with lib;
       };
     };
 
+    # Memory management options
+    oomd = {
+      pressureDurationSec = mkOption {
+        type = types.str;
+        default = "30s";
+        description = "Memory pressure duration before oomd intervention";
+      };
+      
+      swapUsedLimit = mkOption {
+        type = types.str;
+        default = "90%";
+        description = "Swap usage limit before killing processes";
+      };
+      
+      systemMemoryPressureLimit = mkOption {
+        type = types.str;
+        default = "50%";
+        description = "Memory pressure limit for system slice";
+      };
+      
+      userMemoryPressureLimit = mkOption {
+        type = types.str;
+        default = "80%";
+        description = "Memory pressure limit for user slice";
+      };
+    };
+
     # Secrets management structure options
     secrets = {
       business = mkOption {
