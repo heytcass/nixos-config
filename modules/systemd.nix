@@ -12,6 +12,9 @@
     };
   };
 
+  # Enable user lingering for containers (declarative)
+  users.users.${config.mySystem.user.name}.linger = true;
+
   # Enable systemd user services
   systemd.user = {
     # User service for automatic system optimization
