@@ -40,12 +40,21 @@ let
   
   # VS Code extensions
   vscodeExtensions = with pkgs.vscode-extensions; [
+    # Remote & Container tools
     ms-vscode-remote.remote-containers
     ms-azuretools.vscode-docker
+    
+    # AI Assistance (helps with everything!)
     github.copilot
     github.copilot-chat
+    
+    # Themes & Icons
     pkief.material-icon-theme
     github.github-vscode-theme
+    
+    # Additional useful extensions
+    redhat.vscode-yaml              # YAML syntax & validation
+    ms-python.python                # Python support
   ];
   
   # VS Code user settings

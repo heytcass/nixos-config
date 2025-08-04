@@ -40,8 +40,6 @@ in
     ./modules/secrets.nix
     ./modules/secure-boot.nix
     ./modules/advanced-tools.nix
-    ./modules/disko.nix
-    ./modules/impermanence.nix
   ];
 
   # System version

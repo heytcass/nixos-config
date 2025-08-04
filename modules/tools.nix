@@ -29,6 +29,8 @@ let
     bitwarden-cli bitwarden-desktop claude-code
     gh google-chrome podman vscode
     slack zoom-us morewaita-icon-theme
+    marktext               # GUI markdown editor
+    streamdeck-ui          # Stream Deck configuration tool
   ];
   
   # Professional communication and video tools
