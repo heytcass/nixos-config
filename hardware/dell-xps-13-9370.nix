@@ -4,54 +4,20 @@
 { config, pkgs, lib, ... }:
 
 {
+  imports = [
+    ../modules/intel-laptop-base.nix
+  ];
+
   # Hardware-specific settings for Dell XPS 13 9370
-  mySystem.hardware = {
-    hostname = "gti";
-    timezone = "America/Detroit";
-    locale = "en_US.UTF-8";
-    keyboardLayout = "us";
-    keyboardVariant = "colemak";
-  };
+  mySystem.hardware.hostname = "gti";
 
   # Performance settings optimized for XPS 13 9370
   mySystem.performance = {
-    # Skylake architecture (6th/7th gen Intel)
-    cpuArchitecture = "skylake";
-    cpuTune = "skylake";
+    # 8th Gen Intel Kaby Lake Refresh (quad-core)
+    cpuArchitecture = "kabylake";
+    cpuTune = "kabylake";
     
-    # Memory management for 16GB system
-    swapiness = 10;
-    cachePressure = 50;
-    dirtyRatio = 15;
-    dirtyBackgroundRatio = 5;
-    
-    # ZRAM configuration
+    # ZRAM configuration for 16GB system
     zramPercent = 50;
-    zramAlgorithm = "zstd";
-    
-    # Memory mapping
-    maxMapCount = 262144;
-    mmapMinAddr = 65536;
-    overcommitMemory = 1;
-    overcommitRatio = 50;
   };
-
-  # Intel graphics optimizations for XPS 13 9370
-  mySystem.intelFlags = [
-    "i915.fastboot=1"
-    "i915.enable_psr=1"
-    "i915.enable_fbc=1"
-    "i915.enable_guc=2"
-    "i915.enable_dc=2"
-  ];
-
-  # Performance kernel parameters
-  mySystem.perfKernelParams = [
-    "mitigations=auto"
-    "nowatchdog"
-    "intel_iommu=on"
-    "iommu=pt"
-    "quiet"
-    "splash"
-  ];
 }

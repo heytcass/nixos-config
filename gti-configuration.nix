@@ -1,12 +1,9 @@
-# Configuration for Dell Latitude 7280 (transporter)
-# Test/development system configuration
-
 { config, pkgs, lib, notion-mac-flake, claude-desktop-linux-flake, sops-nix, nix-output-monitor, ... }:
 
 {
   imports = [
-    ./hardware/transporter-hardware-configuration.nix
-    ./hardware/dell-latitude-7280.nix
+    ./hardware-configuration.nix
+    ./hardware/dell-xps-13-9370.nix
     ./modules/base.nix
     ./modules/options.nix
     ./modules/boot.nix
@@ -19,8 +16,7 @@
     { _module.args = { inherit notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor; }; }
     ./modules/tools.nix
     ./modules/secrets.nix
-    ./modules/post-install.nix
-    # Skip secure-boot.nix for test system
+    ./modules/secure-boot.nix
     ./modules/advanced-tools.nix
     ./modules/oomd.nix
   ];

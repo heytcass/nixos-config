@@ -138,7 +138,7 @@
         system = "x86_64-linux";
         specialArgs = { inherit home-manager notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko; };
         modules = [
-          ./configuration.nix
+          ./gti-configuration.nix
           nixos-hardware.nixosModules.dell-xps-13-9370
           sops-nix.nixosModules.sops
           lanzaboote.nixosModules.lanzaboote

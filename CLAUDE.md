@@ -35,9 +35,11 @@ This is a modular NixOS configuration following DRY principles with the followin
 
 ### Core Structure
 - **flake.nix**: Main flake with inputs (nixpkgs, home-manager, sops-nix, custom flakes)
-- **configuration.nix**: System-level configuration importing all modules
+- **gti-configuration.nix**: XPS 13 9370 system configuration importing all modules
+- **transporter-configuration.nix**: Latitude 7280 system configuration
 - **home.nix**: User-level configuration via home-manager
-- **modules/shared.nix**: Central DRY constants (user info, hardware specs, performance settings)
+- **modules/base.nix**: Shared base configuration (nix settings, containers, users)
+- **modules/options.nix**: Typed configuration options (replaces shared.nix)
 
 ### Module Organization
 - **modules/boot.nix**: Boot loader, kernel parameters, memory management sysctls

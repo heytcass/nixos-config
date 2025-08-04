@@ -1,3 +1,6 @@
+# Base NixOS configuration shared between all systems
+# Extracts common configuration from configuration.nix and transporter-configuration.nix
+
 { config, pkgs, lib, notion-mac-flake, claude-desktop-linux-flake, sops-nix, nix-output-monitor, ... }:
 
 let
@@ -21,28 +24,8 @@ let
     substituters = substituters;
     trusted-public-keys = trustedPublicKeys;
   };
-  
-  # Configuration moved to systemd.nix for better organization
 in
 {
-  imports = [
-    ./hardware-configuration.nix
-    ./modules/options.nix
-    ./modules/boot.nix
-    ./modules/hardware.nix
-    ./modules/desktop.nix
-    ./modules/networking.nix
-    ./modules/security.nix
-    ./modules/performance.nix
-    ./modules/systemd.nix
-    { _module.args = { inherit notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor; }; }
-    ./modules/tools.nix
-    ./modules/secrets.nix
-    ./modules/secure-boot.nix
-    ./modules/advanced-tools.nix
-    ./modules/oomd.nix
-  ];
-
   # System version
   system.stateVersion = "25.05";
 
@@ -94,7 +77,7 @@ in
     };
   };
 
-  # System services (journald config moved to systemd.nix)
+  # System services
   programs.dconf.enable = true;
 
   # User account
