@@ -1,4 +1,4 @@
-# Tom's NixOS Enhancement PRD v1.0
+# Tom's NixOS Configuration PRD
 
 ## **Current Configuration Philosophy**
 - **DRY Architecture**: All constants centralized in modules/options.nix with typed NixOS options
@@ -49,11 +49,9 @@
    - ✅ Just Perfection for interface optimization and focus
    - ✅ Advanced clipboard history management for copywriting workflow  
    - ✅ Vitals for system monitoring
-   - ❌ Removed wdisplays (incompatible with GNOME - requires wlroots protocols)
    - ⚠️ Some extensions (sound-output-device-chooser, workspace-indicator, window-list) not available in nixpkgs - require manual installation via GNOME Extensions Manager
 
-6. **Multi-Display Management** ✅ 
-   - ❌ Removed kanshi (incompatible with GNOME - wlroots/sway only)
+6. **Multi-Display Management** ✅
    - ✅ Integrated ddcutil for external monitor hardware control via DDC/CI
    - ✅ Added autorandr for automatic display configuration (X11/Wayland compatible)
    - ✅ v4l-utils for camera control during video calls
@@ -62,8 +60,7 @@
 - All communication tools follow existing modular organization pattern
 - PipeWire optimizations maintain compatibility while enabling professional audio
 - Some GNOME extensions require manual installation via Extensions Manager (noted in Next Steps)
-- **Build Issues Resolved**: Removed incompatible wayland-only tools (kanshi, wdisplays) that require wlroots/sway
-- **Extension Compatibility**: Used only GNOME-compatible tools (autorandr, ddcutil) for multi-display management
+- **Extension Compatibility**: Using GNOME-compatible display management tools (autorandr, ddcutil)
 - Secrets management temporarily disabled pending age key configuration
 
 ### **Phase 3: Future-Proof Architecture Migration**
@@ -142,12 +139,11 @@
 - **Predictable behavior** - kills user applications before system services
 - **Professional reliability** - video calls and work remain responsive
 
-### **Phase 6: Future Advanced Capabilities** (Planned)
+### **Phase 6: Future Enhancements** (Planned)
 - Container orchestration for isolated client environments
 - Real-time systemd automation for workflow optimization  
 - Advanced input device and hardware support
 - Network QoS optimization for professional communication
-- Declarative disk management and system state solutions (research required)
 
 ## **Implementation Principles**
 - **Maintain typed options centralization** with modules/options.nix architecture
@@ -462,13 +458,9 @@ This setup provides professional-grade audio and video for your copywriting clie
    - Workspace Indicator: Configure workspace naming
    - Clipboard Manager: Set history size and shortcuts
 
-2. **Kanshi Display Profiles**:
-   ```bash
-   # Create ~/.config/kanshi/config with profiles for:
-   # - Laptop only
-   # - External monitor + laptop
-   # - Presentation mode (mirrored)
-   ```
+2. **Display Configuration**:
+   - Use GNOME's built-in display settings for profile management
+   - Or configure autorandr profiles for automatic display switching
 
 ### **Phase 3 Setup Requirements (Architecture Migration)**
 
@@ -505,16 +497,6 @@ This setup provides professional-grade audio and video for your copywriting clie
    # Test boot process with secure boot enabled
    ```
 
-#### **Disko Disk Management**
-1. **Current Disk Analysis**:
-   ```bash
-   # Document current partitioning scheme
-   lsblk -f > current-disk-layout.txt
-   ```
-
-2. **Disko Configuration**:
-   - Create declarative disk configuration
-   - Plan for encryption and partitioning scheme
 
 #### **Advanced Automation**
 1. **SystemD User Services**:
@@ -534,9 +516,9 @@ This setup provides professional-grade audio and video for your copywriting clie
 - [ ] Performance maintains or improves
 - [ ] Security features function as expected
 
-## **Fresh Installation Guide: Complete From-Scratch Setup**
+## **Fresh Installation Guide**
 
-This section provides a comprehensive guide for deploying this entire NixOS configuration on a new system, including the advanced disko+impermanence setup completed in Phase 5.
+This section provides a comprehensive guide for deploying this entire NixOS configuration on a new system.
 
 ### **Prerequisites**
 - Dell XPS 13 9370 (or compatible hardware)
@@ -620,9 +602,6 @@ Follow the "Next Steps" section in this PRD for:
 - GNOME extensions
 - Professional video conferencing setup
 
-### **Option B: Advanced Installation (Future Enhancement)**
-
-Advanced automated disk management and system state solutions are planned for future phases. Currently, use Option A for reliable installation.
 
 ### **Hardware-Specific Setup (Dell XPS 13 9370)**
 
@@ -707,25 +686,6 @@ sudo nixos-rebuild switch --flake ~/.nixos#gti
 # Reboot and enable Secure Boot in UEFI
 ```
 
-#### **Full Impermanence Migration (from existing system)**
-```bash
-# Create persistent structure:
-sudo mkdir -p /persist/{etc,var,home}
-
-# Copy critical data:
-sudo cp -r /etc/nixos /persist/etc/
-sudo cp -r /etc/ssh /persist/etc/
-sudo cp -r /home/tom /persist/home/
-sudo cp -r /var/lib/nixos /persist/var/lib/
-
-# Enable tmpfs root in configuration:
-# Edit modules/impermanence.nix and uncomment lines 104-115
-
-# Test and deploy:
-sudo nixos-rebuild build --flake ~/.nixos#gti
-sudo nixos-rebuild switch --flake ~/.nixos#gti
-sudo reboot
-```
 
 ### **Troubleshooting Common Issues**
 
@@ -756,19 +716,6 @@ sudo nixos-enter --root /mnt
 nixos-rebuild switch --flake /etc/nixos#gti
 ```
 
-#### **Impermanence Recovery**
-```bash
-# If impermanence breaks system access:
-# Boot from installer
-# Mount persistent partition:
-sudo mount /dev/disk/by-label/nixos /mnt
-cd /mnt/persist/etc/nixos
-
-# Disable impermanence temporarily:
-# Comment out tmpfs root lines in modules/impermanence.nix
-# Install fixed configuration:
-sudo nixos-install --root /mnt --flake .#gti
-```
 
 ### **Performance Optimization Verification**
 
@@ -803,7 +750,7 @@ This comprehensive guide ensures anyone can deploy this exact configuration from
 - **2025-01-11**: PRD created, Phase 1 implementation started
 - **2025-01-11**: Phase 1 completed successfully - security hardening, structured secrets, secure containers deployed
 - **2025-01-11**: Phase 2 completed successfully - professional communication, video conferencing, GNOME productivity suite deployed
-- **2025-01-11**: Resolved compatibility issues: removed kanshi/wdisplays (wlroots-only), fixed PAM U2F settings, GNOME extension availability
+- **2025-01-11**: Resolved compatibility issues with GNOME extensions, fixed PAM U2F settings
 - **2025-01-11**: Secrets management temporarily disabled pending age key resolution - system builds successfully
 - **2025-01-11**: Updated Next Steps with current status and manual configuration requirements
 - **2025-08-02**: Phase 3 completed successfully - architecture migration to proper NixOS options completed

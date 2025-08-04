@@ -63,7 +63,7 @@ let
     "editor.fontLigatures" = true;
     "editor.fontSize" = 14;
     "editor.minimap.enabled" = false;
-    "workbench.colorTheme" = "GitHub Dark Default";
+    "workbench.colorTheme" = "Claude Theme";
     "workbench.iconTheme" = "material-icon-theme";
     "terminal.integrated.defaultProfile.linux" = "fish";
   };
