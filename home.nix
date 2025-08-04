@@ -193,8 +193,8 @@ in
       enable = true;
       addKeysToAgent = "yes";
       extraConfig = ''
-        # YubiKey SSH agent integration (commented out - enable after YubiKey setup)
-        # IdentityAgent ~/.yubikey-agent.sock
+        # YubiKey SSH agent integration
+        IdentityAgent /run/user/1000/yubikey-agent/yubikey-agent.sock
         
         # Standard SSH config
         Host github.com

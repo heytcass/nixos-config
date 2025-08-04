@@ -6,6 +6,7 @@ let
   rustTools = with pkgs; [
     eza ripgrep fd bat dust procs bottom zoxide fzf
     delta tokei hyperfine tealdeer mcfly broot xh bandwhich
+    pfetch-rs    # Rust-based system information fetch
   ];
   
   # File management and workflow tools
@@ -14,6 +15,11 @@ let
     direnv       # Directory-specific environments
     tmux         # Terminal multiplexer
     btop         # Modern system monitor
+    parted       # Partition editor
+    tree         # Directory tree viewer
+    wget         # Web downloader
+    unzip        # Archive extractor
+    zip          # Archive creator
   ];
   
   # Network and system monitoring
@@ -22,6 +28,12 @@ let
     nethogs      # Network usage by process
     iotop        # I/O monitoring
     lsof         # List open files
+    usbutils     # USB device listing (lsusb)
+    pciutils     # PCI device listing (lspci)
+    lshw         # Hardware information listing
+    dmidecode    # DMI/SMBIOS system information
+    smartmontools # SMART disk monitoring (smartctl)
+    hdparm       # Hard disk parameters
   ];
   
   # Essential user applications

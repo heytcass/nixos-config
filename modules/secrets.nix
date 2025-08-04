@@ -14,7 +14,7 @@
     defaultSopsFormat = "yaml";
     
     # Validate sops files at build time
-    validateSopsFiles = false;  # Set to true once you have secrets
+    validateSopsFiles = true;
     
     # Age key configuration
     age = {
@@ -23,13 +23,12 @@
       generateKey = true;  # Auto-generate if doesn't exist
     };
 
-    # System secrets - temporarily disabled until age keys are properly configured
+    # System secrets
     secrets = {
-      # Commented out until decryption keys are set up properly
-      # "wifi/home_password" = config.mySystem.secrets.system // { mode = "0440"; };
-      # "services/github_token" = config.mySystem.secrets.development;
-      # "services/openai_api_key" = config.mySystem.secrets.development;
-      # "services/anthropic_api_key" = config.mySystem.secrets.development;
+      "wifi/home_password" = config.mySystem.secrets.system // { mode = "0440"; };
+      "services/github_token" = config.mySystem.secrets.development;
+      "services/openai_api_key" = config.mySystem.secrets.development;
+      "services/anthropic_api_key" = config.mySystem.secrets.development;
     };
   };
 
