@@ -29,9 +29,13 @@
       url = "github:nix-community/lanzaboote/v0.4.1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, nixos-hardware, flake-utils, home-manager, notion-mac-flake, claude-desktop-linux-flake, sops-nix, nix-output-monitor, lanzaboote }:
+  outputs = { self, nixpkgs, nixos-hardware, flake-utils, home-manager, notion-mac-flake, claude-desktop-linux-flake, sops-nix, nix-output-monitor, lanzaboote, disko }:
     flake-utils.lib.eachDefaultSystem (system: {
       # Development shell for system maintenance
       devShells.default = nixpkgs.legacyPackages.${system}.mkShell {
@@ -44,7 +48,7 @@
     }) // {
       nixosConfigurations.gti = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit home-manager notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote; };
+        specialArgs = { inherit home-manager notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko; };
         modules = [
           ./configuration.nix
           nixos-hardware.nixosModules.dell-xps-13-9370
@@ -52,6 +56,35 @@
           lanzaboote.nixosModules.lanzaboote
           home-manager.nixosModules.home-manager
           {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "backup";
+            home-manager.sharedModules = [
+              sops-nix.homeManagerModules.sops
+            ];
+            home-manager.users.tom = import ./home.nix;
+          }
+        ];
+      };
+
+      # Dell Latitude 7280 configuration (test/development system)
+      transporter = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit home-manager notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko; };
+        modules = [
+          ./configuration.nix
+          nixos-hardware.nixosModules.dell-latitude-7280
+          ./hardware/dell-latitude-7280.nix
+          sops-nix.nixosModules.sops
+          disko.nixosModules.disko
+          ./modules/disko.nix
+          home-manager.nixosModules.home-manager
+          {
+            # Use btrfs filesystem for Latitude 7280
+            mySystem.storage.filesystem = "btrfs";
+            mySystem.storage.diskDevice = "/dev/sda";  # Latitude typically uses SATA
+            mySystem.storage.swapSize = "4G";  # Smaller swap for 8GB system
+            
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.backupFileExtension = "backup";
