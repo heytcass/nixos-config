@@ -60,16 +60,70 @@
             TARGET_HOST="$1"
             DISK_DEVICE="''${2:-/dev/sda}"
             
-            echo "Installing NixOS on Dell Latitude 7280 (transporter)"
+            echo "🚀 Installing NixOS on Dell Latitude 7280 (transporter)"
             echo "Target: $TARGET_HOST"
             echo "Disk: $DISK_DEVICE"
+            echo "Features: btrfs, post-install automation, professional A/V setup"
             echo ""
             
-            exec ${nixpkgs.legacyPackages.${system}.nix}/bin/nix run github:nix-community/nixos-anywhere -- \
+            # Run nixos-anywhere installation
+            if ${nixpkgs.legacyPackages.${system}.nix}/bin/nix run github:nix-community/nixos-anywhere -- \
               --flake .#transporter \
               --target-host "nixos@$TARGET_HOST" \
               --extra-files ${./secrets} \
-              --disk-device "$DISK_DEVICE"
+              --disk-device "$DISK_DEVICE"; then
+              
+              echo ""
+              echo "✅ Installation completed successfully!"
+              echo ""
+              echo "🔄 System is rebooting with post-install automation enabled"
+              echo "📋 After reboot, the system will automatically:"
+              echo "   • Validate age key configuration for secrets"
+              echo "   • Prepare YubiKey FIDO2/U2F directories"
+              echo "   • Verify all essential services"
+              echo "   • Show setup completion status"
+              echo ""
+              echo "🔑 Manual steps after reboot (SSH to tom@$TARGET_HOST):"
+              echo "   • YubiKey PIV: ykman piv keys generate 9a /tmp/pubkey.pem"
+              echo "   • Add SSH key to GitHub: ssh-add -L (from YubiKey agent)"
+              echo "   • Test A/V: launch 'obs' and 'easyeffects'"
+              echo ""
+              echo "🎉 Dell Latitude 7280 'transporter' is ready!"
+            else
+              echo "❌ Installation failed - check output above for details"
+              exit 1
+            fi
+          ''}";
+        };
+        
+        # Convenience app for post-install steps
+        setup-yubikey-piv = {
+          type = "app";
+          program = "${nixpkgs.legacyPackages.${system}.writeShellScript "setup-yubikey-piv" ''
+            echo "🔑 YubiKey PIV SSH Setup"
+            echo "This will generate a new ECCP256 key in PIV slot 9a"
+            echo ""
+            
+            if ! ${nixpkgs.legacyPackages.${system}.yubikey-manager}/bin/ykman list >/dev/null 2>&1; then
+              echo "❌ No YubiKey detected. Please insert YubiKey and try again."
+              exit 1
+            fi
+            
+            echo "Generating PIV key in slot 9a..."
+            ${nixpkgs.legacyPackages.${system}.yubikey-manager}/bin/ykman piv keys generate 9a /tmp/pubkey.pem
+            ${nixpkgs.legacyPackages.${system}.yubikey-manager}/bin/ykman piv certificates generate 9a /tmp/pubkey.pem
+            
+            echo ""
+            echo "✅ PIV key generated successfully!"
+            echo "🔄 Restarting yubikey-agent..."
+            systemctl --user restart yubikey-agent
+            
+            echo ""
+            echo "📋 Your SSH public key (add to GitHub/GitLab):"
+            SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/yubikey-agent/yubikey-agent.sock" ${nixpkgs.legacyPackages.${system}.openssh}/bin/ssh-add -L
+            echo ""
+            echo "🧪 Test GitHub authentication:"
+            echo "SSH_AUTH_SOCK=\"\$XDG_RUNTIME_DIR/yubikey-agent/yubikey-agent.sock\" ssh -T git@github.com"
           ''}";
         };
       };
@@ -112,6 +166,9 @@
             mySystem.storage.filesystem = "btrfs";
             mySystem.storage.diskDevice = "/dev/sda";  # Latitude typically uses SATA
             mySystem.storage.swapSize = "4G";  # Smaller swap for 8GB system
+            
+            # Enable post-installation automation
+            mySystem.postInstall.enable = true;
             
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;

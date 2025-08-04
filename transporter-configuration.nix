@@ -37,6 +37,7 @@ in
     { _module.args = { inherit notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor; }; }
     ./modules/tools.nix
     ./modules/secrets.nix
+    ./modules/post-install.nix
     # Skip secure-boot.nix for test system
     ./modules/advanced-tools.nix
     ./modules/oomd.nix

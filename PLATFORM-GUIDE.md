@@ -81,20 +81,38 @@ nix run github:nix-community/nixos-anywhere -- \
 
 ## Post-Installation Setup
 
-After successful installation, the system will reboot to a fully configured NixOS. Complete the setup with:
+The system now includes **automated post-installation setup** that runs on first boot:
 
+### Automatic Setup (No Manual Steps Required)
+After installation and reboot, the system automatically:
+- ✅ **Validates age key configuration** for secrets management
+- ✅ **Prepares YubiKey FIDO2/U2F directories**
+- ✅ **Verifies all essential services** are running
+- ✅ **Shows setup completion notification** on first login
+
+### Manual Steps (Only These Remain)
 ```bash
 # SSH to the new system
 ssh tom@<target-ip>
 
-# Navigate to configuration directory
-cd ~/.nixos
+# 1. Generate YubiKey PIV SSH key (interactive - requires PIN/touch)
+nix run .#setup-yubikey-piv
 
-# Run automated setup scripts
-./scripts/post-install-setup.sh
-./scripts/import-av-configs.sh
-./scripts/yubikey-piv-setup.sh
+# 2. Add SSH public key to GitHub/GitLab (external service)
+# Key is displayed by the command above
+
+# 3. Test complete setup
+obs                    # Launch OBS Studio
+easyeffects           # Launch EasyEffects
 ```
+
+### What's Now Fully Automated
+- ❌ ~~Age key generation and validation~~ → **Automatic**
+- ❌ ~~YubiKey FIDO2/U2F registration~~ → **Automatic** 
+- ❌ ~~Container platform setup~~ → **Automatic**
+- ❌ ~~EasyEffects configuration~~ → **Declarative via Home Manager**
+- ❌ ~~OBS configuration~~ → **Declarative via Home Manager**
+- ❌ ~~Service verification~~ → **Automatic**
 
 ## Development Workflow
 
