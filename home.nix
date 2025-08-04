@@ -212,5 +212,80 @@ in
         userSettings = vscodeSettings;
       };
     };
+
+    # OBS Studio for professional video calls
+    obs-studio = {
+      enable = true;
+      plugins = with pkgs.obs-studio-plugins; [
+        wlrobs                    # Wayland screen capture support
+        obs-pipewire-audio-capture # PipeWire audio integration
+        obs-vaapi                 # Hardware video encoding (Intel)
+      ];
+    };
+  };
+
+  # User services configuration
+  services = {
+    # EasyEffects professional audio processing
+    easyeffects = {
+      enable = true;
+      preset = "Professional Calls Input";
+      
+      # Declarative preset configuration  
+      extraPresets = {
+        "Professional Calls Input" = {
+          input = {
+            blocklist = [];
+            
+            # Professional effects chain: Gate -> Compressor -> Filter -> Limiter
+            gate = {
+              bypass = false;
+              attack = 20.0;
+              release = 100.0;
+              threshold = -30.0;
+              ratio = 2.0;
+              reduction = -24.0;
+              makeup = 0.0;
+              input-gain = 0.0;
+              output-gain = 0.0;
+            };
+            
+            compressor = {
+              bypass = false;
+              attack = 20.0;
+              release = 100.0;
+              threshold = -18.0;
+              ratio = 4.0;
+              makeup = 0.0;
+              input-gain = 0.0;
+              output-gain = 0.0;
+              mode = "Downward";
+            };
+            
+            filter = {
+              bypass = false;
+              frequency = 10000.0;
+              input-gain = 0.0;
+              output-gain = 0.0;
+              type = "Band-Pass";
+              width = 4.0;
+            };
+            
+            limiter = {
+              bypass = false;
+              attack = 5.0;
+              release = 5.0;
+              threshold = -3.0;
+              input-gain = 0.0;
+              output-gain = 0.0;
+            };
+          };
+          
+          output = {
+            blocklist = [];
+          };
+        };
+      };
+    };
   };
 }

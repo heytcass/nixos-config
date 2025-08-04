@@ -66,14 +66,15 @@ cd ~/.nixos
 - **Home Manager**: SSH config, shell setup, development tools
 - **YubiKey Services**: yubikey-agent, pcscd automatically configured
 - **Audio/Video Stack**: OBS, EasyEffects, PipeWire, v4l2loopback modules
+- **EasyEffects Presets**: Professional audio processing chain declared in home.nix
+- **OBS Studio**: Installation and plugins declared in home.nix
 - **Container Platform**: Rootless Podman configuration
 - **User Lingering**: Now declared in systemd.nix (no manual setup needed)
 
 ### ⚠️ Semi-Automated (Scripts Required)
 - **YubiKey PIV Keys**: Hardware interaction requires interactive setup
 - **Secrets Age Keys**: System key derivation and verification
-- **EasyEffects Presets**: JSON configuration import
-- **OBS Scene Collections**: Basic scene setup automation
+- **OBS Scene Collections**: Basic scene setup automation (no Home Manager support)
 
 ### 🔄 One-Time Manual (Cannot Be Automated)
 - **YubiKey PIN Changes**: Security-sensitive, user decision
