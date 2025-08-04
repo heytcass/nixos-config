@@ -68,11 +68,11 @@
       };
 
       # Dell Latitude 7280 configuration (test/development system)
-      transporter = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.transporter = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit home-manager notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko; };
         modules = [
-          ./configuration.nix
+          ./transporter-configuration.nix
           nixos-hardware.nixosModules.dell-latitude-7280
           ./hardware/dell-latitude-7280.nix
           sops-nix.nixosModules.sops
