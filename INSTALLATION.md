@@ -6,9 +6,13 @@
 ```bash
 # 1. Boot target machine from NixOS installer ISO
 # 2. Enable SSH: sudo systemctl start sshd && sudo passwd nixos  
-# 3. Install from your development machine:
+# 3. Check disk type: lsblk or fdisk -l (to see if /dev/sda or /dev/nvme0n1)
+# 4. Install from your development machine:
+nix run .#install-transporter <target-ip> [disk-device]
 
-nix run .#install-transporter <target-ip>
+# Examples for Dell Latitude 7280:
+nix run .#install-transporter 192.168.1.100                # SATA M.2 SSD (default)
+nix run .#install-transporter 192.168.1.100 /dev/nvme0n1   # NVMe M.2 SSD
 ```
 
 ### What Happens Automatically

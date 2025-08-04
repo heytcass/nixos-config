@@ -53,7 +53,13 @@
           program = "${nixpkgs.legacyPackages.${system}.writeShellScript "install-transporter" ''
             if [ -z "$1" ]; then
               echo "Usage: nix run .#install-transporter <target-host> [disk-device]"
-              echo "Example: nix run .#install-transporter 192.168.1.100"
+              echo "Examples:"
+              echo "  nix run .#install-transporter 192.168.1.100"
+              echo "  nix run .#install-transporter 192.168.1.100 /dev/nvme0n1"
+              echo ""
+              echo "Common Dell Latitude 7280 disk devices:"
+              echo "  /dev/sda     - SATA M.2 SSD (default)"
+              echo "  /dev/nvme0n1 - NVMe M.2 SSD"
               exit 1
             fi
             
@@ -164,7 +170,7 @@
           {
             # Use btrfs filesystem for Latitude 7280
             mySystem.storage.filesystem = "btrfs";
-            mySystem.storage.diskDevice = "/dev/sda";  # Latitude typically uses SATA
+            mySystem.storage.diskDevice = "/dev/sda";  # Default SATA; use /dev/nvme0n1 for NVMe
             mySystem.storage.swapSize = "4G";  # Smaller swap for 8GB system
             
             # Enable post-installation automation
