@@ -4,7 +4,7 @@
 {
   # Lanzaboote configuration for secure boot
   boot.lanzaboote = {
-    enable = true; # Re-enabled after successful rebuild
+    enable = false; # Disabled due to lzbt-systemd test failures
     pkiBundle = "/etc/secureboot";
   };
 
