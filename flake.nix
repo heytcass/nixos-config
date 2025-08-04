@@ -45,6 +45,34 @@
           nix-output-monitor.packages.${system}.default
         ];
       };
+
+      # Installation apps
+      apps = {
+        install-transporter = {
+          type = "app";
+          program = "${nixpkgs.legacyPackages.${system}.writeShellScript "install-transporter" ''
+            if [ -z "$1" ]; then
+              echo "Usage: nix run .#install-transporter <target-host> [disk-device]"
+              echo "Example: nix run .#install-transporter 192.168.1.100"
+              exit 1
+            fi
+            
+            TARGET_HOST="$1"
+            DISK_DEVICE="''${2:-/dev/sda}"
+            
+            echo "Installing NixOS on Dell Latitude 7280 (transporter)"
+            echo "Target: $TARGET_HOST"
+            echo "Disk: $DISK_DEVICE"
+            echo ""
+            
+            exec ${nixpkgs.legacyPackages.${system}.nix}/bin/nix run github:nix-community/nixos-anywhere -- \
+              --flake .#transporter \
+              --target-host "nixos@$TARGET_HOST" \
+              --extra-files ${./secrets} \
+              --disk-device "$DISK_DEVICE"
+          ''}";
+        };
+      };
     }) // {
       nixosConfigurations.gti = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";

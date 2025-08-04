@@ -1,7 +1,7 @@
 # Disko Configuration for Declarative Disk Partitioning
 # Supports both ext4 (XPS) and btrfs (Latitude) filesystems
 
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
