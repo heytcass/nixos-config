@@ -72,12 +72,27 @@
             echo "Features: btrfs, post-install automation, professional A/V setup"
             echo ""
             
+            # Create temporary flake override if custom disk device specified
+            if [ "$DISK_DEVICE" != "/dev/sda" ]; then
+              echo "⚙️  Creating temporary configuration for $DISK_DEVICE..."
+              TEMP_DIR=$(mktemp -d)
+              cp -r . "$TEMP_DIR/"
+              cd "$TEMP_DIR"
+              
+              # Override disk device in flake
+              sed -i "s|mySystem.storage.diskDevice = \"/dev/sda\"|mySystem.storage.diskDevice = \"$DISK_DEVICE\"|" flake.nix
+              
+              # Run installation from temp directory
+              FLAKE_DIR="$TEMP_DIR"
+            else
+              FLAKE_DIR="."
+            fi
+            
             # Run nixos-anywhere installation
             if ${nixpkgs.legacyPackages.${system}.nix}/bin/nix run github:nix-community/nixos-anywhere -- \
-              --flake .#transporter \
+              --flake "$FLAKE_DIR#transporter" \
               --target-host "nixos@$TARGET_HOST" \
-              --extra-files ${./secrets} \
-              --disk-device "$DISK_DEVICE"; then
+              --extra-files ${./secrets}; then
               
               echo ""
               echo "✅ Installation completed successfully!"
@@ -95,8 +110,18 @@
               echo "   • Test A/V: launch 'obs' and 'easyeffects'"
               echo ""
               echo "🎉 Dell Latitude 7280 'transporter' is ready!"
+              
+              # Clean up temp directory if used
+              if [ "$DISK_DEVICE" != "/dev/sda" ] && [ -n "$TEMP_DIR" ]; then
+                rm -rf "$TEMP_DIR"
+              fi
             else
               echo "❌ Installation failed - check output above for details"
+              
+              # Clean up temp directory if used
+              if [ "$DISK_DEVICE" != "/dev/sda" ] && [ -n "$TEMP_DIR" ]; then
+                rm -rf "$TEMP_DIR"
+              fi
               exit 1
             fi
           ''}";
