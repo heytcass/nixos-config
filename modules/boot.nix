@@ -3,7 +3,12 @@
   boot = {
     # Boot loader configuration
     loader = {
-      systemd-boot.enable = true;
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 3; # Keep only 3 most recent generations
+        consoleMode = "auto";
+        editor = false; # Security: disable boot entry editing
+      };
       timeout = 1;
       efi.canTouchEfiVariables = true;
     };
