@@ -12,6 +12,7 @@
     package = jasper.packages.${pkgs.system}.default;
     user = "tom";
     enableGnomeExtension = true;
+    flakePackages = jasper.packages.${pkgs.system};
   };
 
   # The module will handle adding packages when enableGnomeExtension is true
