@@ -33,6 +33,9 @@
     cpuFreqGovernor = "powersave";
   };
 
+  # Kernel modules for hardware control
+  boot.kernelModules = [ "i2c-dev" ];
+
   # Essential hardware services
   services = {
     thermald.enable = true;     # Intel thermal management
