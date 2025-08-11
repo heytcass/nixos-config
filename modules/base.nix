@@ -78,7 +78,6 @@ in
   };
 
   # System services
-  programs.dconf.enable = true;
 
   # User account
   users.users.${config.mySystem.user.name} = {

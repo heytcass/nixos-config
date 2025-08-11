@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, jasper, ... }:
 
 let
   
@@ -15,6 +15,7 @@ let
     gnomeExtensions.caffeine
     gnomeExtensions.media-controls        # Media control integration
     gnomeExtensions.clipboard-indicator   # Clipboard manager
+    pkgs.jasper-gnome-extension-dev  # Jasper AI development extension (kept for development workflow)
     gnome-tweaks
     playerctl                            # Media player control
     gnome-firmware                       # Firmware update GUI
