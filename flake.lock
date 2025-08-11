@@ -318,8 +318,8 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1754938982,
-        "narHash": "sha256-M425ZpFnu3NI1qkhS7WtpFflyXlevdgiRkkqBPo2hpI=",
+        "lastModified": 1754941729,
+        "narHash": "sha256-4UJNF8uNvsYIa2keYhKx/I+6jjLs7jF7iDgseKEGdag=",
         "path": "/home/tom/projects/jasper",
         "type": "path"
       },
