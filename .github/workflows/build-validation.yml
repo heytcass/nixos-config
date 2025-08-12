@@ -1,0 +1,118 @@
+name: NixOS Configuration Validation
+
+on:
+  push:
+    branches: [ main, platform-expansion ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-flake:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        system: [gti, transporter]
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Nix
+      uses: cachix/install-nix-action@v27
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+        extra_nix_config: |
+          experimental-features = nix-command flakes
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+    - name: Setup Cachix
+      uses: cachix/cachix-action@v15
+      with:
+        name: nix-community
+        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+    - name: Check flake syntax
+      run: nix flake check --no-build
+
+    - name: Build NixOS configuration (${{ matrix.system }})
+      run: |
+        nix build .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel \
+          --print-build-logs \
+          --show-trace
+
+    - name: Build development shell
+      run: nix build .#devShells.x86_64-linux.default
+
+    - name: Validate flake metadata
+      run: |
+        nix flake metadata --json | jq -e '.locks'
+        echo "✅ Flake lockfile is valid"
+
+  validate-modules:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Nix
+      uses: cachix/install-nix-action@v27
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+        extra_nix_config: |
+          experimental-features = nix-command flakes
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+    - name: Validate module structure
+      run: |
+        echo "🔍 Checking module directory structure..."
+        
+        # Verify no configuration files in root (except flake.nix, home.nix)
+        if find . -maxdepth 1 -name "*.nix" ! -name "flake.nix" ! -name "home.nix" | grep -q .; then
+          echo "❌ Found .nix files in root directory (violates architecture)"
+          find . -maxdepth 1 -name "*.nix" ! -name "flake.nix" ! -name "home.nix"
+          exit 1
+        fi
+        
+        # Verify required directories exist
+        for dir in systems modules hardware; do
+          if [ ! -d "$dir" ]; then
+            echo "❌ Required directory '$dir' is missing"
+            exit 1
+          fi
+        done
+        
+        # Verify systems directory structure
+        for system_dir in systems/*/; do
+          if [ -d "$system_dir" ]; then
+            system_name=$(basename "$system_dir")
+            if [ ! -f "$system_dir/default.nix" ]; then
+              echo "❌ System '$system_name' missing default.nix"
+              exit 1
+            fi
+            if [ ! -f "$system_dir/hardware-configuration.nix" ]; then
+              echo "❌ System '$system_name' missing hardware-configuration.nix"
+              exit 1
+            fi
+          fi
+        done
+        
+        echo "✅ Module structure validation passed"
+
+    - name: Check for secrets in commits
+      run: |
+        echo "🔐 Scanning for exposed secrets..."
+        
+        # Check for common secret patterns (excluding .sops.yaml files)
+        if git log --all --full-history --grep="password\|secret\|key\|token" --oneline | head -10; then
+          echo "⚠️  Found potential secret references in commit messages (review manually)"
+        fi
+        
+        # Check for files that might contain secrets (excluding sops files)
+        find . -type f -name "*.nix" -exec grep -l "password\|secret\|private.*key" {} \; | \
+        grep -v ".sops" | \
+        while read -r file; do
+          echo "⚠️  File $file contains potential secret references (review manually)"
+        done
+        
+        echo "✅ Secret scan completed"
