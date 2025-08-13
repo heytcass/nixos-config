@@ -46,7 +46,10 @@
         buildInputs = with nixpkgs.legacyPackages.${system}; [
           nixos-rebuild
           home-manager.packages.${system}.default
-          nix-output-monitor.packages.${system}.default
+        ] ++ nixpkgs.lib.optionals (!nixpkgs.legacyPackages.${system}.stdenv.isDarwin) [
+          # nix-output-monitor has issues in CI environments, only include locally
+          # Uncomment below line if you want nom in devShell locally
+          # nix-output-monitor.packages.${system}.default
         ];
       };
 
