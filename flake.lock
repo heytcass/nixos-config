@@ -318,14 +318,18 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 0,
-        "narHash": "sha256-4UJNF8uNvsYIa2keYhKx/I+6jjLs7jF7iDgseKEGdag=",
-        "path": "/home/tom/projects/jasper",
-        "type": "path"
+        "lastModified": 1754791211,
+        "narHash": "sha256-pXnpmOaSM1VgvqoaKu7mts/9HpstWParXUjGG2jHEiM=",
+        "owner": "heytcass",
+        "repo": "jasper",
+        "rev": "3eb20e9ffc34b437774f31025870f66dc76e1cb6",
+        "type": "github"
       },
       "original": {
-        "path": "/home/tom/projects/jasper",
-        "type": "path"
+        "owner": "heytcass",
+        "ref": "main",
+        "repo": "jasper",
+        "type": "github"
       }
     },
     "lanzaboote": {

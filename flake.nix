@@ -33,8 +33,14 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Local development flake - comment out or use GitHub URL for CI
+    # jasper = {
+    #   url = "path:/home/tom/projects/jasper";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
+    # For CI, use a placeholder or GitHub URL if available
     jasper = {
-      url = "path:/home/tom/projects/jasper";
+      url = "github:heytcass/jasper?ref=main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
