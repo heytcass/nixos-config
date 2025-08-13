@@ -318,11 +318,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1754791211,
-        "narHash": "sha256-pXnpmOaSM1VgvqoaKu7mts/9HpstWParXUjGG2jHEiM=",
+        "lastModified": 1755102496,
+        "narHash": "sha256-zySsFBQ/xYTXf3E6273JembJC0UPAcJOeF+TtRi+xEw=",
         "owner": "heytcass",
         "repo": "jasper",
-        "rev": "3eb20e9ffc34b437774f31025870f66dc76e1cb6",
+        "rev": "f38e1211b529003aa6bdb5e89befecf9dedd5330",
         "type": "github"
       },
       "original": {
