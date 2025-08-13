@@ -30,8 +30,10 @@
   # System power management
   powerManagement = {
     enable = true;
-    cpuFreqGovernor = "powersave";
   };
+
+  # Kernel modules for hardware control
+  boot.kernelModules = [ "i2c-dev" ];
 
   # Essential hardware services
   services = {

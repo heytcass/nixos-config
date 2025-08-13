@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, jasper, ... }:
 
 let
   
@@ -11,29 +11,22 @@ let
   
   # Essential GNOME extensions and utilities
   gnomePackages = with pkgs; [
-    gnomeExtensions.power-profile-switcher
     gnomeExtensions.appindicator
     gnomeExtensions.caffeine
-    gnomeExtensions.night-theme-switcher  # Blue light filtering
     gnomeExtensions.media-controls        # Media control integration
     gnomeExtensions.clipboard-indicator   # Clipboard manager
+    pkgs.jasper-gnome-extension-dev  # Jasper AI development extension (kept for development workflow)
     gnome-tweaks
     playerctl                            # Media player control
     gnome-firmware                       # Firmware update GUI
+    sushi                                # GNOME file previewer
   ];
   
   # Professional productivity extensions for copywriting workflow
   productivityPackages = with pkgs; [
-    # gnomeExtensions.sound-output-device-chooser  # Not available, using extension manager
-    gnomeExtensions.just-perfection              # Interface optimization (correct name)
-    # gnomeExtensions.workspace-indicator          # Not available, using extension manager  
-    gnomeExtensions.clipboard-history            # Advanced clipboard management
-    # gnomeExtensions.window-list                  # Not available, using extension manager
     gnomeExtensions.vitals                       # System monitoring
-    # wdisplays                                  # Removed - incompatible with GNOME (requires wlr-protocols)
     ddcutil                                      # External monitor control via DDC/CI
     autorandr                                    # Automatic display configuration
-    # kanshi                                     # Removed - incompatible with GNOME (wlroots-only)
   ];
 in
 {

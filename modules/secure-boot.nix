@@ -4,12 +4,12 @@
 {
   # Lanzaboote configuration for secure boot
   boot.lanzaboote = {
-    enable = false; # Set to true after generating and enrolling keys
+    enable = false; # Disabled due to lzbt-systemd test failures
     pkiBundle = "/etc/secureboot";
   };
 
-  # Disable systemd-boot when lanzaboote is enabled
-  # boot.loader.systemd-boot.enable = lib.mkForce false;
+  # Re-enable systemd-boot when lanzaboote is disabled
+  boot.loader.systemd-boot.enable = lib.mkForce (!config.boot.lanzaboote.enable);
 
   # TPM2 support for disk encryption
   boot.initrd = {
