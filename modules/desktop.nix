@@ -15,7 +15,7 @@ let
     gnomeExtensions.caffeine
     gnomeExtensions.media-controls        # Media control integration
     gnomeExtensions.clipboard-indicator   # Clipboard manager
-    pkgs.jasper-gnome-extension-dev  # Jasper AI development extension (kept for development workflow)
+    # pkgs.jasper-gnome-extension-dev  # Jasper AI development extension (temporarily disabled)
     gnome-tweaks
     playerctl                            # Media player control
     gnome-firmware                       # Firmware update GUI
