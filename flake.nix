@@ -33,19 +33,13 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Local development flake - temporarily disabled for CI testing
-    # jasper = {
-    #   url = "path:/home/tom/projects/jasper";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-    # For CI, use a placeholder or GitHub URL if available
-    # jasper = {
-    #   url = "github:heytcass/jasper?ref=main";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
+    jasper = {
+      url = "path:/home/tom/projects/jasper";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, nixos-hardware, flake-utils, home-manager, notion-mac-flake, claude-desktop-linux-flake, sops-nix, nix-output-monitor, lanzaboote, disko }:
+  outputs = { self, nixpkgs, nixos-hardware, flake-utils, home-manager, notion-mac-flake, claude-desktop-linux-flake, sops-nix, nix-output-monitor, lanzaboote, disko, jasper }:
     flake-utils.lib.eachDefaultSystem (system: {
       # Development shell for system maintenance
       devShells.default = nixpkgs.legacyPackages.${system}.mkShell {
@@ -174,7 +168,7 @@
     }) // {
       nixosConfigurations.gti = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit home-manager notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko; };
+        specialArgs = { inherit home-manager notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko jasper; };
         modules = [
           ./systems/gti
           nixos-hardware.nixosModules.dell-xps-13-9370
@@ -196,7 +190,7 @@
       # Dell Latitude 7280 configuration (test/development system)
       nixosConfigurations.transporter = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit home-manager notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko; };
+        specialArgs = { inherit home-manager notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko jasper; };
         modules = [
           ./systems/transporter
           nixos-hardware.nixosModules.dell-latitude-7280
