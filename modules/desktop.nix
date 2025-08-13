@@ -19,6 +19,7 @@ let
     gnome-tweaks
     playerctl                            # Media player control
     gnome-firmware                       # Firmware update GUI
+    sushi                                # GNOME file previewer
   ];
   
   # Professional productivity extensions for copywriting workflow

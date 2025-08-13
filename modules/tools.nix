@@ -6,7 +6,7 @@ let
   rustTools = with pkgs; [
     eza ripgrep fd bat dust procs bottom zoxide fzf
     delta tokei hyperfine tealdeer mcfly broot xh bandwhich
-    pfetch-rs    # Rust-based system information fetch
+    fastfetch    # Fast system information fetch
   ];
   
   # File management and workflow tools
