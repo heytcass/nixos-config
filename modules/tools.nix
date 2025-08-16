@@ -7,6 +7,7 @@ let
     eza ripgrep fd bat dust procs bottom zoxide fzf
     delta tokei hyperfine tealdeer mcfly broot xh bandwhich
     fastfetch    # Fast system information fetch
+    uv           # Fast Python package installer and resolver
   ];
   
   # File management and workflow tools
