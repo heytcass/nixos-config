@@ -79,6 +79,7 @@ in
   services.udev.packages = with pkgs; [ 
     yubikey-personalization 
     libu2f-host  # FIDO2/U2F support
+    deckmaster   # Stream Deck udev rules
   ];
   
   # FIDO2 authentication support

@@ -42,8 +42,7 @@ let
     bitwarden-cli bitwarden-desktop claude-code
     gh google-chrome podman vscode
     slack zoom-us morewaita-icon-theme
-    marktext               # GUI markdown editor
-    streamdeck-ui          # Stream Deck configuration tool
+    deckmaster             # Stream Deck configuration tool (CLI-based)
   ];
   
   # Professional communication and video tools
@@ -53,6 +52,7 @@ let
     easyeffects             # Real-time audio effects and enhancement
     helvum                  # GTK-based PipeWire patchbay (better for GNOME)
     v4l-utils              # Video4Linux utilities for camera control
+    playerctl               # Media player control for deckmaster
   ];
   
   # YubiKey tools

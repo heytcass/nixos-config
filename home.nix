@@ -125,20 +125,38 @@ in
   programs.home-manager.enable = true;
   fonts.fontconfig.enable = true;
   
-  # Hide terminal applications from app launcher
-  xdg.desktopEntries = {
-    nnn = {
-      name = "nnn";
-      noDisplay = true;
+  # XDG configuration
+  xdg = {
+    enable = true;
+    
+    # Hide terminal applications from app launcher
+    desktopEntries = {
+      nnn = {
+        name = "nnn";
+        noDisplay = true;
+      };
+      btop = {
+        name = "btop";
+        noDisplay = true;
+      };
+      bottom = {
+        name = "bottom";
+        noDisplay = true;
+      };
     };
-    btop = {
-      name = "btop";
-      noDisplay = true;
-    };
-    bottom = {
-      name = "bottom";
-      noDisplay = true;
-    };
+    
+    # Autostart deckmaster for Stream Deck
+    configFile."autostart/deckmaster.desktop".text = ''
+      [Desktop Entry]
+      Name=Deckmaster
+      Comment=Stream Deck Controller
+      Type=Application
+      Exec=${pkgs.deckmaster}/bin/deckmaster -deck ${config.home.homeDirectory}/.config/deckmaster/main.deck
+      Categories=
+      Terminal=false
+      NoDisplay=true
+      StartupNotify=false
+    '';
   };
 
   # sops-nix user configuration
