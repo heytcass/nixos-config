@@ -151,7 +151,7 @@ in
       Name=Deckmaster
       Comment=Stream Deck Controller
       Type=Application
-      Exec=${pkgs.deckmaster}/bin/deckmaster -deck ${config.home.homeDirectory}/.config/deckmaster/main.deck
+      Exec=${pkgs.deckmaster}/bin/deckmaster -deck ${config.home.homeDirectory}/.config/deckmaster/simple.deck
       Categories=
       Terminal=false
       NoDisplay=true
