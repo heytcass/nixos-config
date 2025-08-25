@@ -82,6 +82,11 @@ in
     deckmaster   # Stream Deck udev rules
   ];
   
+  # Additional udev rules for deckmaster uinput access
+  services.udev.extraRules = ''
+    KERNEL=="uinput", GROUP="input", MODE="0664"
+  '';
+  
   # FIDO2 authentication support
   security.pam.u2f = {
     enable = true;
