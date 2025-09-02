@@ -1,5 +1,8 @@
 # NixOS Configuration
 
+[![CI](https://github.com/heytcass/nixos-config/actions/workflows/check-lite.yml/badge.svg)](https://github.com/heytcass/nixos-config/actions/workflows/check-lite.yml)
+[![Update Dependencies](https://github.com/heytcass/nixos-config/actions/workflows/update-flake.yml/badge.svg)](https://github.com/heytcass/nixos-config/actions/workflows/update-flake.yml)
+
 Modern, modular NixOS configuration with secure boot capabilities, advanced tooling, and complete home-manager integration.
 
 ## 🏗️ Architecture
@@ -29,6 +32,12 @@ Modern, modular NixOS configuration with secure boot capabilities, advanced tool
 - **Fast Builds**: nix-fast-build for parallel evaluation and building
 - **Remote Deployment**: nixos-anywhere, colmena, and system analysis tools
 - **Declarative Disk**: disko integration ready for disk partitioning
+
+### Phase 5: CI/CD & Automation ✅
+- **Lightweight CI**: GitHub Actions validation without memory issues
+- **Automated Updates**: Weekly dependency updates via PRs
+- **Pre-push Validation**: Local checks and git hooks prevent broken pushes
+- **Code Quality**: Automated formatting and linting with nixpkgs-fmt and statix
 
 ## 🖥️ Target Hardware
 
