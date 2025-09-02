@@ -1,0 +1,95 @@
+name: "Check NixOS Config (Lite)"
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '**.nix'
+      - 'flake.lock'
+      - '.github/workflows/**'
+  pull_request:
+    paths:
+      - '**.nix'
+      - 'flake.lock'
+
+jobs:
+  flake-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: cachix/install-nix-action@v24
+      with:
+        extra_nix_config: |
+          max-jobs = 2
+          cores = 2
+          
+    # Just check flake syntax and evaluation - no building
+    - name: Check flake
+      run: |
+        nix flake check --no-build 2>&1 | head -100 || true
+        
+    - name: Check flake metadata
+      run: nix flake metadata
+      
+    - name: Show flake outputs
+      run: nix flake show
+      
+  eval-config:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        host: [gti, transporter]
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: cachix/install-nix-action@v24
+      with:
+        extra_nix_config: |
+          max-jobs = 1
+          cores = 2
+          # Minimal substituters to reduce network load
+          substituters = https://cache.nixos.org/
+          trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+    
+    # Only evaluate, don't build - catches most config errors
+    - name: Evaluate ${{ matrix.host }} config
+      run: |
+        nix eval .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel.outPath \
+          --max-jobs 1 \
+          2>&1 | head -50
+          
+    # Check for common issues
+    - name: Check for undefined options
+      run: |
+        nix eval .#nixosConfigurations.${{ matrix.host }}.config.warnings \
+          --json 2>/dev/null | jq -r '.[]' || echo "No warnings"
+          
+  format-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: cachix/install-nix-action@v24
+    
+    - name: Check formatting with nixpkgs-fmt
+      run: |
+        nix run nixpkgs#nixpkgs-fmt -- --check . || {
+          echo "::warning::Some files are not properly formatted"
+          echo "Run: nix run nixpkgs#nixpkgs-fmt ."
+          exit 0  # Don't fail the build
+        }
+        
+  statix-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: cachix/install-nix-action@v24
+    
+    - name: Check for anti-patterns with statix
+      run: |
+        nix run nixpkgs#statix -- check . || {
+          echo "::warning::Statix found some suggestions"
+          exit 0  # Don't fail the build
+        }

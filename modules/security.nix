@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  
+
   # Network security parameters
   networkSecurity = {
     "net.ipv4.conf.default.rp_filter" = 1;
@@ -19,7 +19,7 @@ let
     "net.ipv6.conf.all.accept_source_route" = 0;
     "net.ipv6.conf.default.accept_source_route" = 0;
   };
-  
+
   # Kernel hardening parameters
   kernelSecurity = {
     "kernel.dmesg_restrict" = 1;
@@ -32,20 +32,20 @@ in
     # Essential security services
     rtkit.enable = true;
     protectKernelImage = true;
-    
+
     # Privilege escalation configuration
     sudo = {
       enable = true;
       execWheelOnly = true;
       extraConfig = "Defaults timestamp_timeout=30";
     };
-    
+
     # Mandatory access control
     apparmor = {
       enable = true;
       killUnconfinedConfinables = true;
     };
-    
+
     # Security monitoring
     auditd.enable = true;
   };
@@ -64,33 +64,33 @@ in
         "172.16.0.0/12"
       ];
     };
-    
+
     # Smart card daemon for YubiKey
     pcscd = {
       enable = true;
       plugins = [ pkgs.ccid ];
     };
-    
+
     # Enhanced YubiKey support
-    yubikey-agent.enable = true;  # SSH agent integration
+    yubikey-agent.enable = true; # SSH agent integration
   };
 
   # Enhanced YubiKey udev rules and FIDO2 support
-  services.udev.packages = with pkgs; [ 
-    yubikey-personalization 
-    libu2f-host  # FIDO2/U2F support
-    deckmaster   # Stream Deck udev rules
+  services.udev.packages = with pkgs; [
+    yubikey-personalization
+    libu2f-host # FIDO2/U2F support
+    deckmaster # Stream Deck udev rules
   ];
-  
+
   # Additional udev rules for deckmaster uinput access
   services.udev.extraRules = ''
     KERNEL=="uinput", GROUP="input", MODE="0664"
   '';
-  
+
   # FIDO2 authentication support
   security.pam.u2f = {
     enable = true;
-    settings.cue = true;  # Show touch notification
+    settings.cue = true; # Show touch notification
   };
 
   # Kernel security hardening

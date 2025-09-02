@@ -9,13 +9,13 @@ let
     "https://cache.nixos.org/"
     "https://nix-community.cachix.org"
   ];
-  
+
   # Public keys for binary cache verification
   trustedPublicKeys = [
     "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
     "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
   ];
-  
+
   # Nix configuration settings
   nixSettings = {
     experimental-features = [ "nix-command" "flakes" ];
@@ -35,7 +35,7 @@ in
 
   # Package and system management
   nixpkgs.config.allowUnfree = true;
-  
+
   nix = {
     settings = nixSettings;
     gc = {
@@ -54,7 +54,7 @@ in
     enable = true;
     dockerCompat = true;
     defaultNetwork.settings.dns_enabled = true;
-    
+
     # Security configurations
     autoPrune = {
       enable = true;
@@ -62,16 +62,16 @@ in
       flags = [ "--all" ];
     };
   };
-  
+
   # Rootless container support
   virtualisation.containers = {
     enable = true;
     registries.search = [ "docker.io" "quay.io" ];
     policy = {
-      default = [ { type = "insecureAcceptAnything"; } ];
+      default = [{ type = "insecureAcceptAnything"; }];
       transports = {
         docker-daemon = {
-          "" = [ { type = "insecureAcceptAnything"; } ];
+          "" = [{ type = "insecureAcceptAnything"; }];
         };
       };
     };

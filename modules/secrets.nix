@@ -12,15 +12,15 @@
     # Default sops file location
     defaultSopsFile = ../secrets/secrets.yaml;
     defaultSopsFormat = "yaml";
-    
+
     # Validate sops files at build time
     validateSopsFiles = true;
-    
+
     # Age key configuration
     age = {
       # System secrets use SSH host key converted to age
       keyFile = "/var/lib/sops-nix/key.txt";
-      generateKey = true;  # Auto-generate if doesn't exist
+      generateKey = true; # Auto-generate if doesn't exist
     };
 
     # System secrets

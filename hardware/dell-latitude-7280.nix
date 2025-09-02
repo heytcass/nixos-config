@@ -16,7 +16,7 @@
     # 7th Gen Intel Kaby Lake (dual-core with hyperthreading)
     cpuArchitecture = "skylake";
     cpuTune = "skylake";
-    
+
     # ZRAM configuration - higher for 8GB system vs 16GB
     zramPercent = 60;
   };

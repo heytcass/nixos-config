@@ -5,9 +5,9 @@
     # D-Bus integration for desktop applications
     dbus = {
       enable = true;
-      packages = with pkgs; [ 
-        dconf 
-        gnome-settings-daemon 
+      packages = with pkgs; [
+        dconf
+        gnome-settings-daemon
       ];
     };
   };
@@ -25,7 +25,7 @@
         ExecStart = "${pkgs.nix}/bin/nix store optimise";
       };
     };
-    
+
     # Timer for periodic optimization
     timers.nix-optimize = {
       description = "Run Nix store optimization weekly";
@@ -42,7 +42,7 @@
   environment.sessionVariables = {
     # XDG directories for proper desktop integration
     XDG_DATA_DIRS = [
-      "/usr/share" 
+      "/usr/share"
       "/usr/local/share"
       "/var/lib/flatpak/exports/share"
       "/home/${config.mySystem.user.name}/.local/share/flatpak/exports/share"
@@ -67,7 +67,7 @@
     settings.Manager = {
       DefaultTimeoutStopSec = "10s";
     };
-    
+
     # User service configuration
     user.extraConfig = ''
       DefaultTimeoutStopSec=10s

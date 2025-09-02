@@ -1,0 +1,67 @@
+name: "Update flake.lock"
+
+on:
+  schedule:
+    # Run every Monday at 2 AM
+    - cron: '0 2 * * 1'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - uses: cachix/install-nix-action@v24
+      with:
+        extra_nix_config: |
+          max-jobs = 1
+          cores = 2
+          
+    - name: Update flake.lock
+      run: |
+        nix flake update
+        
+    - name: Check if changes exist
+      id: check
+      run: |
+        if git diff --exit-code flake.lock; then
+          echo "has_changes=false" >> $GITHUB_OUTPUT
+        else
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Create Pull Request
+      if: steps.check.outputs.has_changes == 'true'
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: "chore: update flake.lock"
+        title: "Automated flake.lock update"
+        body: |
+          ## Automated dependency update
+          
+          This PR updates the flake.lock file with the latest versions of all inputs.
+          
+          ### Changed inputs:
+          ```
+          ${{ steps.diff.outputs.diff }}
+          ```
+          
+          Please review and test locally before merging:
+          ```bash
+          git checkout update-flake-lock
+          rebuild
+          ```
+        branch: update-flake-lock
+        delete-branch: true
+        
+    - name: Get changes summary
+      id: diff
+      if: steps.check.outputs.has_changes == 'true'
+      run: |
+        echo "diff<<EOF" >> $GITHUB_OUTPUT
+        nix flake metadata --json | jq -r '.locks.nodes | to_entries | .[] | "\(.key): \(.value.locked.rev // "N/A")"' | head -20 >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT

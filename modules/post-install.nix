@@ -38,16 +38,16 @@ with lib;
       description = "NixOS Post-Installation Setup";
       wantedBy = [ "multi-user.target" ];
       after = [ "network.target" "sops-nix.service" ];
-      
+
       # Only run once by creating a flag file
       unitConfig.ConditionPathExists = "!/var/lib/nixos-post-install-complete";
-      
+
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
         User = "root";
       };
-      
+
       script = ''
         set -euo pipefail
         
@@ -142,15 +142,15 @@ with lib;
     systemd.user.services.nixos-post-install-status = {
       description = "Show post-installation status";
       wantedBy = [ "default.target" ];
-      
+
       # Only run once by creating a flag file
       unitConfig.ConditionPathExists = "!/home/${config.mySystem.user.name}/.config/nixos-post-install-shown";
-      
+
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
       };
-      
+
       script = ''
         # Show friendly welcome message
         ${pkgs.libnotify}/bin/notify-send \

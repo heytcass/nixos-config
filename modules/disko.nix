@@ -12,19 +12,19 @@ with lib;
       default = "ext4";
       description = "Root filesystem type";
     };
-    
+
     diskDevice = mkOption {
       type = types.str;
       default = "/dev/nvme0n1";
       description = "Primary disk device";
     };
-    
+
     swapSize = mkOption {
       type = types.str;
       default = "8G";
       description = "Swap partition size";
     };
-    
+
     enableCompression = mkOption {
       type = types.bool;
       default = true;
@@ -114,7 +114,7 @@ with lib;
         btrfs-progs
         compsize
       ];
-      
+
       # Auto-scrub for data integrity
       services.btrfs.autoScrub = {
         enable = true;

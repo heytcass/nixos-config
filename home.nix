@@ -7,7 +7,7 @@ let
     update = "sudo nixos-rebuild switch --upgrade --flake /home/tom/.nixos#gti";
     mkcd = "mkdir -p $argv[1]; and cd $argv[1]";
   };
-  
+
   # Git workflow functions
   gitFunctions = {
     gs = "git status";
@@ -16,7 +16,7 @@ let
     gp = "git push";
     gl = "git pull";
   };
-  
+
   # Combined shell abbreviations
   allAbbrs = {
     # System abbreviations
@@ -37,26 +37,26 @@ let
     ll = "eza -l --icons --git";
     la = "eza -la --icons --git";
   };
-  
+
   # VS Code extensions
   vscodeExtensions = with pkgs.vscode-extensions; [
     # Remote & Container tools
     ms-vscode-remote.remote-containers
     ms-azuretools.vscode-docker
-    
+
     # AI Assistance (helps with everything!)
     github.copilot
     github.copilot-chat
-    
+
     # Themes & Icons
     pkief.material-icon-theme
     github.github-vscode-theme
-    
+
     # Additional useful extensions
-    redhat.vscode-yaml              # YAML syntax & validation
+    redhat.vscode-yaml # YAML syntax & validation
     # ms-python.python                # Python support - temporarily disabled due to pygls build issue
   ];
-  
+
   # VS Code user settings
   vscodeSettings = {
     "editor.fontFamily" = "'FiraCode Nerd Font', 'monospace'";
@@ -67,7 +67,7 @@ let
     "workbench.iconTheme" = "material-icon-theme";
     "terminal.integrated.defaultProfile.linux" = "fish";
   };
-  
+
   # Git configuration
   gitConfig = {
     init.defaultBranch = "main";
@@ -76,7 +76,7 @@ let
     core.editor = "code --wait";
     diff.tool = "vscode";
     merge.tool = "vscode";
-    
+
     # GitHub CLI integration
     credential = {
       "https://github.com" = {
@@ -86,14 +86,14 @@ let
         helper = "!gh auth git-credential";
       };
     };
-    
+
     # GPG signing configuration
     commit.gpgsign = true;
     gpg.format = "openpgp";
     # The signing key ID is stored in sops but needs to be read as a value
     # For now, using the literal value until we set up proper secret reading
     user.signingkey = "34F011E3CF3B61A71571FCC9C01F5B8505294BED";
-    
+
     # Git aliases for different use cases
     alias = {
       # For Claude Code - commits without GPG signing
@@ -101,7 +101,7 @@ let
       cc-commit-msg = "!f() { git commit --no-gpg-sign -m \"$1\"; }; f";
     };
   };
-  
+
   # Delta (git diff) configuration
   deltaOptions = {
     navigate = true;
@@ -124,11 +124,11 @@ in
   # Enable Home Manager
   programs.home-manager.enable = true;
   fonts.fontconfig.enable = true;
-  
+
   # XDG configuration
   xdg = {
     enable = true;
-    
+
     # Hide terminal applications from app launcher
     desktopEntries = {
       nnn = {
@@ -144,7 +144,7 @@ in
         noDisplay = true;
       };
     };
-    
+
     # Autostart deckmaster for Stream Deck
     configFile."autostart/deckmaster.desktop".text = ''
       [Desktop Entry]
@@ -163,11 +163,11 @@ in
   sops = {
     # User age key file
     age.keyFile = "/home/tom/.config/sops/age/keys.txt";
-    
+
     # Default user secrets file
     defaultSopsFile = ./secrets/user-secrets.yaml;
     defaultSopsFormat = "yaml";
-    
+
     # User secrets
     secrets = {
       # GPG signing key ID for Git commits
@@ -235,9 +235,9 @@ in
     obs-studio = {
       enable = true;
       plugins = with pkgs.obs-studio-plugins; [
-        wlrobs                    # Wayland screen capture support
+        wlrobs # Wayland screen capture support
         obs-pipewire-audio-capture # PipeWire audio integration
-        obs-vaapi                 # Hardware video encoding (Intel)
+        obs-vaapi # Hardware video encoding (Intel)
       ];
     };
 
@@ -396,13 +396,13 @@ in
     easyeffects = {
       enable = true;
       preset = "Professional Calls Input";
-      
+
       # Declarative preset configuration  
       extraPresets = {
         "Professional Calls Input" = {
           input = {
-            blocklist = [];
-            
+            blocklist = [ ];
+
             # Professional effects chain: Gate -> Compressor -> Filter -> Limiter
             gate = {
               bypass = false;
@@ -415,7 +415,7 @@ in
               input-gain = 0.0;
               output-gain = 0.0;
             };
-            
+
             compressor = {
               bypass = false;
               attack = 20.0;
@@ -427,7 +427,7 @@ in
               output-gain = 0.0;
               mode = "Downward";
             };
-            
+
             filter = {
               bypass = false;
               frequency = 10000.0;
@@ -436,7 +436,7 @@ in
               type = "Band-Pass";
               width = 4.0;
             };
-            
+
             limiter = {
               bypass = false;
               attack = 5.0;
@@ -446,9 +446,9 @@ in
               output-gain = 0.0;
             };
           };
-          
+
           output = {
-            blocklist = [];
+            blocklist = [ ];
           };
         };
       };

@@ -3,7 +3,7 @@
   hardware = {
     # Enable all hardware optimizations
     enableRedistributableFirmware = true;
-    
+
     # Intel graphics with hardware acceleration
     graphics = {
       enable = true;
@@ -16,10 +16,10 @@
         intel-compute-runtime
       ];
     };
-    
+
     # Intel CPU optimizations
     cpu.intel.updateMicrocode = true;
-    
+
     # Wireless connectivity
     bluetooth = {
       enable = true;
@@ -37,10 +37,10 @@
 
   # Essential hardware services
   services = {
-    thermald.enable = true;     # Intel thermal management
-    udisks2.enable = true;      # Auto-mount USB devices
-    fstrim.enable = true;       # SSD optimization
-    fwupd.enable = true;        # Firmware updates
+    thermald.enable = true; # Intel thermal management
+    udisks2.enable = true; # Auto-mount USB devices
+    fstrim.enable = true; # SSD optimization
+    fwupd.enable = true; # Firmware updates
   };
 
   # Memory optimization with zram

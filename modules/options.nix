@@ -13,25 +13,25 @@ with lib;
         default = "tom";
         description = "Primary user name";
       };
-      
+
       fullName = mkOption {
         type = types.str;
         default = "Tom Cassady";
         description = "User's full name";
       };
-      
+
       email = mkOption {
         type = types.str;
         default = "heytcass@gmail.com";
         description = "User's email address";
       };
-      
+
       shell = mkOption {
         type = types.package;
         default = pkgs.fish;
         description = "User's default shell";
       };
-      
+
       groups = mkOption {
         type = types.listOf types.str;
         default = [ "networkmanager" "wheel" "podman" "input" ];
@@ -46,25 +46,25 @@ with lib;
         default = "gti";
         description = "System hostname";
       };
-      
+
       timezone = mkOption {
         type = types.str;
         default = "America/Detroit";
         description = "System timezone";
       };
-      
+
       locale = mkOption {
         type = types.str;
         default = "en_US.UTF-8";
         description = "System locale";
       };
-      
+
       keyboardLayout = mkOption {
         type = types.str;
         default = "us";
         description = "Keyboard layout";
       };
-      
+
       keyboardVariant = mkOption {
         type = types.str;
         default = "colemak";
@@ -79,67 +79,67 @@ with lib;
         default = 10;
         description = "VM swappiness value (0-100)";
       };
-      
+
       cachePressure = mkOption {
         type = types.int;
         default = 50;
         description = "VFS cache pressure value";
       };
-      
+
       dirtyRatio = mkOption {
         type = types.int;
         default = 15;
         description = "Dirty memory ratio percentage";
       };
-      
+
       dirtyBackgroundRatio = mkOption {
         type = types.int;
         default = 5;
         description = "Dirty background ratio percentage";
       };
-      
+
       zramPercent = mkOption {
         type = types.int;
         default = 50;
         description = "ZRAM size as percentage of RAM";
       };
-      
+
       zramAlgorithm = mkOption {
         type = types.str;
         default = "zstd";
         description = "ZRAM compression algorithm";
       };
-      
+
       cpuArchitecture = mkOption {
         type = types.str;
         default = "skylake";
         description = "CPU architecture for GCC optimization";
       };
-      
+
       cpuTune = mkOption {
         type = types.str;
         default = "skylake";
         description = "CPU tuning target";
       };
-      
+
       maxMapCount = mkOption {
         type = types.int;
         default = 262144;
         description = "Maximum memory map areas";
       };
-      
+
       mmapMinAddr = mkOption {
         type = types.int;
         default = 65536;
         description = "Minimum mmap address for security";
       };
-      
+
       overcommitMemory = mkOption {
         type = types.int;
         default = 1;
         description = "Memory overcommit handling (0=heuristic, 1=always, 2=never)";
       };
-      
+
       overcommitRatio = mkOption {
         type = types.int;
         default = 50;
@@ -154,13 +154,13 @@ with lib;
         default = "100M";
         description = "Maximum journal size";
       };
-      
+
       runtimeMaxSize = mkOption {
         type = types.str;
         default = "50M";
         description = "Maximum runtime journal size";
       };
-      
+
       gcRetentionDays = mkOption {
         type = types.str;
         default = "14d";
@@ -175,19 +175,19 @@ with lib;
         default = "30s";
         description = "Memory pressure duration before oomd intervention";
       };
-      
+
       swapUsedLimit = mkOption {
         type = types.str;
         default = "90%";
         description = "Swap usage limit before killing processes";
       };
-      
+
       systemMemoryPressureLimit = mkOption {
         type = types.str;
         default = "50%";
         description = "Memory pressure limit for system slice";
       };
-      
+
       userMemoryPressureLimit = mkOption {
         type = types.str;
         default = "80%";
@@ -206,7 +206,7 @@ with lib;
         };
         description = "Business/client work secrets configuration";
       };
-      
+
       development = mkOption {
         type = types.attrs;
         default = {
@@ -216,7 +216,7 @@ with lib;
         };
         description = "Development and API secrets configuration";
       };
-      
+
       system = mkOption {
         type = types.attrs;
         default = {

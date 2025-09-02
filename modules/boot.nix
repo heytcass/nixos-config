@@ -15,17 +15,17 @@
 
     # Use latest kernel
     kernelPackages = pkgs.linuxPackages_latest;
-    
+
     # Combined kernel parameters for performance and Intel graphics
     kernelParams = config.mySystem.perfKernelParams ++ config.mySystem.intelFlags;
-    
+
     # Optimized initrd
     initrd = {
       compressor = "zstd";
       compressorArgs = [ "-19" "-T0" ];
       systemd.enable = true;
     };
-    
+
     # Smooth boot experience with NixOS theme
     plymouth = {
       enable = true;
@@ -36,7 +36,7 @@
     # Hardware virtualization and video routing
     kernelModules = [ "kvm-intel" "v4l2loopback" ];
     extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
-    
+
     # System performance tuning
     kernel.sysctl = {
       # Memory management
@@ -44,7 +44,7 @@
       "vm.vfs_cache_pressure" = config.mySystem.performance.cachePressure;
       "vm.dirty_ratio" = config.mySystem.performance.dirtyRatio;
       "vm.dirty_background_ratio" = config.mySystem.performance.dirtyBackgroundRatio;
-      
+
       # Advanced memory management
       "vm.max_map_count" = config.mySystem.performance.maxMapCount;
       "vm.mmap_min_addr" = config.mySystem.performance.mmapMinAddr;

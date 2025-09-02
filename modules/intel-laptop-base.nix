@@ -19,10 +19,10 @@
     cachePressure = 50;
     dirtyRatio = 15;
     dirtyBackgroundRatio = 5;
-    
+
     # ZRAM configuration
     zramAlgorithm = "zstd";
-    
+
     # Memory mapping
     maxMapCount = 262144;
     mmapMinAddr = 65536;

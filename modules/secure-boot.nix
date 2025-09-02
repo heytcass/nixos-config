@@ -30,7 +30,7 @@
   environment.systemPackages = with pkgs; [
     # Secure boot tools
     sbctl
-    
+
     # TPM2 tools
     tpm2-tss
     tpm2-tools

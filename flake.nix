@@ -36,24 +36,25 @@
   };
 
   outputs = { self, nixpkgs, nixos-hardware, flake-utils, home-manager, notion-mac-flake, claude-desktop-linux-flake, sops-nix, nix-output-monitor, lanzaboote, disko }:
-    flake-utils.lib.eachDefaultSystem (system: {
-      # Development shell for system maintenance
-      devShells.default = nixpkgs.legacyPackages.${system}.mkShell {
-        buildInputs = with nixpkgs.legacyPackages.${system}; [
-          nixos-rebuild
-          home-manager.packages.${system}.default
-        ] ++ nixpkgs.lib.optionals (!nixpkgs.legacyPackages.${system}.stdenv.isDarwin) [
-          # nix-output-monitor has issues in CI environments, only include locally
-          # Uncomment below line if you want nom in devShell locally
-          # nix-output-monitor.packages.${system}.default
-        ];
-      };
+    flake-utils.lib.eachDefaultSystem
+      (system: {
+        # Development shell for system maintenance
+        devShells.default = nixpkgs.legacyPackages.${system}.mkShell {
+          buildInputs = with nixpkgs.legacyPackages.${system}; [
+            nixos-rebuild
+            home-manager.packages.${system}.default
+          ] ++ nixpkgs.lib.optionals (!nixpkgs.legacyPackages.${system}.stdenv.isDarwin) [
+            # nix-output-monitor has issues in CI environments, only include locally
+            # Uncomment below line if you want nom in devShell locally
+            # nix-output-monitor.packages.${system}.default
+          ];
+        };
 
-      # Installation apps
-      apps = {
-        install-transporter = {
-          type = "app";
-          program = "${nixpkgs.legacyPackages.${system}.writeShellScript "install-transporter" ''
+        # Installation apps
+        apps = {
+          install-transporter = {
+            type = "app";
+            program = "${nixpkgs.legacyPackages.${system}.writeShellScript "install-transporter" ''
             if [ -z "$1" ]; then
               echo "Usage: nix run .#install-transporter <target-host> [disk-device]"
               echo "Examples:"
@@ -128,12 +129,12 @@
               exit 1
             fi
           ''}";
-        };
-        
-        # Convenience app for post-install steps
-        setup-yubikey-piv = {
-          type = "app";
-          program = "${nixpkgs.legacyPackages.${system}.writeShellScript "setup-yubikey-piv" ''
+          };
+
+          # Convenience app for post-install steps
+          setup-yubikey-piv = {
+            type = "app";
+            program = "${nixpkgs.legacyPackages.${system}.writeShellScript "setup-yubikey-piv" ''
             echo "🔑 YubiKey PIV SSH Setup"
             echo "This will generate a new ECCP256 key in PIV slot 9a"
             echo ""
@@ -159,9 +160,9 @@
             echo "🧪 Test GitHub authentication:"
             echo "SSH_AUTH_SOCK=\"\$XDG_RUNTIME_DIR/yubikey-agent/yubikey-agent.sock\" ssh -T git@github.com"
           ''}";
+          };
         };
-      };
-    }) // {
+      }) // {
       nixosConfigurations.gti = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit home-manager notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko; };
@@ -198,12 +199,12 @@
           {
             # Use btrfs filesystem for Latitude 7280
             mySystem.storage.filesystem = "btrfs";
-            mySystem.storage.diskDevice = "/dev/sda";  # Default SATA; use /dev/nvme0n1 for NVMe
-            mySystem.storage.swapSize = "4G";  # Smaller swap for 8GB system
-            
+            mySystem.storage.diskDevice = "/dev/sda"; # Default SATA; use /dev/nvme0n1 for NVMe
+            mySystem.storage.swapSize = "4G"; # Smaller swap for 8GB system
+
             # Enable post-installation automation
             mySystem.postInstall.enable = true;
-            
+
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.backupFileExtension = "backup";

@@ -16,7 +16,7 @@
     # 8th Gen Intel Kaby Lake Refresh (quad-core)
     cpuArchitecture = "kabylake";
     cpuTune = "kabylake";
-    
+
     # ZRAM configuration for 16GB system
     zramPercent = 50;
   };

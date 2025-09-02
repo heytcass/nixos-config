@@ -1,31 +1,40 @@
 { config, pkgs, lib, ... }:
 
 let
-  
+
   # Unwanted GNOME applications
   excludedGnomePackages = with pkgs; [
-    epiphany gnome-maps gnome-music gnome-tour gnome-terminal
-    simple-scan totem yelp gnome-contacts gnome-calendar gnome-weather
+    epiphany
+    gnome-maps
+    gnome-music
+    gnome-tour
+    gnome-terminal
+    simple-scan
+    totem
+    yelp
+    gnome-contacts
+    gnome-calendar
+    gnome-weather
     gnome-software
   ];
-  
+
   # Essential GNOME extensions and utilities
   gnomePackages = with pkgs; [
     gnomeExtensions.appindicator
     gnomeExtensions.caffeine
-    gnomeExtensions.media-controls        # Media control integration
-    gnomeExtensions.clipboard-indicator   # Clipboard manager
+    gnomeExtensions.media-controls # Media control integration
+    gnomeExtensions.clipboard-indicator # Clipboard manager
     gnome-tweaks
-    playerctl                            # Media player control
-    gnome-firmware                       # Firmware update GUI
-    sushi                                # GNOME file previewer
+    playerctl # Media player control
+    gnome-firmware # Firmware update GUI
+    sushi # GNOME file previewer
   ];
-  
+
   # Professional productivity extensions for copywriting workflow
   productivityPackages = with pkgs; [
-    gnomeExtensions.vitals                       # System monitoring
-    ddcutil                                      # External monitor control via DDC/CI
-    autorandr                                    # Automatic display configuration
+    gnomeExtensions.vitals # System monitoring
+    ddcutil # External monitor control via DDC/CI
+    autorandr # Automatic display configuration
   ];
 in
 {
@@ -39,13 +48,13 @@ in
       };
       excludePackages = [ pkgs.xterm ];
     };
-    
+
     # Modern display manager with Wayland
     displayManager.gdm = {
       enable = true;
       wayland = true;
     };
-    
+
     # GNOME desktop environment
     desktopManager.gnome.enable = true;
 
@@ -57,7 +66,7 @@ in
       alsa.support32Bit = true;
       pulse.enable = true;
       jack.enable = true;
-      
+
       # Low-latency configuration for professional audio
       extraConfig.pipewire."92-low-latency" = {
         context.properties = {
@@ -68,10 +77,10 @@ in
         };
       };
     };
-    
+
     # Additional desktop services
-    flatpak.enable = true;      # Sandboxed applications
-    geoclue2.enable = true;     # Location services
+    flatpak.enable = true; # Sandboxed applications
+    geoclue2.enable = true; # Location services
   };
 
   # Audio security
