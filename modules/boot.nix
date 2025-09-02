@@ -26,10 +26,11 @@
       systemd.enable = true;
     };
     
-    # Smooth boot experience
+    # Smooth boot experience with NixOS theme
     plymouth = {
       enable = true;
-      theme = "breeze";
+      theme = "bgrt";
+      themePackages = [ pkgs.nixos-bgrt-plymouth ];
     };
 
     # Hardware virtualization and video routing

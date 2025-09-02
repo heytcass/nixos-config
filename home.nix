@@ -54,7 +54,7 @@ let
     
     # Additional useful extensions
     redhat.vscode-yaml              # YAML syntax & validation
-    ms-python.python                # Python support
+    # ms-python.python                # Python support - temporarily disabled due to pygls build issue
   ];
   
   # VS Code user settings
