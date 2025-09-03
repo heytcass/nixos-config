@@ -19,5 +19,6 @@
     ../../modules/secure-boot.nix
     ../../modules/advanced-tools.nix
     ../../modules/oomd.nix
+    ../../modules/zsa-voyager.nix
   ];
 }

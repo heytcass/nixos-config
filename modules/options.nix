@@ -34,7 +34,7 @@ with lib;
 
       groups = mkOption {
         type = types.listOf types.str;
-        default = [ "networkmanager" "wheel" "podman" "input" ];
+        default = [ "networkmanager" "wheel" "podman" "input" "plugdev" ];
         description = "Additional groups for the user";
       };
     };
