@@ -209,17 +209,20 @@ in
     # SSH configuration for YubiKey
     ssh = {
       enable = true;
-      addKeysToAgent = "yes";
-      extraConfig = ''
-        # YubiKey SSH agent integration
-        IdentityAgent /run/user/1000/yubikey-agent/yubikey-agent.sock
-        
-        # Standard SSH config
-        Host github.com
-          HostName github.com
-          User git
-          IdentitiesOnly yes
-      '';
+      enableDefaultConfig = false;  # Disable deprecated default values
+      matchBlocks = {
+        "*" = {
+          addKeysToAgent = "yes";  # Moved from top-level
+          extraOptions = {
+            IdentityAgent = "/run/user/1000/yubikey-agent/yubikey-agent.sock";
+          };
+        };
+        "github.com" = {
+          hostname = "github.com";
+          user = "git";
+          identitiesOnly = true;
+        };
+      };
     };
 
     # VS Code IDE
