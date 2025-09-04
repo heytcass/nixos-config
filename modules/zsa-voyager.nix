@@ -16,4 +16,9 @@
   
   # Create plugdev group
   users.groups.plugdev = {};
+  
+  # Install Keymapp for configuring ZSA keyboards
+  environment.systemPackages = with pkgs; [
+    keymapp
+  ];
 }
