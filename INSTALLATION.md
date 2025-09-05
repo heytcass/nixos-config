@@ -53,7 +53,7 @@ podman run hello-world  # Container platform
 ### Comparison to Manual Installation
 | Task | Manual Method | Automated Method |
 |------|---------------|------------------|
-| Disk partitioning | `fdisk` + manual setup | ✅ Declarative with disko |
+| Disk partitioning | `fdisk` + manual setup | ✅ Optional disko automation |
 | Base installation | `nixos-install` | ✅ One `nix run` command |
 | Hardware optimization | Manual driver/kernel tweaks | ✅ nixos-hardware integration |
 | Secrets management | Manual age key setup | ✅ Auto-generated from SSH |

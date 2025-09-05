@@ -11,6 +11,7 @@ Modern, modular NixOS configuration with secure boot capabilities, advanced tool
 - **Typed Options**: Custom `mySystem.*` options with proper validation via `modules/options.nix`
 - **Secure by Default**: Hardware security, encrypted secrets, TPM2 support
 - **Professional Workflow**: Modern CLI tools, development environments, communication stack
+- **Deployment Ready**: Optional disko and post-install modules for fresh installations
 
 ## 🚀 Features
 
@@ -31,7 +32,7 @@ Modern, modular NixOS configuration with secure boot capabilities, advanced tool
 - **TPM2 Support**: Hardware security for LUKS auto-unlock
 - **Fast Builds**: nix-fast-build for parallel evaluation and building
 - **Remote Deployment**: nixos-anywhere, colmena, and system analysis tools
-- **Declarative Disk**: disko integration ready for disk partitioning
+- **Deployment Tools**: disko and post-install automation modules for fresh installations
 
 ### Phase 5: CI/CD & Automation ✅
 - **Lightweight CI**: GitHub Actions validation without memory issues

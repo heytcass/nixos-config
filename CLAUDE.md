@@ -110,6 +110,22 @@ systems/workstation/
 - `nixos` - Navigate to ~/.nixos directory
 - `projects` - Navigate to ~/projects directory
 
+## Deployment-Only Modules
+
+### Disko Module (modules/disko.nix)
+- **Purpose**: Declarative disk partitioning for fresh installations
+- **Current Usage**: transporter system only
+- **Status**: Available for future deployments, not used by production systems
+- **Use Case**: Fresh installations with automated disk setup
+
+### Post-Install Module (modules/post-install.nix)
+- **Purpose**: First-boot automation for new deployments
+- **Current Usage**: transporter system only
+- **Status**: Available for new system deployments
+- **Features**: Automatic configuration validation, service activation, first-login setup
+
+**Note**: These modules are deployment tools, not part of the core system configuration. They're kept for future fresh installations but aren't needed for existing systems.
+
 ## Development Notes
 
 - **Directory structure is CRITICAL** - maintain strict separation of concerns

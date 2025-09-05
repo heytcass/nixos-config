@@ -85,7 +85,7 @@
 
 8. **Modern NixOS Toolchain** ✅
    - ✅ Integrated lanzaboote for secure boot with TPM (ready for key enrollment)
-   - ✅ Added disko for declarative disk partitioning (flake input ready)
+   - ✅ Added disko for declarative disk partitioning (deployment-only, transporter system)
    - ✅ Included nix-fast-build for faster parallel builds
    - ✅ Added nixos-anywhere for remote deployment capability
    - ✅ Additional tools: colmena, nixos-generators, system analysis tools
@@ -93,9 +93,16 @@
 **Implementation Notes:**
 - Lanzaboote module configured but disabled pending secure boot key generation
 - TPM2 support fully configured for automatic LUKS unlock
+- Disko module available for fresh deployments (modules/disko.nix) - currently used by transporter test system only
+- Post-install automation module (modules/post-install.nix) ready for new system deployments
 - Advanced deployment tools ready for multi-machine management
 - Performance analysis and debugging tools included
 - System builds successfully with all advanced tooling
+
+**Deployment Tools Status:**
+- **disko**: Declarative disk partitioning - kept for future fresh installations
+- **post-install**: First-boot automation - available for new deployments
+- **Note**: Impermanence implementation was explored but not adopted
 
 ### **Phase 5: User Tools & Productivity Enhancement** 
 **Status: ✅ COMPLETED - User tools successfully deployed 2025-08-03**
