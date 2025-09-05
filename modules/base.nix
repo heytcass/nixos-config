@@ -1,7 +1,7 @@
 # Base NixOS configuration shared between all systems
 # Extracts common configuration from configuration.nix and transporter-configuration.nix
 
-{ config, pkgs, lib, notion-mac-flake, claude-desktop-linux-flake, sops-nix, nix-output-monitor, ... }:
+{ config, pkgs, lib, claude-desktop-linux-flake, sops-nix, nix-output-monitor, ... }:
 
 let
   # Trusted binary cache sources

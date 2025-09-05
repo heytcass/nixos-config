@@ -1,4 +1,4 @@
-{ config, pkgs, lib, notion-mac-flake, claude-desktop-linux-flake, sops-nix, nix-output-monitor, ... }:
+{ config, pkgs, lib, claude-desktop-linux-flake, sops-nix, nix-output-monitor, ... }:
 
 {
   imports = [
@@ -13,7 +13,7 @@
     ../../modules/security.nix
     ../../modules/performance.nix
     ../../modules/systemd.nix
-    { _module.args = { inherit notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor; }; }
+    { _module.args = { inherit claude-desktop-linux-flake sops-nix nix-output-monitor; }; }
     ../../modules/tools.nix
     ../../modules/secrets.nix
     ../../modules/secure-boot.nix

@@ -9,10 +9,6 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    notion-mac-flake = {
-      url = "github:heytcass/notion-mac-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     claude-desktop-linux-flake = {
       url = "github:heytcass/claude-desktop-linux-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -35,7 +31,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixos-hardware, flake-utils, home-manager, notion-mac-flake, claude-desktop-linux-flake, sops-nix, nix-output-monitor, lanzaboote, disko }:
+  outputs = { self, nixpkgs, nixos-hardware, flake-utils, home-manager, claude-desktop-linux-flake, sops-nix, nix-output-monitor, lanzaboote, disko }:
     flake-utils.lib.eachDefaultSystem
       (system: {
         # Development shell for system maintenance
@@ -165,7 +161,7 @@
       }) // {
       nixosConfigurations.gti = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit home-manager notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko; };
+        specialArgs = { inherit home-manager claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko; };
         modules = [
           ./systems/gti
           nixos-hardware.nixosModules.dell-xps-13-9370
@@ -187,7 +183,7 @@
       # Dell Latitude 7280 configuration (test/development system)
       nixosConfigurations.transporter = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit home-manager notion-mac-flake claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko; };
+        specialArgs = { inherit home-manager claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko; };
         modules = [
           ./systems/transporter
           nixos-hardware.nixosModules.dell-latitude-7280

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, notion-mac-flake, claude-desktop-linux-flake, nix-output-monitor, ... }:
+{ config, pkgs, lib, claude-desktop-linux-flake, nix-output-monitor, ... }:
 
 let
 
@@ -90,7 +90,6 @@ let
 
   # Custom flake packages
   customApps = [
-    notion-mac-flake.packages.${pkgs.system}.default
     claude-desktop-linux-flake.packages.${pkgs.system}.default
     nix-output-monitor.packages.${pkgs.system}.default
   ];
