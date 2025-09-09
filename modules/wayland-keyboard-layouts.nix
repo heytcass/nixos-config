@@ -40,30 +40,30 @@
           """Get list of input devices from /proc/bus/input/devices"""
           devices = []
           try:
-              with open('/proc/bus/input/devices', 'r') as f:
+              with open("/proc/bus/input/devices", "r") as f:
                   content = f.read()
               
-              device_blocks = content.strip().split('\n\n')
+              device_blocks = content.strip().split("\n\n")
               for block in device_blocks:
-                  if 'Handlers=' in block and 'event' in block:
+                  if "Handlers=" in block and "event" in block:
                       device = {}
-                      for line in block.split('\n'):
-                          if line.startswith('N: Name='):
-                              device['name'] = line.split('Name=')[1].strip(' "')
-                          elif line.startswith('I: Bus='):
+                      for line in block.split("\n"):
+                          if line.startswith("N: Name="):
+                              device["name"] = line.split("Name=")[1].strip(" \"")
+                          elif line.startswith("I: Bus="):
                               # Extract vendor and product IDs
                               parts = line.split()
                               for part in parts:
-                                  if part.startswith('Vendor='):
-                                      device['vendor'] = part.split('=')[1]
-                                  elif part.startswith('Product='):
-                                      device['product'] = part.split('=')[1]
-                          elif line.startswith('H: Handlers='):
-                              handlers = line.split('Handlers=')[1].strip()
-                              if 'kbd' in handlers:
-                                  device['is_keyboard'] = True
+                                  if part.startswith("Vendor="):
+                                      device["vendor"] = part.split("=")[1]
+                                  elif part.startswith("Product="):
+                                      device["product"] = part.split("=")[1]
+                          elif line.startswith("H: Handlers="):
+                              handlers = line.split("Handlers=")[1].strip()
+                              if "kbd" in handlers:
+                                  device["is_keyboard"] = True
                       
-                      if device.get('is_keyboard') and device.get('name'):
+                      if device.get("is_keyboard") and device.get("name"):
                           devices.append(device)
                           
           except Exception as e:
@@ -76,7 +76,7 @@
           devices = get_input_devices()
           for device in devices:
               # ZSA Voyager vendor ID is 3297 (0x0ce1)
-              if device.get('vendor') == '3297' or 'voyager' in device.get('name', '').lower():
+              if device.get("vendor") == "3297" or ("voyager" in device.get("name", "").lower()):
                   print(f"Found ZSA device: {device}")
                   return True
           return False
@@ -84,7 +84,7 @@
       def get_current_input_sources():
           """Get current GNOME input sources"""
           try:
-              result = subprocess.run(['gsettings', 'get', 'org.gnome.desktop.input-sources', 'sources'], 
+              result = subprocess.run(["gsettings", "get", "org.gnome.desktop.input-sources", "sources"], 
                                     capture_output=True, text=True)
               return result.stdout.strip()
           except Exception as e:
@@ -94,7 +94,7 @@
       def set_input_sources(sources_str):
           """Set GNOME input sources"""
           try:
-              subprocess.run(['gsettings', 'set', 'org.gnome.desktop.input-sources', 'sources', sources_str])
+              subprocess.run(["gsettings", "set", "org.gnome.desktop.input-sources", "sources", sources_str])
               print(f"Set input sources to: {sources_str}")
               return True
           except Exception as e:
@@ -146,13 +146,16 @@
       # Wait for GNOME to be fully loaded
       sleep 10
       
-      # Run the keyboard manager
-      /etc/gnome-keyboard-manager.py
+      # Run the keyboard manager with full environment
+      ${pkgs.python3}/bin/python3 /etc/gnome-keyboard-manager.py
     '';
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = false;
       Restart = "no";
+    };
+    environment = {
+      PATH = "${pkgs.glib}/bin:/run/current-system/sw/bin";
     };
   };
 
