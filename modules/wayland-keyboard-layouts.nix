@@ -155,7 +155,7 @@
       Restart = "no";
     };
     environment = {
-      PATH = "${pkgs.glib}/bin:/run/current-system/sw/bin";
+      PATH = lib.mkForce "${pkgs.glib}/bin:/run/current-system/sw/bin";
     };
   };
 
