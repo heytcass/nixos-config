@@ -40,7 +40,7 @@ let
 
   # Network and system monitoring
   networkTools = with pkgs; [
-    iftop # Network bandwidth monitor  
+    iftop # Network bandwidth monitor
     nethogs # Network usage by process
     iotop # I/O monitoring
     lsof # List open files
@@ -50,6 +50,7 @@ let
     dmidecode # DMI/SMBIOS system information
     smartmontools # SMART disk monitoring (smartctl)
     hdparm # Hard disk parameters
+    dog # Modern DNS client (dig/drill alternative)
   ];
 
   # Essential user applications

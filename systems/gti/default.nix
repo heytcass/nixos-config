@@ -9,6 +9,7 @@
     ../../modules/boot.nix
     ../../modules/hardware.nix
     ../../modules/desktop.nix
+    ../../modules/fonts.nix
     ../../modules/networking.nix
     ../../modules/security.nix
     ../../modules/performance.nix

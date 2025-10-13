@@ -13,7 +13,7 @@
         intel-vaapi-driver
         vaapiVdpau
         libvdpau-va-gl
-        intel-compute-runtime
+        # intel-compute-runtime # Commented out due to version conflicts
       ];
     };
 
@@ -33,7 +33,10 @@
   };
 
   # Kernel modules for hardware control
-  boot.kernelModules = [ "i2c-dev" ];
+  boot.kernelModules = [ "i2c-dev" "uinput" ];
+
+  # User groups for hardware access
+  users.groups.uinput = {};
 
   # Essential hardware services
   services = {
@@ -41,6 +44,19 @@
     udisks2.enable = true; # Auto-mount USB devices
     fstrim.enable = true; # SSD optimization
     fwupd.enable = true; # Firmware updates
+
+    # Stream Deck udev rules
+    udev.extraRules = ''
+      # Elgato Stream Deck - Grant access to uinput group
+      SUBSYSTEM=="input", GROUP="input", MODE="0666"
+      KERNEL=="uinput", SUBSYSTEM=="misc", TAG+="uaccess", OPTIONS+="static_node=uinput", GROUP="uinput", MODE="0660"
+
+      # Elgato Stream Deck USB devices
+      SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0060|0063|006c|006d|0080|0090", TAG+="uaccess"
+
+      # Elgato Stream Deck HID devices - this is what deckmaster actually uses
+      KERNEL=="hidraw*", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0060|0063|006c|006d|0080|0090", TAG+="uaccess", GROUP="plugdev", MODE="0660"
+    '';
   };
 
   # Memory optimization with zram

@@ -1,10 +1,6 @@
 { config, pkgs, lib, ... }:
 
 let
-
-  # DNS servers (Cloudflare and Google)
-  dnsServers = [ "1.1.1.1" "8.8.8.8" ];
-
   # KDE Connect port ranges for local discovery
   kdeConnectPorts = { from = 1714; to = 1764; };
 in
@@ -18,8 +14,6 @@ in
       wifi.powersave = false; # Prioritize performance over battery
     };
 
-    # DNS configuration
-    nameservers = dnsServers;
 
     # Firewall with minimal necessary ports
     firewall = {
@@ -36,8 +30,6 @@ in
     resolved = {
       enable = true;
       dnssec = "true";
-      domains = [ "~." ];
-      fallbackDns = dnsServers;
       dnsovertls = "opportunistic";
     };
 

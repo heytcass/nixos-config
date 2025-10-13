@@ -28,6 +28,7 @@ let
     playerctl # Media player control
     gnome-firmware # Firmware update GUI
     sushi # GNOME file previewer
+    gnome-icon-theme # Required for Stream Deck deckmaster
   ];
 
   # Professional productivity extensions for copywriting workflow
