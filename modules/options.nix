@@ -269,7 +269,7 @@ with lib;
         ps = "procs";
         du = "dust";
         cd = "z";
-        rebuild = "sudo nixos-rebuild switch --flake ~/.nixos#gti";
+        rebuild = "sudo nixos-rebuild switch --flake ~/.nixos";
         nixos = "cd ~/.nixos";
         projects = "cd ~/projects";
         git-no-sign = "git -c commit.gpgsign=false";

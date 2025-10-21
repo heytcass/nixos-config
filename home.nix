@@ -3,8 +3,8 @@
 let
   # System management functions
   systemFunctions = {
-    rebuild = "sudo nixos-rebuild switch --flake /home/tom/.nixos#gti";
-    update = "sudo nixos-rebuild switch --upgrade --flake /home/tom/.nixos#gti";
+    rebuild = "sudo nixos-rebuild switch --flake /home/${config.mySystem.user.name}/.nixos#${config.mySystem.hardware.hostname}";
+    update = "sudo nixos-rebuild switch --upgrade --flake /home/${config.mySystem.user.name}/.nixos#${config.mySystem.hardware.hostname}";
     mkcd = "mkdir -p $argv[1]; and cd $argv[1]";
   };
 
@@ -17,23 +17,9 @@ let
     gl = "git pull";
   };
 
-  # Combined shell abbreviations
-  allAbbrs = {
-    # System abbreviations
-    rb = "rebuild";
-    up = "update";
-    ".." = "cd ..";
-    "..." = "cd ../..";
-    # Git abbreviations
-    g = "git";
-    gst = "git status";
-    gaa = "git add --all";
-    gcmsg = "git commit -m";
-    gco = "git checkout";
-    gb = "git branch";
-    gd = "git diff";
-    glog = "git log --oneline --graph --decorate";
-    # Additional abbreviations
+  # Shell abbreviations from mySystem options (avoid duplication)
+  allAbbrs = config.mySystem.systemAbbrs // config.mySystem.gitAbbrs // {
+    # Additional home-specific abbreviations
     ll = "eza -l --icons --git";
     la = "eza -la --icons --git";
   };
@@ -112,8 +98,8 @@ in
 {
   # Home Manager configuration
   home = {
-    username = "tom";
-    homeDirectory = "/home/tom";
+    username = config.mySystem.user.name;
+    homeDirectory = "/home/${config.mySystem.user.name}";
     stateVersion = "25.05";
     packages = (with pkgs; [
       nerd-fonts.fira-code
@@ -166,7 +152,7 @@ in
   # sops-nix user configuration
   sops = {
     # User age key file
-    age.keyFile = "/home/tom/.config/sops/age/keys.txt";
+    age.keyFile = "/home/${config.mySystem.user.name}/.config/sops/age/keys.txt";
 
     # Default user secrets file
     defaultSopsFile = ./secrets/user-secrets.yaml;
@@ -185,12 +171,9 @@ in
     # Git version control
     git = {
       enable = true;
-      settings = gitConfig // {
-        user = {
-          name = "Tom Cassady";
-          email = "heytcass@gmail.com";
-        };
-      };
+      userName = config.mySystem.user.fullName;
+      userEmail = config.mySystem.user.email;
+      extraConfig = gitConfig;
     };
 
     # Delta (git diff pager)

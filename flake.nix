@@ -159,64 +159,64 @@
           ''}";
           };
         };
-      }) // {
-      nixosConfigurations.gti = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit home-manager claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko; };
-        modules = [
-          ./systems/gti
-          nixos-hardware.nixosModules.dell-xps-13-9370
-          sops-nix.nixosModules.sops
-          lanzaboote.nixosModules.lanzaboote
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "backup";
-            home-manager.sharedModules = [
-              sops-nix.homeManagerModules.sops
-            ];
-            home-manager.users.tom = import ./home.nix;
-            home-manager.extraSpecialArgs = {
-              pkgs-latest = import nixpkgs-latest {
-                system = "x86_64-linux";
-                config.allowUnfree = true;
-              };
+      }) // (
+      let
+        # Shared configuration to eliminate duplication
+        commonSpecialArgs = { inherit home-manager claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko nixpkgs-latest; };
+
+        mkHomeManagerConfig = {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.backupFileExtension = "backup";
+          home-manager.sharedModules = [
+            sops-nix.homeManagerModules.sops
+          ];
+          home-manager.users.tom = import ./home.nix;
+          home-manager.extraSpecialArgs = {
+            pkgs-latest = import nixpkgs-latest {
+              system = "x86_64-linux";
+              config.allowUnfree = true;
             };
-          }
-        ];
-      };
+          };
+        };
+      in
+      {
+        nixosConfigurations.gti = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = commonSpecialArgs;
+          modules = [
+            ./systems/gti
+            nixos-hardware.nixosModules.dell-xps-13-9370
+            sops-nix.nixosModules.sops
+            lanzaboote.nixosModules.lanzaboote
+            home-manager.nixosModules.home-manager
+            mkHomeManagerConfig
+          ];
+        };
 
-      # Dell Latitude 7280 configuration (test/development system)
-      nixosConfigurations.transporter = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit home-manager claude-desktop-linux-flake sops-nix nix-output-monitor lanzaboote disko; };
-        modules = [
-          ./systems/transporter
-          nixos-hardware.nixosModules.dell-latitude-7280
-          ./hardware/dell-latitude-7280.nix
-          sops-nix.nixosModules.sops
-          disko.nixosModules.disko
-          ./modules/disko.nix
-          home-manager.nixosModules.home-manager
-          {
-            # Use btrfs filesystem for Latitude 7280
-            mySystem.storage.filesystem = "btrfs";
-            mySystem.storage.diskDevice = "/dev/sda"; # Default SATA; use /dev/nvme0n1 for NVMe
-            mySystem.storage.swapSize = "4G"; # Smaller swap for 8GB system
+        # Dell Latitude 7280 configuration (test/development system)
+        nixosConfigurations.transporter = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = commonSpecialArgs;
+          modules = [
+            ./systems/transporter
+            nixos-hardware.nixosModules.dell-latitude-7280
+            ./hardware/dell-latitude-7280.nix
+            sops-nix.nixosModules.sops
+            disko.nixosModules.disko
+            ./modules/disko.nix
+            home-manager.nixosModules.home-manager
+            (mkHomeManagerConfig // {
+              # Use btrfs filesystem for Latitude 7280
+              mySystem.storage.filesystem = "btrfs";
+              mySystem.storage.diskDevice = "/dev/sda"; # Default SATA; use /dev/nvme0n1 for NVMe
+              mySystem.storage.swapSize = "4G"; # Smaller swap for 8GB system
 
-            # Enable post-installation automation
-            mySystem.postInstall.enable = true;
-
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "backup";
-            home-manager.sharedModules = [
-              sops-nix.homeManagerModules.sops
-            ];
-            home-manager.users.tom = import ./home.nix;
-          }
-        ];
-      };
-    };
+              # Enable post-installation automation
+              mySystem.postInstall.enable = true;
+            })
+          ];
+        };
+      }
+    );
 }
