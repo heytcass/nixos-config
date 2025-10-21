@@ -79,13 +79,8 @@ in
   services.udev.packages = with pkgs; [
     yubikey-personalization
     libu2f-host # FIDO2/U2F support
-    deckmaster # Stream Deck udev rules
+    # Note: deckmaster udev rules are in hardware.nix
   ];
-
-  # Additional udev rules for deckmaster uinput access
-  services.udev.extraRules = ''
-    KERNEL=="uinput", GROUP="input", MODE="0664"
-  '';
 
   # FIDO2 authentication support
   security.pam.u2f = {

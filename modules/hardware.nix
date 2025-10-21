@@ -45,18 +45,24 @@
     fstrim.enable = true; # SSD optimization
     fwupd.enable = true; # Firmware updates
 
-    # Stream Deck udev rules
-    udev.extraRules = ''
-      # Elgato Stream Deck - Grant access to uinput group
-      SUBSYSTEM=="input", GROUP="input", MODE="0666"
-      KERNEL=="uinput", SUBSYSTEM=="misc", TAG+="uaccess", OPTIONS+="static_node=uinput", GROUP="uinput", MODE="0660"
+    # Stream Deck udev configuration
+    udev = {
+      packages = with pkgs; [
+        deckmaster # Stream Deck udev rules package (moved from security.nix to avoid duplication)
+      ];
 
-      # Elgato Stream Deck USB devices
-      SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0060|0063|006c|006d|0080|0090", TAG+="uaccess"
+      extraRules = ''
+        # Elgato Stream Deck - Grant access to uinput group
+        SUBSYSTEM=="input", GROUP="input", MODE="0666"
+        KERNEL=="uinput", SUBSYSTEM=="misc", TAG+="uaccess", OPTIONS+="static_node=uinput", GROUP="uinput", MODE="0660"
 
-      # Elgato Stream Deck HID devices - this is what deckmaster actually uses
-      KERNEL=="hidraw*", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0060|0063|006c|006d|0080|0090", TAG+="uaccess", GROUP="plugdev", MODE="0660"
-    '';
+        # Elgato Stream Deck USB devices
+        SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0060|0063|006c|006d|0080|0090", TAG+="uaccess"
+
+        # Elgato Stream Deck HID devices - this is what deckmaster actually uses
+        KERNEL=="hidraw*", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0060|0063|006c|006d|0080|0090", TAG+="uaccess", GROUP="plugdev", MODE="0660"
+      '';
+    };
   };
 
   # Memory optimization with zram
