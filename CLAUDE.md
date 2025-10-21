@@ -87,7 +87,7 @@ This is a modular NixOS configuration following DRY principles with the followin
 - **Secrets Management**: sops-nix with age encryption for system and user secrets
 - **YubiKey Integration**: GPG signing, PIV/FIDO2 authentication, touch requirements
 - **Home Manager**: Declarative user environment with Fish shell, Starship prompt, modern tools
-- **Custom Flakes**: notion-mac-flake, claude-desktop-linux-flake for additional packages
+- **Custom Flakes**: claude-desktop-linux-flake for additional packages
 
 ## Adding a New System
 

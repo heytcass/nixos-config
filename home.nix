@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, pkgs-latest, lib, ... }:
 
 let
   # System management functions
@@ -115,10 +115,13 @@ in
     username = "tom";
     homeDirectory = "/home/tom";
     stateVersion = "25.05";
-    packages = with pkgs; [
+    packages = (with pkgs; [
       nerd-fonts.fira-code
       nerd-fonts.jetbrains-mono
       discord
+      anytype
+    ]) ++ [
+      pkgs-latest.multiviewer-for-f1
     ];
   };
 
@@ -182,13 +185,19 @@ in
     # Git version control
     git = {
       enable = true;
-      userName = "Tom Cassady";
-      userEmail = "heytcass@gmail.com";
-      extraConfig = gitConfig;
-      delta = {
-        enable = true;
-        options = deltaOptions;
+      settings = gitConfig // {
+        user = {
+          name = "Tom Cassady";
+          email = "heytcass@gmail.com";
+        };
       };
+    };
+
+    # Delta (git diff pager)
+    delta = {
+      enable = true;
+      enableGitIntegration = true;
+      options = deltaOptions;
     };
 
     # GPG configuration for YubiKey commit signing

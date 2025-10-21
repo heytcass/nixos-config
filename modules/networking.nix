@@ -29,7 +29,7 @@ in
     # Modern DNS resolution with security
     resolved = {
       enable = true;
-      dnssec = "true";
+      dnssec =  "false";
       dnsovertls = "opportunistic";
     };
 

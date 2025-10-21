@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-latest.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     flake-utils.url = "github:numtide/flake-utils";
     home-manager = {
@@ -31,7 +32,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixos-hardware, flake-utils, home-manager, claude-desktop-linux-flake, sops-nix, nix-output-monitor, lanzaboote, disko }:
+  outputs = { self, nixpkgs, nixpkgs-latest, nixos-hardware, flake-utils, home-manager, claude-desktop-linux-flake, sops-nix, nix-output-monitor, lanzaboote, disko }:
     flake-utils.lib.eachDefaultSystem
       (system: {
         # Development shell for system maintenance
@@ -176,6 +177,12 @@
               sops-nix.homeManagerModules.sops
             ];
             home-manager.users.tom = import ./home.nix;
+            home-manager.extraSpecialArgs = {
+              pkgs-latest = import nixpkgs-latest {
+                system = "x86_64-linux";
+                config.allowUnfree = true;
+              };
+            };
           }
         ];
       };
