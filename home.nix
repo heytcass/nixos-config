@@ -120,6 +120,7 @@ in
       nerd-fonts.jetbrains-mono
       discord
       anytype
+      mqttx
     ]) ++ [
       pkgs-latest.multiviewer-for-f1
     ];

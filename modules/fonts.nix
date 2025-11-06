@@ -91,7 +91,7 @@
       # Core fonts - Noto family (comprehensive, modern)
       noto-fonts          # Google's font family with great Unicode support
       noto-fonts-cjk-sans # Chinese, Japanese, Korean
-      noto-fonts-emoji    # Emoji support
+      noto-fonts-color-emoji    # Emoji support
 
       # Fallback fonts
       liberation_ttf      # Microsoft font alternatives (Arial, Times New Roman, Courier)
