@@ -36,5 +36,8 @@ in
     # Network time synchronization
     ntp.enable = false;
     timesyncd.enable = true;
+
+    # Tailscale VPN mesh network
+    tailscale.enable = true;
   };
 }

@@ -121,6 +121,8 @@ in
       discord
       anytype
       mqttx
+      rpi-imager
+      tailscale-systray
     ]) ++ [
       pkgs-latest.multiviewer-for-f1
     ];
