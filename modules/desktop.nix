@@ -29,6 +29,7 @@ let
     gnome-firmware # Firmware update GUI
     sushi # GNOME file previewer
     gnome-icon-theme # Required for Stream Deck deckmaster
+    gnome-themes-extra # Adwaita GTK theme for window decorations
   ];
 
   # Professional productivity extensions for copywriting workflow

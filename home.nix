@@ -406,6 +406,29 @@ in
     };
   };
 
+  # GTK configuration for proper theming
+  gtk = {
+    enable = true;
+
+    theme = {
+      name = "Adwaita";
+      package = pkgs.gnome-themes-extra;
+    };
+
+    iconTheme = {
+      name = "Adwaita";
+      package = pkgs.adwaita-icon-theme;
+    };
+
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = false;
+    };
+
+    gtk4.extraConfig = {
+      gtk-application-prefer-dark-theme = false;
+    };
+  };
+
   # User services configuration
   services = {
     # EasyEffects professional audio processing
