@@ -48,6 +48,7 @@ in
 
     # Security monitoring
     auditd.enable = true;
+    audit.enable = false;  # Disable audit rules service (no rules defined)
   };
 
   # Security monitoring services
